@@ -1,0 +1,14 @@
+E:\Diploma\PizzaBackendServer\WebApi\DAL\bin\Debug\net6.0\DAL.deps.json
+E:\Diploma\PizzaBackendServer\WebApi\DAL\bin\Debug\net6.0\DAL.runtimeconfig.json
+E:\Diploma\PizzaBackendServer\WebApi\DAL\bin\Debug\net6.0\DAL.dll
+E:\Diploma\PizzaBackendServer\WebApi\DAL\bin\Debug\net6.0\DAL.pdb
+E:\Diploma\PizzaBackendServer\WebApi\DAL\obj\Debug\net6.0\DAL.csproj.AssemblyReference.cache
+E:\Diploma\PizzaBackendServer\WebApi\DAL\obj\Debug\net6.0\DAL.GeneratedMSBuildEditorConfig.editorconfig
+E:\Diploma\PizzaBackendServer\WebApi\DAL\obj\Debug\net6.0\DAL.AssemblyInfoInputs.cache
+E:\Diploma\PizzaBackendServer\WebApi\DAL\obj\Debug\net6.0\DAL.AssemblyInfo.cs
+E:\Diploma\PizzaBackendServer\WebApi\DAL\obj\Debug\net6.0\DAL.csproj.CoreCompileInputs.cache
+E:\Diploma\PizzaBackendServer\WebApi\DAL\obj\Debug\net6.0\DAL.dll
+E:\Diploma\PizzaBackendServer\WebApi\DAL\obj\Debug\net6.0\refint\DAL.dll
+E:\Diploma\PizzaBackendServer\WebApi\DAL\obj\Debug\net6.0\DAL.pdb
+E:\Diploma\PizzaBackendServer\WebApi\DAL\obj\Debug\net6.0\DAL.genruntimeconfig.cache
+E:\Diploma\PizzaBackendServer\WebApi\DAL\obj\Debug\net6.0\ref\DAL.dll

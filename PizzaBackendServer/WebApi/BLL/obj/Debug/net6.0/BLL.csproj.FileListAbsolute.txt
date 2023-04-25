@@ -1,0 +1,15 @@
+E:\Diploma\PizzaBackendServer\WebApi\BLL\bin\Debug\net6.0\BLL.deps.json
+E:\Diploma\PizzaBackendServer\WebApi\BLL\bin\Debug\net6.0\BLL.dll
+E:\Diploma\PizzaBackendServer\WebApi\BLL\bin\Debug\net6.0\BLL.pdb
+E:\Diploma\PizzaBackendServer\WebApi\BLL\obj\Debug\net6.0\BLL.csproj.AssemblyReference.cache
+E:\Diploma\PizzaBackendServer\WebApi\BLL\obj\Debug\net6.0\BLL.GeneratedMSBuildEditorConfig.editorconfig
+E:\Diploma\PizzaBackendServer\WebApi\BLL\obj\Debug\net6.0\BLL.AssemblyInfoInputs.cache
+E:\Diploma\PizzaBackendServer\WebApi\BLL\obj\Debug\net6.0\BLL.AssemblyInfo.cs
+E:\Diploma\PizzaBackendServer\WebApi\BLL\obj\Debug\net6.0\BLL.csproj.CoreCompileInputs.cache
+E:\Diploma\PizzaBackendServer\WebApi\BLL\obj\Debug\net6.0\BLL.dll
+E:\Diploma\PizzaBackendServer\WebApi\BLL\obj\Debug\net6.0\refint\BLL.dll
+E:\Diploma\PizzaBackendServer\WebApi\BLL\obj\Debug\net6.0\BLL.pdb
+E:\Diploma\PizzaBackendServer\WebApi\BLL\obj\Debug\net6.0\ref\BLL.dll
+E:\Diploma\PizzaBackendServer\WebApi\BLL\bin\Debug\net6.0\DAL.dll
+E:\Diploma\PizzaBackendServer\WebApi\BLL\bin\Debug\net6.0\DAL.pdb
+E:\Diploma\PizzaBackendServer\WebApi\BLL\obj\Debug\net6.0\BLL.csproj.CopyComplete
