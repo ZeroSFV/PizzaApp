@@ -9,5 +9,6 @@ namespace BLL.Interfaces
 {
     public interface IOrderService
     {
+        List<OrderModel> GetAllOrders();
     }
 }

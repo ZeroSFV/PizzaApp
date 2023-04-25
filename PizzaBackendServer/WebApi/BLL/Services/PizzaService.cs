@@ -22,5 +22,53 @@ namespace BLL.Services
         {
             dataBase = repos;
         }
+
+        public List<PizzaModel> GetAllPizzas()
+        {
+            return dataBase.PizzaRepository.GetAll().Select(i => new PizzaModel(i)).Where(i => i.SizeId == 2).Where(i => i.Prescence == true).ToList();
+        }
+
+        public List<PizzaModel> GetPizzasWithDescription(string description)
+        {
+            return dataBase.PizzaRepository.GetAll().Select(i => new PizzaModel(i)).Where(i => i.Description.Contains(description) == true).Where(i => i.SizeId == 2).Where(i => i.Prescence == true).ToList();
+        }
+
+        public List<PizzaModel> GetPizzasByName(string name)
+        {
+            return dataBase.PizzaRepository.GetAll().Select(i => new PizzaModel(i)).Where(i => i.Name == name).ToList();
+        }
+
+        public void UpdatePizza(PizzaChangeModel pm)
+        {
+            var pizza = dataBase.PizzaRepository.GetAll().Where(i => i.Name == pm.Name).ToList();
+            if (pizza.Count > 0)
+            {
+                foreach(var p in pizza)
+                {
+                    p.Description = pm.Description;
+                    p.Consistance = pm.Consistance;
+                    if (pm.Prescence == true)
+                    {
+                        p.Prescence = 1;
+                    }
+                    else
+                    {
+                        p.Prescence = 0;
+                    }
+                    if (p.SizeId == 1)
+                        p.Price = pm.PriceForBig;
+                    if (p.SizeId == 2)
+                        p.Price = pm.PriceForMedium;
+                    dataBase.PizzaRepository.Update(p);
+                    Save();
+                }
+            }
+        }
+
+        public bool Save()
+        {
+            dataBase.Save();
+            return true;
+        }
     }
 }

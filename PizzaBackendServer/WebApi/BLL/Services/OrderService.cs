@@ -22,5 +22,10 @@ namespace BLL.Services
         {
             dataBase = repos;
         }
+
+        public List<OrderModel> GetAllOrders()
+        {
+            return dataBase.OrderRepository.GetAll().Select(i => new OrderModel(i)).ToList();
+        }
     }
 }

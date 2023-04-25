@@ -9,5 +9,10 @@ namespace BLL.Interfaces
 {
     public interface IPizzaService
     {
+        List<PizzaModel> GetAllPizzas();
+        List<PizzaModel> GetPizzasWithDescription(string description);
+        List<PizzaModel> GetPizzasByName(string name);
+        void UpdatePizza(PizzaChangeModel pm);
+
     }
 }
