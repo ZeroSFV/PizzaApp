@@ -16,6 +16,7 @@ namespace BLL.Models
         public bool Prescence { get; set; }
         public string Consistance { get; set; } = null!;
         public int SizeId { get; set; }
+        public string SizeName { get; set; }
         public string? Photo { get; set; }
         public PizzaModel() { } 
 
@@ -29,6 +30,7 @@ namespace BLL.Models
             Consistance = p.Consistance;
             SizeId = p.SizeId;
             Photo = p.Photo;
+            SizeName = p.Size.Name;
         }
     }
 }

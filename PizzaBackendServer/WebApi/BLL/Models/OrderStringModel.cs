@@ -13,6 +13,7 @@ namespace BLL.Models
         public int Count { get; set; }
         public int PizzaId { get; set; }
         public int OrderId { get; set; }
+        public PizzaModel Pizza { get; set; }
         public OrderStringModel() { }
 
         public OrderStringModel(OrderString os)
@@ -21,6 +22,7 @@ namespace BLL.Models
             Count = os.Count;
             PizzaId = os.PizzaId;
             OrderId = os.OrderId;
+            Pizza = new PizzaModel(os.Pizza);
         }
     }
 }

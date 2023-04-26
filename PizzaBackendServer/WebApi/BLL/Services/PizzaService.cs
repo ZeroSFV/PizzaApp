@@ -25,22 +25,35 @@ namespace BLL.Services
 
         public List<PizzaModel> GetAllPizzas()
         {
-            return dataBase.PizzaRepository.GetAll().Select(i => new PizzaModel(i)).Where(i => i.SizeId == 2).Where(i => i.Prescence == true).ToList();
+            return dataBase.PizzaRepository.GetAll()
+                                           .Select(i => new PizzaModel(i))
+                                           .Where(i => i.SizeId == 2)
+                                           .Where(i => i.Prescence == true)
+                                           .ToList();
         }
 
         public List<PizzaModel> GetPizzasWithDescription(string description)
         {
-            return dataBase.PizzaRepository.GetAll().Select(i => new PizzaModel(i)).Where(i => i.Description.Contains(description) == true).Where(i => i.SizeId == 2).Where(i => i.Prescence == true).ToList();
+            return dataBase.PizzaRepository.GetAll()
+                                           .Select(i => new PizzaModel(i))
+                                           .Where(i => i.Description.Contains(description) == true)
+                                           .Where(i => i.SizeId == 2).Where(i => i.Prescence == true)
+                                           .ToList();
         }
 
         public List<PizzaModel> GetPizzasByName(string name)
         {
-            return dataBase.PizzaRepository.GetAll().Select(i => new PizzaModel(i)).Where(i => i.Name == name).ToList();
+            return dataBase.PizzaRepository.GetAll()
+                                           .Select(i => new PizzaModel(i))
+                                           .Where(i => i.Name == name)
+                                           .ToList();
         }
 
         public void UpdatePizza(PizzaChangeModel pm)
         {
-            var pizza = dataBase.PizzaRepository.GetAll().Where(i => i.Name == pm.Name).ToList();
+            var pizza = dataBase.PizzaRepository.GetAll()
+                                                .Where(i => i.Name == pm.Name)
+                                                .ToList();
             if (pizza.Count > 0)
             {
                 foreach(var p in pizza)

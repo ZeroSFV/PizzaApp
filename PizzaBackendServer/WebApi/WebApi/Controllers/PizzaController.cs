@@ -78,7 +78,7 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("changePizza")]
         public async Task<IActionResult> UpdatePizza([FromBody] PizzaChangeModel pizzaChangeModel)
         {
             if (ModelState.IsValid)

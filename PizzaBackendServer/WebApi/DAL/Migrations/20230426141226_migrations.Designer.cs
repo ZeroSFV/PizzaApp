@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(PizzaContext))]
-    [Migration("20230424164327_migrations")]
+    [Migration("20230426141226_migrations")]
     partial class migrations
     {
         /// <inheritdoc />
@@ -70,8 +70,17 @@ namespace DAL.Migrations
                         .HasMaxLength(70)
                         .HasColumnType("nvarchar(70)");
 
+                    b.Property<decimal?>("Change")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("decimal(8,2)");
+
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ClientName")
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
 
                     b.Property<int?>("CourierId")
                         .HasColumnType("int");
@@ -81,6 +90,11 @@ namespace DAL.Migrations
 
                     b.Property<DateTime?>("FinishedTime")
                         .HasColumnType("datetime");
+
+                    b.Property<string>("PayingType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -114,10 +128,13 @@ namespace DAL.Migrations
                         {
                             Id = 1,
                             Address = "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1",
+                            Change = 370m,
                             ClientId = 1,
+                            ClientName = "Михаил",
                             CourierId = 4,
                             CreationTime = new DateTime(2022, 4, 24, 18, 0, 0, 0, DateTimeKind.Unspecified),
                             FinishedTime = new DateTime(2022, 4, 24, 18, 30, 0, 0, DateTimeKind.Unspecified),
+                            PayingType = "Наличными",
                             PhoneNumber = "+79106991174",
                             Price = 630m,
                             StatusId = 5,
@@ -128,7 +145,9 @@ namespace DAL.Migrations
                             Id = 2,
                             Address = "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1",
                             ClientId = 1,
+                            ClientName = "Михаил",
                             CreationTime = new DateTime(2022, 4, 24, 17, 0, 0, 0, DateTimeKind.Unspecified),
+                            PayingType = "Картой",
                             PhoneNumber = "+79106991174",
                             Price = 630m,
                             StatusId = 1
@@ -138,10 +157,26 @@ namespace DAL.Migrations
                             Id = 3,
                             Address = "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1",
                             ClientId = 1,
+                            ClientName = "Виктор",
                             CreationTime = new DateTime(2022, 4, 24, 14, 0, 0, 0, DateTimeKind.Unspecified),
+                            PayingType = "Картой",
                             PhoneNumber = "+79106991174",
                             Price = 630m,
                             StatusId = 6
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Address = "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1",
+                            Change = 70m,
+                            ClientId = 1,
+                            ClientName = "Михаил",
+                            CreationTime = new DateTime(2022, 4, 24, 18, 0, 0, 0, DateTimeKind.Unspecified),
+                            PayingType = "Наличными",
+                            PhoneNumber = "+79106991174",
+                            Price = 630m,
+                            StatusId = 3,
+                            WorkerId = 3
                         });
                 });
 

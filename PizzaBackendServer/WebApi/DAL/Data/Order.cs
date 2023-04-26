@@ -19,6 +19,9 @@ namespace DAL.Data
         public decimal Price { get; set; }
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
+        public string ClientName { get; set; }
+        public string PayingType { get; set; }
+        public decimal? Change { get; set; }
         public int ClientId { get; set; }
         public int? WorkerId { get; set; }
         public int? CourierId { get; set; }

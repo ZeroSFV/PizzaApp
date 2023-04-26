@@ -25,6 +25,12 @@ namespace DAL.Data.Configuration
             builder.Property(e => e.PhoneNumber).HasMaxLength(50);
 
             builder.Property(e => e.Price).HasPrecision(8, 2);
+            
+            builder.Property(e => e.Change).HasPrecision(8, 2);
+
+            builder.Property(e => e.ClientName).HasMaxLength(70);
+
+            builder.Property(e => e.PayingType).HasMaxLength(20);
 
             builder.HasIndex(e => e.ClientId, "client_idx");
 
@@ -63,6 +69,9 @@ namespace DAL.Data.Configuration
                     Price = 630,
                     Address = "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1",
                     PhoneNumber = "+79106991174",
+                    ClientName = "Михаил",
+                    PayingType = "Наличными",
+                    Change = 370,
                     StatusId = 5,
                     ClientId = 1,
                     WorkerId = 3,
@@ -75,6 +84,8 @@ namespace DAL.Data.Configuration
                     Price = 630,
                     Address = "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1",
                     PhoneNumber = "+79106991174",
+                    ClientName = "Михаил",
+                    PayingType = "Картой",
                     StatusId = 1,
                     ClientId = 1,
                 },
@@ -85,8 +96,25 @@ namespace DAL.Data.Configuration
                     Price = 630,
                     Address = "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1",
                     PhoneNumber = "+79106991174",
+                    ClientName = "Виктор",
+                    PayingType = "Картой",
                     StatusId = 6,
                     ClientId = 1,
+
+                },
+                new Order
+                {
+                    Id = 4,
+                    CreationTime = new DateTime(2022, 04, 24, 18, 0, 0),
+                    Price = 630,
+                    Address = "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1",
+                    PhoneNumber = "+79106991174",
+                    ClientName = "Михаил",
+                    PayingType = "Наличными",
+                    Change = 70,
+                    StatusId = 3,
+                    ClientId = 1,
+                    WorkerId = 3
                 }
                 );
         }

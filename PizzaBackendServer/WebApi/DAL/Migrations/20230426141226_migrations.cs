@@ -96,6 +96,9 @@ namespace DAL.Migrations
                     Price = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ClientName = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false),
+                    PayingType = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Change = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: true),
                     ClientId = table.Column<int>(type: "int", nullable: false),
                     WorkerId = table.Column<int>(type: "int", nullable: true),
                     CourierId = table.Column<int>(type: "int", nullable: true),
@@ -218,12 +221,13 @@ namespace DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "order",
-                columns: new[] { "Id", "Address", "ClientId", "CourierId", "CreationTime", "FinishedTime", "PhoneNumber", "Price", "StatusId", "WorkerId" },
+                columns: new[] { "Id", "Address", "Change", "ClientId", "ClientName", "CourierId", "CreationTime", "FinishedTime", "PayingType", "PhoneNumber", "Price", "StatusId", "WorkerId" },
                 values: new object[,]
                 {
-                    { 1, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", 1, 4, new DateTime(2022, 4, 24, 18, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 4, 24, 18, 30, 0, 0, DateTimeKind.Unspecified), "+79106991174", 630m, 5, 3 },
-                    { 2, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", 1, null, new DateTime(2022, 4, 24, 17, 0, 0, 0, DateTimeKind.Unspecified), null, "+79106991174", 630m, 1, null },
-                    { 3, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", 1, null, new DateTime(2022, 4, 24, 14, 0, 0, 0, DateTimeKind.Unspecified), null, "+79106991174", 630m, 6, null }
+                    { 1, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", 370m, 1, "Михаил", 4, new DateTime(2022, 4, 24, 18, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 4, 24, 18, 30, 0, 0, DateTimeKind.Unspecified), "Наличными", "+79106991174", 630m, 5, 3 },
+                    { 2, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", null, 1, "Михаил", null, new DateTime(2022, 4, 24, 17, 0, 0, 0, DateTimeKind.Unspecified), null, "Картой", "+79106991174", 630m, 1, null },
+                    { 3, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", null, 1, "Виктор", null, new DateTime(2022, 4, 24, 14, 0, 0, 0, DateTimeKind.Unspecified), null, "Картой", "+79106991174", 630m, 6, null },
+                    { 4, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", 70m, 1, "Михаил", null, new DateTime(2022, 4, 24, 18, 0, 0, 0, DateTimeKind.Unspecified), null, "Наличными", "+79106991174", 630m, 3, 3 }
                 });
 
             migrationBuilder.InsertData(
