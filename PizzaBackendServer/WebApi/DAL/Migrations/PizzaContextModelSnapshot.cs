@@ -3,7 +3,6 @@ using System;
 using DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -18,19 +17,16 @@ namespace DAL.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .UseCollation("utf8mb4_0900_ai_ci")
-                .HasAnnotation("MySql:CharSet", "utf8mb4")
-                .HasAnnotation("ProductVersion", "7.0.5")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "6.0.6")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            MySqlModelBuilderExtensions.HasCharSet(modelBuilder, "utf8mb4");
 
             modelBuilder.Entity("DAL.Data.Basket", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Amount")
                         .HasColumnType("int");
@@ -52,6 +48,16 @@ namespace DAL.Migrations
                     b.HasIndex(new[] { "UserId" }, "user_idx");
 
                     b.ToTable("basket", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Amount = 1,
+                            PizzaId = 1,
+                            Price = 0m,
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("DAL.Data.Order", b =>
@@ -60,12 +66,10 @@ namespace DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasMaxLength(70)
-                        .HasColumnType("nvarchar(70)");
+                        .HasColumnType("varchar(70)");
 
                     b.Property<decimal?>("Change")
                         .HasPrecision(8, 2)
@@ -77,7 +81,7 @@ namespace DAL.Migrations
                     b.Property<string>("ClientName")
                         .IsRequired()
                         .HasMaxLength(70)
-                        .HasColumnType("nvarchar(70)");
+                        .HasColumnType("varchar(70)");
 
                     b.Property<int?>("CourierId")
                         .HasColumnType("int");
@@ -91,12 +95,12 @@ namespace DAL.Migrations
                     b.Property<string>("PayingType")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(8, 2)
@@ -183,8 +187,6 @@ namespace DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
@@ -198,7 +200,8 @@ namespace DAL.Migrations
 
                     b.HasIndex(new[] { "OrderId" }, "order_idx");
 
-                    b.HasIndex(new[] { "PizzaId" }, "pizza_idx");
+                    b.HasIndex(new[] { "PizzaId" }, "pizza_idx")
+                        .HasDatabaseName("pizza_idx1");
 
                     b.ToTable("orderString", (string)null);
 
@@ -232,29 +235,27 @@ namespace DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("Consistance")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Photo")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
-                    b.Property<short>("Prescence")
-                        .HasColumnType("smallint");
+                    b.Property<sbyte>("Prescence")
+                        .HasColumnType("tinyint");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(8, 2)
@@ -277,7 +278,7 @@ namespace DAL.Migrations
                             Description = "Мясная",
                             Name = "Пепперони",
                             Photo = "assets/Pepperoni.png",
-                            Prescence = (short)1,
+                            Prescence = (sbyte)1,
                             Price = 630m,
                             SizeId = 1
                         },
@@ -288,7 +289,7 @@ namespace DAL.Migrations
                             Description = "Мясная",
                             Name = "Пепперони",
                             Photo = "assets/Pepperoni.png",
-                            Prescence = (short)1,
+                            Prescence = (sbyte)1,
                             Price = 562m,
                             SizeId = 2
                         },
@@ -299,7 +300,7 @@ namespace DAL.Migrations
                             Description = "Острая Мясная",
                             Name = "Баварская",
                             Photo = "assets/Bavarian.png",
-                            Prescence = (short)1,
+                            Prescence = (sbyte)1,
                             Price = 612m,
                             SizeId = 1
                         },
@@ -310,7 +311,7 @@ namespace DAL.Migrations
                             Description = "Острая Мясная",
                             Name = "Баварская",
                             Photo = "assets/Bavarian.png",
-                            Prescence = (short)1,
+                            Prescence = (sbyte)1,
                             Price = 562m,
                             SizeId = 2
                         },
@@ -321,7 +322,7 @@ namespace DAL.Migrations
                             Description = "Грибная",
                             Name = "Жюльен",
                             Photo = "assets/Zhulien.png",
-                            Prescence = (short)1,
+                            Prescence = (sbyte)1,
                             Price = 590m,
                             SizeId = 1
                         },
@@ -332,7 +333,7 @@ namespace DAL.Migrations
                             Description = "Грибная",
                             Name = "Жюльен",
                             Photo = "assets/Zhulien.png",
-                            Prescence = (short)1,
+                            Prescence = (sbyte)1,
                             Price = 445m,
                             SizeId = 2
                         },
@@ -343,7 +344,7 @@ namespace DAL.Migrations
                             Description = "Рыбная",
                             Name = "Золотая рыбка",
                             Photo = "assets/GoldenFish.png",
-                            Prescence = (short)1,
+                            Prescence = (sbyte)1,
                             Price = 840m,
                             SizeId = 1
                         },
@@ -354,7 +355,7 @@ namespace DAL.Migrations
                             Description = "Рыбная",
                             Name = "Золотая рыбка",
                             Photo = "assets/GoldenFish.png",
-                            Prescence = (short)1,
+                            Prescence = (sbyte)1,
                             Price = 670m,
                             SizeId = 2
                         },
@@ -365,7 +366,7 @@ namespace DAL.Migrations
                             Description = "Острая мясная",
                             Name = "Пиццбургер",
                             Photo = "assets/PizzaBurger.png",
-                            Prescence = (short)1,
+                            Prescence = (sbyte)1,
                             Price = 730m,
                             SizeId = 1
                         },
@@ -376,7 +377,7 @@ namespace DAL.Migrations
                             Description = "Острая мясная",
                             Name = "Пиццбургер",
                             Photo = "assets/PizzaBurger.png",
-                            Prescence = (short)1,
+                            Prescence = (sbyte)1,
                             Price = 540m,
                             SizeId = 2
                         });
@@ -388,12 +389,10 @@ namespace DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -418,12 +417,10 @@ namespace DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -468,46 +465,44 @@ namespace DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int?>("Bonuses")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50)");
 
-                    b.Property<short>("IsApproved")
-                        .HasColumnType("smallint");
+                    b.Property<sbyte>("IsApproved")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(70)
-                        .HasColumnType("nvarchar(70)");
+                        .HasColumnType("varchar(70)");
 
                     b.Property<string>("Passport")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("RefreshToken")
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -519,7 +514,7 @@ namespace DAL.Migrations
                             Id = 1,
                             Bonuses = 0,
                             Email = "reksmbd@gmail.com",
-                            IsApproved = (short)1,
+                            IsApproved = (sbyte)1,
                             Name = "Михаил Баусов Дмитриевич",
                             Password = "1U+u9QwJ8SdXuiRip3b83S7jiu06Z0PxlaPHFOJZJ+Q=:tiUz98Ow0IbpP7gWSLBCcA==",
                             Phone = "+79106991174",
@@ -529,7 +524,7 @@ namespace DAL.Migrations
                         {
                             Id = 2,
                             Email = "admin@gmail.com",
-                            IsApproved = (short)1,
+                            IsApproved = (sbyte)1,
                             Name = "Администратор",
                             Passport = "2415 771077",
                             Password = "8eqn6A6N11WY0k4j8PLlVfcmDvnUQZJOvTtxdBYtINA=:5tZTJitFXi/473n+fWFzog==",
@@ -540,7 +535,7 @@ namespace DAL.Migrations
                         {
                             Id = 3,
                             Email = "worker@gmail.com",
-                            IsApproved = (short)1,
+                            IsApproved = (sbyte)1,
                             Name = "Работник",
                             Passport = "2416 772076",
                             Password = "ucPtmgnShnsbFBQVZg7kNukEDDluMTr2/fYAq3odDF8=:amw/M3NvUh1kzCQkIJnVIg==",
@@ -551,7 +546,7 @@ namespace DAL.Migrations
                         {
                             Id = 4,
                             Email = "courier@gmail.com",
-                            IsApproved = (short)1,
+                            IsApproved = (sbyte)1,
                             Name = "Курьер",
                             Passport = "2316 771071",
                             Password = "ucPtmgnShnsbFBQVZg7kNukEDDluMTr2/fYAq3odDF8=:amw/M3NvUh1kzCQkIJnVIg==",

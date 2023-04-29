@@ -25,7 +25,7 @@ namespace DAL.Data
         public string? Photo { get; set; }
 
        
-        public virtual Size Size { get; set; }
+        public virtual Size Size { get; set; } = null!;
         public virtual ICollection<Basket>? Baskets { get; set; }
         public virtual ICollection<OrderString>? OrderStrings { get; set; }
 

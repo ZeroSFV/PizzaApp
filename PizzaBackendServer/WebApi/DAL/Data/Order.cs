@@ -1,6 +1,7 @@
-﻿using Microsoft.Identity.Client;
+﻿
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace DAL.Data
         {
             OrderStrings = new HashSet<OrderString>();
         }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public DateTime CreationTime { get; set; }
         public DateTime? FinishedTime { get; set; }
@@ -26,10 +28,10 @@ namespace DAL.Data
         public int? WorkerId { get; set; }
         public int? CourierId { get; set; }
         public int StatusId { get; set; }
-        public virtual User Client { get; set; }
+        public virtual User Client { get; set; } = null!;
         public virtual User? Worker { get; set; }
         public virtual User? Courier { get; set; }
-        public virtual Status Status { get; set; }
+        public virtual Status Status { get; set; } = null!;
         public virtual ICollection<OrderString> OrderStrings { get; set; }
     }
 }

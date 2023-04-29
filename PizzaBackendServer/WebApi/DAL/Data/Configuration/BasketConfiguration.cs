@@ -14,7 +14,12 @@ namespace DAL.Data.Configuration
         {
             builder.ToTable("basket");
 
+            builder.HasKey(x => x.Id);
+
+           // builder.Property(e => e.Id).UseMySqlIdentityColumn();
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
+            // builder.Property(e => e.Id).ValueGeneratedOnAddOrUpdate();
+
 
             builder.HasIndex(e => e.UserId, "user_idx");
 
@@ -31,6 +36,15 @@ namespace DAL.Data.Configuration
                 .WithMany(p => p.Baskets)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("userId");
+
+            builder.HasData(
+               new Basket
+               {
+                   Id = 1,
+                   Amount = 1,
+                   PizzaId = 1,
+                   UserId = 1,
+               });
         }
     }
 }

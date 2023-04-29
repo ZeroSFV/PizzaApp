@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.Interfaces;
 using DAL.Data;
 
 namespace BLL.Models
@@ -20,7 +21,7 @@ namespace BLL.Models
         public string? Photo { get; set; }
         public PizzaModel() { } 
 
-        public PizzaModel(Pizza p)
+        public PizzaModel(Pizza p, IUnitOfWork dataBase)
         {
             Id = p.Id;
             Name = p.Name;
@@ -30,7 +31,8 @@ namespace BLL.Models
             Consistance = p.Consistance;
             SizeId = p.SizeId;
             Photo = p.Photo;
-            SizeName = p.Size.Name;
+            var size = dataBase.SizeRepository.Get(SizeId); 
+            SizeName = size.Name;
         }
     }
 }

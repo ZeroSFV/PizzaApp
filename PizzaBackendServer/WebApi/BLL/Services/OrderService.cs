@@ -27,14 +27,14 @@ namespace BLL.Services
         public List<OrderModel> GetAllOrders()
         {
             return dataBase.OrderRepository.GetAll()
-                                           .Select(i => new OrderModel(i))
+                                           .Select(i => new OrderModel(i, dataBase))
                                            .ToList();
         }
 
         public List<OrderModel> GetOrdersOfUser(int userId)
         {
             return dataBase.OrderRepository.GetAll()
-                                           .Select(i => new OrderModel(i))
+                                           .Select(i => new OrderModel(i, dataBase))
                                            .Where(i => i.ClientId == userId)
                                            .ToList();
         }
@@ -42,7 +42,7 @@ namespace BLL.Services
         public List<OrderModel> GetOrdersOfWorker(int workerId)
         {
             return dataBase.OrderRepository.GetAll()
-                                           .Select(i => new OrderModel(i))
+                                           .Select(i => new OrderModel(i, dataBase))
                                            .Where(i => i.WorkerId == workerId)
                                            .ToList();
         }
@@ -50,7 +50,7 @@ namespace BLL.Services
         public List<OrderModel> GetOrdersOfCourier(int courierId)
         {
             return dataBase.OrderRepository.GetAll()
-                                           .Select(i => new OrderModel(i))
+                                           .Select(i => new OrderModel(i, dataBase))
                                            .Where(i => i.CourierId == courierId)
                                            .ToList();
         }
@@ -58,7 +58,7 @@ namespace BLL.Services
         public OrderModel GetActiveOrderByUserId(int userId)
         {
             var orderModel =  dataBase.OrderRepository.GetAll()
-                                               .Select(i => new OrderModel(i))
+                                               .Select(i => new OrderModel(i, dataBase))
                                                .Where(i => i.ClientId == userId)
                                                .Where(i => i.StatusId < 5)
                                                .FirstOrDefault();
@@ -91,10 +91,11 @@ namespace BLL.Services
         {
             var order = dataBase.OrderRepository.Get(orderId);
             var worker = dataBase.UserRepository.Get(workerId);
-            if (worker != null && order != null)
+            if (worker != null && order != null && order.StatusId == 1)
             {
                 order.WorkerId = worker.Id;
                 order.Worker = worker;
+                order.StatusId++;
                 Save();
             }
         }
@@ -103,10 +104,11 @@ namespace BLL.Services
         {
             var order = dataBase.OrderRepository.Get(orderId);
             var courier = dataBase.UserRepository.Get(courierId);
-            if (courier != null && order != null)
+            if (courier != null && order != null && order.StatusId == 3)
             {
                 order.CourierId = courier.Id;
                 order.Courier = courier;
+                order.StatusId++;
                 Save();
             }
         }
@@ -114,7 +116,7 @@ namespace BLL.Services
         public void ChangeToNextStatus(int orderId)
         {
             var order = dataBase.OrderRepository.Get(orderId);
-            if (order != null)
+            if (order != null && order.StatusId < 5)
             {
                 order.StatusId++;
                 Save();
@@ -125,7 +127,7 @@ namespace BLL.Services
         public OrderModel GetActiveOrderOfWorker(int workerId)
         {
             var orderModel = dataBase.OrderRepository.GetAll()
-                                               .Select(i => new OrderModel(i))
+                                               .Select(i => new OrderModel(i, dataBase))
                                                .Where(i => i.WorkerId == workerId)
                                                .Where(i => i.StatusId == 2)
                                                .FirstOrDefault();
@@ -135,7 +137,7 @@ namespace BLL.Services
         public List<OrderModel> GetActiveOrdersOfCourier(int courierId)
         {
             var orderModel = dataBase.OrderRepository.GetAll()
-                                           .Select(i => new OrderModel(i))
+                                           .Select(i => new OrderModel(i, dataBase))
                                            .Where(i => i.CourierId == courierId)
                                            .Where(i => i.StatusId == 4)
                                            .ToList();
@@ -145,7 +147,7 @@ namespace BLL.Services
         public List<OrderModel> GetUnacceptedByWorkerOrders()
         {
             var orders = dataBase.OrderRepository.GetAll()
-                                                 .Select(i => new OrderModel(i))
+                                                 .Select(i => new OrderModel(i, dataBase))
                                                  .Where(i => i.StatusId == 1)
                                                  .Where(i => i.WorkerId == null)
                                                  .Where(i => i.CourierId == null)
@@ -156,7 +158,7 @@ namespace BLL.Services
         public List<OrderModel> GetUnacceptedByCourierOrders()
         {
             var orders = dataBase.OrderRepository.GetAll()
-                                                 .Select(i => new OrderModel(i))
+                                                 .Select(i => new OrderModel(i, dataBase))
                                                  .Where(i => i.StatusId == 3)
                                                  .Where(i => i.WorkerId != null)
                                                  .Where(i => i.CourierId == null)

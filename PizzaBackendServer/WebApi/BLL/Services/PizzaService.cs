@@ -26,7 +26,7 @@ namespace BLL.Services
         public List<PizzaModel> GetAllPizzas()
         {
             return dataBase.PizzaRepository.GetAll()
-                                           .Select(i => new PizzaModel(i))
+                                           .Select(i => new PizzaModel(i, dataBase))
                                            .Where(i => i.SizeId == 2)
                                            .Where(i => i.Prescence == true)
                                            .ToList();
@@ -35,7 +35,7 @@ namespace BLL.Services
         public List<PizzaModel> GetPizzasWithDescription(string description)
         {
             return dataBase.PizzaRepository.GetAll()
-                                           .Select(i => new PizzaModel(i))
+                                           .Select(i => new PizzaModel(i, dataBase))
                                            .Where(i => i.Description.Contains(description) == true)
                                            .Where(i => i.SizeId == 2).Where(i => i.Prescence == true)
                                            .ToList();
@@ -44,7 +44,7 @@ namespace BLL.Services
         public List<PizzaModel> GetPizzasByName(string name)
         {
             return dataBase.PizzaRepository.GetAll()
-                                           .Select(i => new PizzaModel(i))
+                                           .Select(i => new PizzaModel(i, dataBase))
                                            .Where(i => i.Name == name)
                                            .ToList();
         }

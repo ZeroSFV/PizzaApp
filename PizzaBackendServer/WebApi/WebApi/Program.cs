@@ -28,8 +28,8 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IBasketService, BasketService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
-builder.Services.AddDbContext<PizzaContext>(options =>
-    options.UseSqlServer(connectionString));
+//builder.Services.AddDbContext<PizzaContext>(options =>
+//    options.UseSqlServer(connectionString));
 
 // Add services to the container.
 
