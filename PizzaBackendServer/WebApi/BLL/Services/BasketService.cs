@@ -67,6 +67,7 @@ namespace BLL.Services
                 {
                     basket.Amount++;
                     basket.Price += pizza.Price;
+                    dataBase.BasketRepository.Update(basket);
                 }
                 else { dataBase.BasketRepository.Create(new Basket { Amount = 1, Price = pizza.Price, PizzaId = pizza.Id, UserId = user.Id, Pizza = pizza, User = user}); }
                 Save();

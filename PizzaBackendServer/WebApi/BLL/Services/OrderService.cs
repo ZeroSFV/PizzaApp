@@ -224,8 +224,9 @@ namespace BLL.Services
                     if (order != null)
                     {
                         order.OrderStrings.Add(line);
-                        dataBase.OrderRepository.Update(order);
                         dataBase.OrderStringRepository.Create(line);
+                        dataBase.OrderRepository.Update(order);
+                       // dataBase.OrderStringRepository.Create(line);
                         Save();
                     }
                     else

@@ -10,7 +10,6 @@ namespace BLL.Models
     public class MakeOrderModel
     {
         public int ClientId { get; set; }
-        public List<BasketModel> Baskets { get; set; }
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
         public string ClientName { get; set; }
@@ -18,10 +17,9 @@ namespace BLL.Models
         public decimal? Change { get; set; }
         public MakeOrderModel() { }
 
-        public MakeOrderModel(int clientId, List<BasketModel> baskets, string address, string phoneNumber, string clientName, string payingType, decimal? change)
+        public MakeOrderModel(int clientId,  string address, string phoneNumber, string clientName, string payingType, decimal? change)
         {
             ClientId = clientId;
-            Baskets = baskets;
             Address = address;
             PhoneNumber = phoneNumber;
             ClientName = clientName;

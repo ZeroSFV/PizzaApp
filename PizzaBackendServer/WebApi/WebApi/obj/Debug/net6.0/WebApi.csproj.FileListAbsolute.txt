@@ -130,3 +130,4 @@ E:\Diploma\PizzaBackendServer\WebApi\WebApi\bin\Debug\net6.0\MimeKit.dll
 E:\Diploma\PizzaBackendServer\WebApi\WebApi\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
 E:\Diploma\PizzaBackendServer\WebApi\WebApi\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
 E:\Diploma\PizzaBackendServer\WebApi\WebApi\bin\Debug\net6.0\Microsoft.DotNet.PlatformAbstractions.dll
+E:\Diploma\PizzaBackendServer\WebApi\WebApi\bin\Debug\net6.0\Options\SenderCredentials.json
