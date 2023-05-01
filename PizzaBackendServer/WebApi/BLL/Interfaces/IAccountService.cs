@@ -10,7 +10,7 @@ namespace BLL.Interfaces
     public interface IAccountService
     {
         bool CheckUserByEmail(string email);
-        void CreateUser(SignUpModel signUpModel);
+        Task CreateUser(SignUpModel signUpModel);
         UserModel GetUserByEmailAndPassword(string email, string password);
         void UpdateUser(UserModel userModel);
         bool ChangePasswordOfUser(ChangePasswordModel changePasswordModel);

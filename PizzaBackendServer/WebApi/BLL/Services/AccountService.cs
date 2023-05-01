@@ -35,7 +35,7 @@ namespace BLL.Services
             else return true;
         }
 
-        public void CreateUser(SignUpModel signUpModel)
+        public async Task CreateUser(SignUpModel signUpModel)
         {
             User user = new User
             {

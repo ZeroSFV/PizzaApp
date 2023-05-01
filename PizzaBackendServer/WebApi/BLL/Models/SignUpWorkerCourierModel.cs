@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BLL.Models
 {
-    public class SignUpModel
+    public class SignUpWorkerCourierModel
     {
         [Required]
         [Display(Name = "Email")]
@@ -19,6 +19,14 @@ namespace BLL.Models
         [Required]
         [Display(Name = "Phone")]
         public string Phone { get; set; }
+
+        [Required]
+        [Display(Name = "Passport")]
+        public string Passport { get; set; }
+
+        [Required]
+        [Display(Name = "Role")]
+        public string Role { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

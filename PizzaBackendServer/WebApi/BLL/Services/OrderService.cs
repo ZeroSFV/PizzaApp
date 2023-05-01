@@ -58,10 +58,10 @@ namespace BLL.Services
         public OrderModel GetActiveOrderByUserId(int userId)
         {
             var orderModel =  dataBase.OrderRepository.GetAll()
-                                               .Select(i => new OrderModel(i, dataBase))
-                                               .Where(i => i.ClientId == userId)
-                                               .Where(i => i.StatusId < 5)
-                                               .FirstOrDefault();
+                                                      .Select(i => new OrderModel(i, dataBase))
+                                                      .Where(i => i.ClientId == userId)
+                                                      .Where(i => i.StatusId < 5)
+                                                      .FirstOrDefault();
             return orderModel;
         }
 

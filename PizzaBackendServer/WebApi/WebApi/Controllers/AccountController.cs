@@ -36,8 +36,12 @@ namespace Dinner.Controllers
                     {
                         if (ModelState.IsValid)
                         {
-                            _iAccountService.CreateUser(user);
-                            return Ok("Новый пользователь добавлен!");
+                            await _iAccountService.CreateUser(user);
+                            var msg = new
+                            {
+                                message = "Регистрация прошла успешно! Ссылка с подтверждением отправлена по вашему адресу электронной почты!"
+                            };
+                            return Ok(msg);
                         }
                     }
                     else
@@ -90,9 +94,8 @@ namespace Dinner.Controllers
                 var refreshToken = TokenService.GenerateRefreshToken();
                 user.RefreshToken = refreshToken;
                 _iAccountService.UpdateUser(user);
-                return Ok(
-                    (token, refreshToken)
-                );
+                TokenModel tokenModel = new TokenModel(refreshToken, token);
+                return Ok(tokenModel);
             }
             else
             {

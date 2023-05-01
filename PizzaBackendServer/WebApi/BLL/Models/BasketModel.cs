@@ -24,7 +24,5 @@ namespace BLL.Models
             UserId = b.UserId;
             PizzaId = b.PizzaId;
         }
-
-     
     }
 }
