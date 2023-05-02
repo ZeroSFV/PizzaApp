@@ -29,6 +29,7 @@ namespace BLL.Services
             var userModel = dataBase.UserRepository.GetAll()
                                                    .Select(i => new UserModel(i))
                                                    .Where(i => i.Id == userId)
+                                                   .OrderBy(i => i.Name)
                                                    .FirstOrDefault();
             if (userModel != null)
             {
@@ -38,10 +39,21 @@ namespace BLL.Services
             else return null;
         }
 
+        public UserModel GetUserById(int id)
+        {
+            var user = dataBase.UserRepository.Get(id);
+            if (user != null)
+            {
+                return new UserModel(user);
+            }
+            else return null;
+        }
+
         public List<UserInfoModel> GetAllUsers()
         {
             var userModels = dataBase.UserRepository.GetAll()
                                                     .Select(i => new UserModel(i))
+                                                    .OrderBy(i => i.Name)
                                                     .ToList();
             if (userModels != null)
             {
@@ -60,6 +72,7 @@ namespace BLL.Services
             var userModels = dataBase.UserRepository.GetAll()
                                                     .Select(i => new UserModel(i))
                                                     .Where(i => i.IsApproved == false)
+                                                    .OrderBy(i => i.Name)
                                                     .ToList();
             if (userModels != null)
             {
@@ -78,6 +91,7 @@ namespace BLL.Services
             var userModels = dataBase.UserRepository.GetAll()
                                                     .Select(i => new UserModel(i))
                                                     .Where(i => i.Role == "worker")
+                                                    .OrderBy(i => i.Name)
                                                     .ToList();
             if (userModels != null)
             {
@@ -96,6 +110,7 @@ namespace BLL.Services
             var userModels = dataBase.UserRepository.GetAll()
                                                     .Select(i => new UserModel(i))
                                                     .Where(i => i.Role == "courier")
+                                                    .OrderBy (i => i.Name)
                                                     .ToList();
             if (userModels != null)
             {

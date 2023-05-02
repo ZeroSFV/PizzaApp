@@ -8,6 +8,7 @@ using BLL.Models;
 using BLL.Interfaces;
 using BLL;
 using Microsoft.AspNetCore.Authorization;
+using System.Net.Http.Headers;
 
 namespace WebApi.Controllers
 {
@@ -22,83 +23,76 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPizzas()
+        public IActionResult GetAllPizzas()
         {
-            if (ModelState.IsValid)
+            try
             {
                 List<PizzaModel> allPizzas = _iPizzaService.GetAllPizzas();
-                return new ObjectResult(allPizzas);   
+                if (allPizzas != null)
+                    return new ObjectResult(allPizzas);
+                else return BadRequest(new ErrorResponseModel { Status = 500, Description = "Список пицц получить не удалось!" });
             }
-            else
+            catch (Exception e) 
             {
-                var errorMsg = new
-                {
-                    message = "Во время получения пицц произошла ошибка",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = e.Message });
             }
         }
 
         [HttpGet("bydescription/{description}")]
-        public async Task<IActionResult> GetPizzasWithDescription(string description)
+        public IActionResult GetPizzasWithDescription(string description)
         {
-            if (ModelState.IsValid)
+            try
             {
                 List<PizzaModel> allPizzas = _iPizzaService.GetPizzasWithDescription(description);
-                return new ObjectResult(allPizzas);
+                if (allPizzas != null)
+                    return new ObjectResult(allPizzas);
+                else return BadRequest(new ErrorResponseModel { Status = 500, Description="Пицц с данным описанием не существует!" });
             }
-            else
+            catch (Exception e) 
             {
-                var errorMsg = new
-                {
-                    message = "Во время получения пицц произошла ошибка",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = e.Message });
             }
         }
 
         [HttpGet("byname/{name}")]
-        public async Task<IActionResult> GetPizzasWithName(string name)
+        public IActionResult GetPizzasWithName(string name)
         {
-            if (ModelState.IsValid)
+            try
             {
                 List<PizzaModel> Pizza = _iPizzaService.GetPizzasByName(name);
-                return new ObjectResult(Pizza);
+                if (Pizza != null)
+                    return new ObjectResult(Pizza);
+                else return BadRequest(new ErrorResponseModel { Status = 500, Description = "При получении пицц с таким именем произошла ошибка" });
             }
-            else
+            catch (Exception e)
             {
-                var errorMsg = new
-                {
-                    message = "Во время получения пицц произошла ошибка",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description=e.Message });
             }
         }
 
         [HttpPut("changePizza")]
-        public async Task<IActionResult> UpdatePizza([FromBody] PizzaChangeModel pizzaChangeModel)
+        public IActionResult UpdatePizza([FromBody] PizzaChangeModel pizzaChangeModel)
         {
             if (ModelState.IsValid)
             {
-                _iPizzaService.UpdatePizza(pizzaChangeModel);
-
-                var msg = new
+                try
                 {
-                    message = "Изменения пиццы внесены"
-                };
-                return Ok(msg);
+                    _iPizzaService.UpdatePizza(pizzaChangeModel);
+
+                    var msg = new
+                    {
+                        message = "Изменения пиццы внесены"
+                    };
+                    return Ok(msg);
+                }
+                catch 
+                {
+                    return BadRequest(new ErrorResponseModel { Status = 500, Description = "Изменить пиццу не получилось!" });
+                }
             }
             else
             {
-                var errorMsg = new
-                {
-                    message = "Неверные входные данные",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Неверные входные данные"});
             }
         }
     }

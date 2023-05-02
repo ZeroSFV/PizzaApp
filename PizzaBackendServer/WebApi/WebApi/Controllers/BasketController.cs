@@ -23,26 +23,23 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("userBaskets/{userId}")]
-        public async Task<IActionResult> GetUserBaskets(int userId)
+        public IActionResult GetUserBaskets(int userId)
         {
-            if (ModelState.IsValid)
-            {
+            try 
+            { 
                 List<BasketModel> allUserBaskets = _iBasketService.GetAllBasketsByUserId(userId);
-                return new ObjectResult(allUserBaskets);
+                if (allUserBaskets != null)
+                    return new ObjectResult(allUserBaskets);
+                else return BadRequest(new ErrorResponseModel { Status = 500, Description = "У данного пользователя пустая корзина!" });                
             }
-            else
+            catch (Exception e) 
             {
-                var errorMsg = new
-                {
-                    message = "Во время получения корзины пользователя произошла ошибка",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = e.Message });
             }
         }
 
         [HttpDelete("deleteBasket/{basketId}")]
-        public async Task<IActionResult> DeleteBasket(int basketId)
+        public IActionResult DeleteBasket(int basketId)
         {
             if (ModelState.IsValid)
             {
@@ -56,17 +53,12 @@ namespace WebApi.Controllers
             }
             else
             {
-                var errorMsg = new
-                {
-                    message = "Неверные входные данные",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Неверные входные данные" });
             }
         }
 
         [HttpPut("updateBasket")]
-        public async Task<IActionResult> updateBasket([FromBody] BasketModel basketModel)
+        public IActionResult updateBasket([FromBody] BasketModel basketModel)
         {
             if (ModelState.IsValid)
             {
@@ -79,17 +71,12 @@ namespace WebApi.Controllers
             }
             else
             {
-                var errorMsg = new
-                {
-                    message = "Неверные входные данные",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Неверные входные данные" });
             }
         }
 
         [HttpPost("createBasket")]
-        public async Task<IActionResult> CreateBasket([FromBody] CreateBasketModel createBasketModel)
+        public IActionResult CreateBasket([FromBody] CreateBasketModel createBasketModel)
         {
             if (ModelState.IsValid)
             {
@@ -102,12 +89,7 @@ namespace WebApi.Controllers
             }
             else
             {
-                var errorMsg = new
-                {
-                    message = "Неверные входные данные",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Неверные входные данные" });
             }
         }
     }

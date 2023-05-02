@@ -29,6 +29,7 @@ namespace BLL.Services
                                            .Select(i => new PizzaModel(i, dataBase))
                                            .Where(i => i.SizeId == 2)
                                            .Where(i => i.Prescence == true)
+                                           .OrderBy(i => i.Name)
                                            .ToList();
         }
 
@@ -38,6 +39,7 @@ namespace BLL.Services
                                            .Select(i => new PizzaModel(i, dataBase))
                                            .Where(i => i.Description.Contains(description) == true)
                                            .Where(i => i.SizeId == 2).Where(i => i.Prescence == true)
+                                           .OrderBy(i => i.Name)
                                            .ToList();
         }
 

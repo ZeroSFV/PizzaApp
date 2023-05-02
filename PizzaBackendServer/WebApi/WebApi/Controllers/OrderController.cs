@@ -23,178 +23,158 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllOrders()
+        public IActionResult GetAllOrders()
         {
-            if (ModelState.IsValid)
+            try
             {
                 List<OrderModel> allOrders = _iOrderService.GetAllOrders();
-                return new ObjectResult(allOrders);
-            }
-            else
-            {
-                var errorMsg = new
+                if (allOrders != null)
                 {
-                    message = "Во время получения всех заказов произошла ошибка",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                    return new ObjectResult(allOrders);
+                }
+                else return BadRequest(new ErrorResponseModel { Status = 500, Description = "Получить список заказов не удалось" });
+            }
+            catch (Exception e) 
+            {
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = e.Message });
             }
         }
 
         [HttpGet("userOrder/{userId}")]
-        public async Task<IActionResult> GetUserOrders(int userId)
+        public IActionResult GetUserOrders(int userId)
         {
-            if (ModelState.IsValid)
+            try
             {
                 List<OrderModel> userOrders = _iOrderService.GetOrdersOfUser(userId);
-                return new ObjectResult(userOrders);
-            }
-            else
-            {
-                var errorMsg = new
+                if (userOrders != null)
                 {
-                    message = "Во время получения заказов пользователя произошла ошибка",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                    return new ObjectResult(userOrders);
+                }
+                else return BadRequest(new ErrorResponseModel { Status = 500, Description = "У данного клиента нет заказов" });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new ErrorResponseModel { Status=500, Description = e.Message });
             }
         }
 
         [HttpGet("workerOrder/{workerId}")]
-        public async Task<IActionResult> GetWorkerOrders(int workerId)
+        public IActionResult GetWorkerOrders(int workerId)
         {
-            if (ModelState.IsValid)
+            try
             {
                 List<OrderModel> workerOrders = _iOrderService.GetOrdersOfWorker(workerId);
-                return new ObjectResult(workerOrders);
-            }
-            else
-            {
-                var errorMsg = new
+                if (workerOrders != null)
                 {
-                    message = "Во время получения заказов работника произошла ошибка",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                    return new ObjectResult(workerOrders);
+                }
+                else return BadRequest(new ErrorResponseModel { Status = 500, Description = "Заказов с участием данного работника не существует" }); 
+                
+            }
+            catch (Exception e)
+            { 
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = e.Message });
             }
         }
 
         [HttpGet("courierOrder/{courierId}")]
-        public async Task<IActionResult> GetCourierOrders(int courierId)
+        public IActionResult GetCourierOrders(int courierId)
         {
-            if (ModelState.IsValid)
+            try
             {
                 List<OrderModel> courierOrders = _iOrderService.GetOrdersOfCourier(courierId);
-                return new ObjectResult(courierOrders);
+                if (courierOrders != null)
+                    return new ObjectResult(courierOrders);
+                else return BadRequest(new ErrorResponseModel { Status = 500, Description = "Заказов с участием данного курьера не существует" });
             }
-            else
+            catch (Exception e)
             {
-                var errorMsg = new
-                {
-                    message = "Во время получения заказов работника произошла ошибка",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = e.Message });
             }
         }
 
         [HttpGet("userActiveOrder/{userId}")]
-        public async Task<IActionResult> GetUserActiveOrder(int userId)
+        public IActionResult GetUserActiveOrder(int userId)
         {
-            if (ModelState.IsValid)
-            {
+            try
+            { 
                 OrderModel userActiveOrder = _iOrderService.GetActiveOrderByUserId(userId);
-                return new ObjectResult(userActiveOrder);
+                if (userActiveOrder != null)
+                    return new ObjectResult(userActiveOrder);
+                else return BadRequest(new ErrorResponseModel { Status = 500, Description = "У данного клиента нет активного заказа в данный момент!" });
             }
-            else
+            catch (Exception e)
             {
-                var errorMsg = new
-                {
-                    message = "Во время получения активного заказа пользователя произошла ошибка",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = e.Message });
             }
         }
 
         [HttpGet("workerActiveOrder/{workerId}")]
-        public async Task<IActionResult> GetWorkerActiveOrder(int workerId)
+        public IActionResult GetWorkerActiveOrder(int workerId)
         {
-            if (ModelState.IsValid)
-            {
+            try
+            { 
                 OrderModel workerActiveOrder = _iOrderService.GetActiveOrderOfWorker(workerId);
-                return new ObjectResult(workerActiveOrder);
+                if (workerActiveOrder != null)
+                    return new ObjectResult(workerActiveOrder);
+                else return BadRequest(new ErrorResponseModel { Status = 500, Description = "Активных заказов у данного работника пиццерии нет!" });
             }
-            else
+            catch (Exception e)
             {
-                var errorMsg = new
-                {
-                    message = "Во время получения активного заказа работника произошла ошибка",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = e.Message });
             }
         }
 
         [HttpGet("courierActiveOrder/{courierId}")]
-        public async Task<IActionResult> GetCourierActiveOrders(int courierId)
+        public IActionResult GetCourierActiveOrders(int courierId)
         {
-            if (ModelState.IsValid)
+            try
             {
                 List<OrderModel> courierActiveOrders = _iOrderService.GetActiveOrdersOfCourier(courierId);
-                return new ObjectResult(courierActiveOrders);
+                if (courierActiveOrders != null)
+                    return new ObjectResult(courierActiveOrders);
+                else return BadRequest(new ErrorResponseModel { Status = 500, Description = "Активных заказов у данного курьера нет!" });
             }
-            else
+            catch (Exception e) 
             {
-                var errorMsg = new
-                {
-                    message = "Во время получения активного заказов курьера произошла ошибка",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = e.Message });
             }
         }
 
         [HttpGet("unacceptedWorkerOrders")]
-        public async Task<IActionResult> GetUnacceptedByWorkerOrders()
+        public IActionResult GetUnacceptedByWorkerOrders()
         {
-            if (ModelState.IsValid)
+            try
             {
                 List<OrderModel> workerUnacceptedOrders = _iOrderService.GetUnacceptedByWorkerOrders();
-                return new ObjectResult(workerUnacceptedOrders);
+                if (workerUnacceptedOrders != null)
+                    return new ObjectResult(workerUnacceptedOrders);
+                else return BadRequest(new ErrorResponseModel { Status = 500, Description = "Заказов со статусом 'Оформлен' нет в данный момент!"});
             }
-            else
+            catch (Exception e)
             {
-                var errorMsg = new
-                {
-                    message = "Во время получения непринятых заказов работником произошла ошибка",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = e.Message });
             }
         }
 
         [HttpGet("unacceptedCourierOrders")]
-        public async Task<IActionResult> GetUnacceptedByCourierOrders()
+        public IActionResult GetUnacceptedByCourierOrders()
         {
-            if (ModelState.IsValid)
+            try 
             {
                 List<OrderModel> courierUnacceptedOrders = _iOrderService.GetUnacceptedByCourierOrders();
-                return new ObjectResult(courierUnacceptedOrders);
+                if (courierUnacceptedOrders != null)
+                    return new ObjectResult(courierUnacceptedOrders);
+                else return BadRequest(new ErrorResponseModel { Status = 500, Description = "Заказов со статусом 'Комплектуется' нет в данный момент!" });
             }
-            else
+            catch (Exception e)
             {
-                var errorMsg = new
-                {
-                    message = "Во время получения непринятых заказов курьером произошла ошибка",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = e.Message });
             }
         }
 
         [HttpPut("cancelOrder")]
-        public async Task<IActionResult> CancelOrder([FromBody] int orderId)
+        public IActionResult CancelOrder([FromBody] int orderId)
         {
             if (ModelState.IsValid)
             {
@@ -209,27 +189,17 @@ namespace WebApi.Controllers
                 }
                 else
                 {
-                    var errorMsg = new
-                    {
-                        message = "Данный заказ уже нельзя отменить",
-                        error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                    };
-                    return BadRequest(errorMsg);
+                    return BadRequest(new ErrorResponseModel { Status = 500, Description = "Данный заказ уже нельзя отменить!" });
                 }
             }
             else
             {
-                var errorMsg = new
-                {
-                    message = "Неверные входные данные",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Неверные входные данные!" });
             }
         }
 
         [HttpPut("toNextStatus")]
-        public async Task<IActionResult> ToNextStatus([FromBody] int orderId)
+        public IActionResult ToNextStatus([FromBody] int orderId)
         {
             if (ModelState.IsValid)
             {
@@ -242,17 +212,12 @@ namespace WebApi.Controllers
             }
             else
             {
-                var errorMsg = new
-                {
-                    message = "Неверные входные данные",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Неверные входные данные!" });
             }
         }
 
         [HttpPut("acceptOrderByWorker")]
-        public async Task<IActionResult> AcceptOrderByWorker([FromBody] AcceptOrderModel acceptOrderWorker)
+        public IActionResult AcceptOrderByWorker([FromBody] AcceptOrderModel acceptOrderWorker)
         {
             if (ModelState.IsValid)
             {
@@ -265,17 +230,12 @@ namespace WebApi.Controllers
             }
             else
             {
-                var errorMsg = new
-                {
-                    message = "Неверные входные данные",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Неверные входные данные!" });
             }
         }
 
         [HttpPut("acceptOrderByCourier")]
-        public async Task<IActionResult> AcceptOrderByCourier([FromBody] AcceptOrderModel acceptOrderCourier)
+        public IActionResult AcceptOrderByCourier([FromBody] AcceptOrderModel acceptOrderCourier)
         {
             if (ModelState.IsValid)
             {
@@ -288,17 +248,12 @@ namespace WebApi.Controllers
             }
             else
             {
-                var errorMsg = new
-                {
-                    message = "Неверные входные данные",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Неверные входные данные!" });
             }
         }
 
         [HttpPost("makeOrder")]
-        public async Task<IActionResult> MakeOrder([FromBody] MakeOrderModel makeOrder)
+        public IActionResult MakeOrder([FromBody] MakeOrderModel makeOrder)
         {
             if (ModelState.IsValid)
             {
@@ -311,12 +266,7 @@ namespace WebApi.Controllers
             }
             else
             {
-                var errorMsg = new
-                {
-                    message = "Неверные входные данные",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Неверные входные данные!" });
             }
         }
     }

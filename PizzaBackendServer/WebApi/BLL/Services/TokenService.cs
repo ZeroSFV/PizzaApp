@@ -10,7 +10,7 @@ using System.Security.Claims;
 
 namespace BLL.Services
 {
-    public class TokenService
+    public class TokenService 
     {
         public static string GenerateRefreshToken()
         {

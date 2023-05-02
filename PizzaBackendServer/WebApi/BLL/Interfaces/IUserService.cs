@@ -17,5 +17,6 @@ namespace BLL.Interfaces
         List<UserInfoModel> GetAllCouriers();
         List<UserInfoModel> GetAllWorkers();
         Task CreateUser(SignUpWorkerCourierModel signUpModel);
+        UserModel GetUserById(int id);
     }
 }

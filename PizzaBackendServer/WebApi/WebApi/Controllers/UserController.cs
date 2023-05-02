@@ -25,7 +25,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUserData(string token)
+        public IActionResult GetUserData(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwt = tokenHandler.ReadJwtToken(token);
@@ -37,12 +37,7 @@ namespace WebApi.Controllers
             }
             else
             {
-                var errorMsg = new
-                {
-                    message = "Не удалось найти пользователя по данному токену",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Не удалось найти пользователя по заданому токену" });
             }
         }
 

@@ -34,6 +34,26 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 
 // Add services to the container.
 
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = AuthOptions.ISSUER,
+
+            ValidateAudience = true,
+            ValidAudience = AuthOptions.AUDIENCE,
+            ValidateLifetime = true,
+
+            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+            ValidateIssuerSigningKey = true,
+        };
+    });
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -73,6 +93,7 @@ app.UseRouting();
 app.UseStaticFiles();
 app.UseCors("AllowAllHeaders");
 
+app.UseAuthorization();
 app.UseAuthorization();
 
 app.MapControllers();

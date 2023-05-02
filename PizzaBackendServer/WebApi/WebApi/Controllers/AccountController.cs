@@ -26,7 +26,7 @@ namespace Dinner.Controllers
 
         [HttpPost]
         [Route("signUp")]
-        public async Task<IActionResult> SignUp([FromBody] SignUpModel user)
+        public IActionResult SignUp([FromBody] SignUpModel user)
         {
             if (ModelState.IsValid)
             {
@@ -36,7 +36,7 @@ namespace Dinner.Controllers
                     {
                         if (ModelState.IsValid)
                         {
-                            await _iAccountService.CreateUser(user);
+                            _iAccountService.CreateUser(user);
                             var msg = new
                             {
                                 message = "Регистрация прошла успешно! Ссылка с подтверждением отправлена по вашему адресу электронной почты!"
@@ -46,39 +46,24 @@ namespace Dinner.Controllers
                     }
                     else
                     {
-                        var errorMsg = new
-                        {
-                            message = "Длина пароля должна быть от 6 до 30 символов!",
-                            error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                        };
-                        return BadRequest(errorMsg);
+                        return BadRequest(new ErrorResponseModel { Status = 500, Description = "Длина пароля должна быть от 6 до 30 символов!" });
                     }
                 }
                 else
                 {
-                    var errorMsg = new
-                    {
-                        message = "Аккаунт с данной электронной почтой уже существует!",
-                        error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                    };
-                    return BadRequest(errorMsg);
+                    return BadRequest(new ErrorResponseModel { Status = 500, Description = "Аккаунт с данной электронной почтой уже существует!" });
                 }
-                return BadRequest("Не удалось добавить пользователя");
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Не удалось добавить пользователя" });
             }
             else
             {
-                var errorMsg = new
-                {
-                    message = "Не удалось добавить пользователя",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Не удалось добавить пользователя" });
             }
         }
 
         [HttpPost]
         [Route("signIn")]
-        public async Task<IActionResult> SignIn([FromBody] SignInModel model)
+        public IActionResult SignIn([FromBody] SignInModel model)
         {
             UserModel AuthenticateUser(string email, string password)
             {
@@ -99,33 +84,28 @@ namespace Dinner.Controllers
             }
             else
             {
-                return Unauthorized();
+                return Unauthorized(new ErrorResponseModel { Status = 400, Description = "Неправильный пароль или электронная почта" });
             }
         }
 
         [HttpPut]
         [Route("resetpassword")]
-        public async Task<IActionResult> ResetPassword([FromBody] string email)
+        public IActionResult ResetPassword([FromBody] string email)
         {
             if (_iAccountService.CheckUserByEmail(email) == true)
             {
-                await _iAccountService.ResetPasswordOfUser(email);
+                _iAccountService.ResetPasswordOfUser(email);
                 return Ok("Новый пароль отправлен на электронную почту!");
             }
             else
             {
-                var errorMsg = new
-                {
-                    message = "Данного пользователя не существует!",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Данного пользователя не существует" });
             }
         }
 
         [HttpPut]
         [Route("changepassword")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel changePasswordModel)
+        public IActionResult ChangePassword([FromBody] ChangePasswordModel changePasswordModel)
         {
             if (changePasswordModel.NewPassword.Length <= 30 && changePasswordModel.NewPassword.Length >= 6)
             {
@@ -134,24 +114,13 @@ namespace Dinner.Controllers
                     return Ok("Ваш пароль изменён!");
                 else
                 {
-                    var errorMsg = new
-                    {
-                        message = "Старый пароль был введен неправильно!",
-                        error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                    };
-                    return BadRequest(errorMsg);
+                    return BadRequest(new ErrorResponseModel { Status = 500, Description = "Старый пароль введён не правильно!" });
                 }
             }
             else
             {
-                var errorMsg = new
-                {
-                    message = "Длина пароля должна быть больше 5 и меньше 31 символа",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Длина пароля должна быть больше 5 и меньше 31 символа" });
             }
-
         }
 
     }

@@ -28,6 +28,7 @@ namespace BLL.Services
         {
             return dataBase.OrderRepository.GetAll()
                                            .Select(i => new OrderModel(i, dataBase))
+                                           .OrderBy(i => i.CreationTime)
                                            .ToList();
         }
 
@@ -36,6 +37,7 @@ namespace BLL.Services
             return dataBase.OrderRepository.GetAll()
                                            .Select(i => new OrderModel(i, dataBase))
                                            .Where(i => i.ClientId == userId)
+                                           .OrderBy(i => i.CreationTime)
                                            .ToList();
         }
 
@@ -44,6 +46,7 @@ namespace BLL.Services
             return dataBase.OrderRepository.GetAll()
                                            .Select(i => new OrderModel(i, dataBase))
                                            .Where(i => i.WorkerId == workerId)
+                                           .OrderBy (i => i.CreationTime)
                                            .ToList();
         }
 
@@ -52,6 +55,7 @@ namespace BLL.Services
             return dataBase.OrderRepository.GetAll()
                                            .Select(i => new OrderModel(i, dataBase))
                                            .Where(i => i.CourierId == courierId)
+                                           .OrderBy(i => i.CreationTime)
                                            .ToList();
         }
 
@@ -140,6 +144,7 @@ namespace BLL.Services
                                            .Select(i => new OrderModel(i, dataBase))
                                            .Where(i => i.CourierId == courierId)
                                            .Where(i => i.StatusId == 4)
+                                           .OrderBy(i => i.CreationTime)
                                            .ToList();
             return orderModel;
         }
@@ -151,6 +156,7 @@ namespace BLL.Services
                                                  .Where(i => i.StatusId == 1)
                                                  .Where(i => i.WorkerId == null)
                                                  .Where(i => i.CourierId == null)
+                                                 .OrderBy (i => i.CreationTime)
                                                  .ToList();
             return orders;
         }
@@ -162,6 +168,7 @@ namespace BLL.Services
                                                  .Where(i => i.StatusId == 3)
                                                  .Where(i => i.WorkerId != null)
                                                  .Where(i => i.CourierId == null)
+                                                 .OrderBy(i => i.CreationTime)
                                                  .ToList();
             return orders;
         }

@@ -29,9 +29,9 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public IActionResult GetAllUsers()
         {
-            if (ModelState.IsValid)
+            try
             {
                 List<UserInfoModel> allUsers = _iUserService.GetAllUsers();
                 if (allUsers != null)
@@ -40,29 +40,19 @@ namespace WebApi.Controllers
                 }
                 else
                 {
-                    var errorMsg = new
-                    {
-                        message = "Список пользователей получить не удалось!",
-                        error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                    };
-                    return BadRequest(errorMsg);
+                    return BadRequest(new ErrorResponseModel { Status = 500, Description = "Список пользователей получить не удалось!"});
                 }
             }
-            else
+            catch (Exception e) 
             {
-                var errorMsg = new
-                {
-                    message = "Неверные входные данные",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = e.Message });
             }
         }
 
         [HttpGet("getUnapprovedUsers")]
-        public async Task<IActionResult> GetAllUnapprovedUsers()
+        public IActionResult GetAllUnapprovedUsers()
         {
-            if (ModelState.IsValid)
+            try
             {
                 List<UserInfoModel> allUnapprovedUsers = _iUserService.GetAllUnapprovedUser();
                 if (allUnapprovedUsers != null)
@@ -71,29 +61,19 @@ namespace WebApi.Controllers
                 }
                 else
                 {
-                    var errorMsg = new
-                    {
-                        message = "Список неподтвержденных пользователей получить не удалось!",
-                        error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                    };
-                    return BadRequest(errorMsg);
+                    return BadRequest(new ErrorResponseModel { Status = 500, Description = "Список неподтвержденных пользователей получить не удалось!" });
                 }
             }
-            else
+            catch (Exception e) 
             {
-                var errorMsg = new
-                {
-                    message = "Неверные входные данные",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = e.Message });
             }
         }
 
         [HttpGet("getWorkers")]
-        public async Task<IActionResult> GetAllWokrers()
+        public IActionResult GetAllWokrers()
         {
-            if (ModelState.IsValid)
+            try
             {
                 List<UserInfoModel> allWorkers = _iUserService.GetAllWorkers();
                 if (allWorkers != null)
@@ -102,29 +82,19 @@ namespace WebApi.Controllers
                 }
                 else
                 {
-                    var errorMsg = new
-                    {
-                        message = "Список работников получить не удалось!",
-                        error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                    };
-                    return BadRequest(errorMsg);
+                    return BadRequest(new ErrorResponseModel { Status = 500, Description = "Список работников получить не удалось!" });
                 }
             }
-            else
+            catch (Exception e)
             {
-                var errorMsg = new
-                {
-                    message = "Неверные входные данные",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = e.Message });
             }
         }
 
         [HttpGet("getCouriers")]
-        public async Task<IActionResult> GetAllCouriers()
+        public IActionResult GetAllCouriers()
         {
-            if (ModelState.IsValid)
+            try
             {
                 List<UserInfoModel> allCouriers = _iUserService.GetAllCouriers();
                 if (allCouriers != null)
@@ -133,28 +103,18 @@ namespace WebApi.Controllers
                 }
                 else
                 {
-                    var errorMsg = new
-                    {
-                        message = "Список курьеров получить не удалось!",
-                        error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                    };
-                    return BadRequest(errorMsg);
+                    return BadRequest(new ErrorResponseModel { Status = 500, Description = "Список курьеров получить не удалось!" });
                 }
             }
-            else
+            catch(Exception e) 
             {
-                var errorMsg = new
-                {
-                    message = "Неверные входные данные",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = e.Message });
             }
         }
 
         [HttpPost]
         [Route("signUpNewWorkerCourier")]
-        public async Task<IActionResult> SignUp([FromBody] SignUpWorkerCourierModel user)
+        public IActionResult SignUp([FromBody] SignUpWorkerCourierModel user)
         {
             if (ModelState.IsValid)
             {
@@ -164,56 +124,32 @@ namespace WebApi.Controllers
                     {
                         if (user.Password.Length <= 30 && user.Password.Length >= 6)
                         {
-                            if (ModelState.IsValid)
-                            {
-                                await _iUserService.CreateUser(user);
-                                return Ok("Новый пользователь добавлен!");
-                            }
+                            _iUserService.CreateUser(user);
+                            return Ok("Новый пользователь добавлен!"); 
                         }
                         else
                         {
-                            var errorMsg = new
-                            {
-                                message = "Длина пароля должна быть от 6 до 30 символов!",
-                                error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                            };
-                            return BadRequest(errorMsg);
+                            return BadRequest(new ErrorResponseModel { Status = 500, Description = "Длина пароля должна быть от 6 до 30 символов!" });
                         }
                     }
                     else
                     {
-                        var errorMsg = new
-                        {
-                            message = "Аккаунт с данной электронной почтой уже существует!",
-                            error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                        };
-                        return BadRequest(errorMsg);
+                        return BadRequest(new ErrorResponseModel { Status = 500, Description = "Аккаунт с данной электронной почтой уже существует!" });
                     }
-                    return BadRequest("Не удалось добавить пользователя");
                 }
                 else
                 {
-                    var errorMsg = new
-                    {
-                        message = "Вы должны создать либо курьера, либо работника!",
-                        error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                    };
-                    return BadRequest(errorMsg);
+                    return BadRequest(new ErrorResponseModel { Status = 500, Description = "Вы должны создать либо курьера, либо работника!" });
                 }
             }
             else
             {
-                var errorMsg = new
-                {
-                    message = "Не удалось добавить пользователя",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Не удалось добавить пользователя" });
             }
         }
 
         [HttpPut("approveUser/{userId}")]
-        public async Task<IActionResult> ApproveUser(int userId)
+        public IActionResult ApproveUser([FromBody]int userId)
         {
             if (ModelState.IsValid)
             {
@@ -227,17 +163,12 @@ namespace WebApi.Controllers
             }
             else
             {
-                var errorMsg = new
-                {
-                    message = "Неверные входные данные",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-                return BadRequest(errorMsg);
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Неверные входные данные" });
             }
         }
 
         [HttpDelete("deleleUser/{userId}")]
-        public async Task<IActionResult> DeleteUser(int userId)
+        public IActionResult DeleteUser([FromBody]int userId)
         {
             if (ModelState.IsValid)
             {
@@ -256,27 +187,17 @@ namespace WebApi.Controllers
                     }
                     else
                     {
-                        var errorMsg = new
-                        {
-                            message = "Нельзя удалить администратора",
-                            error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                        };
-                        return BadRequest(errorMsg);
+                        return BadRequest(new ErrorResponseModel { Status = 500, Description = "Нельзя удалить администратора" });
                     }
                 }
                 else
                 {
-                    var errorMsg = new
-                    {
-                        message = "Такого пользователя нет!",
-                        error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                    };
-                    return BadRequest(errorMsg);
+                    return BadRequest(new ErrorResponseModel { Status = 500, Description = "Такого пользователя нет!" });
                 }
             }
             else
             {
-                return BadRequest();
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Неверные входные данные" });
             }
         }
     }

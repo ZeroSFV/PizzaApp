@@ -29,6 +29,7 @@ namespace BLL.Services
             return dataBase.BasketRepository.GetAll()
                                             .Select(i => new BasketModel(i))
                                             .Where(i => i.UserId == userId)
+                                            .OrderBy(i => i.Price)
                                             .ToList();
         }
 
