@@ -28,7 +28,7 @@ namespace WebApi.Controllers
             try
             {
                 List<PizzaModel> allPizzas = _iPizzaService.GetAllPizzas();
-                if (allPizzas != null)
+                if (allPizzas.Count != 0)
                     return new ObjectResult(allPizzas);
                 else return BadRequest(new ErrorResponseModel { Status = 500, Description = "Список пицц получить не удалось!" });
             }
@@ -44,7 +44,7 @@ namespace WebApi.Controllers
             try
             {
                 List<PizzaModel> allPizzas = _iPizzaService.GetPizzasWithDescription(description);
-                if (allPizzas != null)
+                if (allPizzas.Count != 0)
                     return new ObjectResult(allPizzas);
                 else return BadRequest(new ErrorResponseModel { Status = 500, Description="Пицц с данным описанием не существует!" });
             }
@@ -60,7 +60,7 @@ namespace WebApi.Controllers
             try
             {
                 List<PizzaModel> Pizza = _iPizzaService.GetPizzasByName(name);
-                if (Pizza != null)
+                if (Pizza.Count != 0)
                     return new ObjectResult(Pizza);
                 else return BadRequest(new ErrorResponseModel { Status = 500, Description = "При получении пицц с таким именем произошла ошибка" });
             }

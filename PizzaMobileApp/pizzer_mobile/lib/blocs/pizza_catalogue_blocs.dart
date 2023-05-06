@@ -18,5 +18,38 @@ class PizzaCatalogueBloc
         emit(PizzaCatalogueErrorState(e.toString()));
       }
     });
+
+    on<LoadChosenPizzaEvent>(((event, emit) async {
+      emit(ChosenPizzaLoadingState(event.name));
+      try {
+        final pizzasWithName =
+            await _pizzaRepository.getBigPizzaByName(event.name);
+        emit(ChosenBigPizzaLoadedState(pizzasWithName));
+      } catch (e) {
+        emit(ChosenPizzaErrorState(e.toString()));
+      }
+    }));
+
+    on<LoadChosenMediumPizzaEvent>(((event, emit) async {
+      // emit(ChosenPizzaLoadingState(event.name));
+      try {
+        final pizzasWithName =
+            await _pizzaRepository.getMediumPizzaByName(event.name);
+        emit(ChosenMediumPizzaLoadedState(pizzasWithName));
+      } catch (e) {
+        emit(ChosenPizzaErrorState(e.toString()));
+      }
+    }));
+
+    on<LoadChosenBigPizzaEvent>(((event, emit) async {
+      // emit(ChosenPizzaLoadingState(event.name));
+      try {
+        final pizzasWithName =
+            await _pizzaRepository.getBigPizzaByName(event.name);
+        emit(ChosenBigPizzaLoadedState(pizzasWithName));
+      } catch (e) {
+        emit(ChosenPizzaErrorState(e.toString()));
+      }
+    }));
   }
 }
