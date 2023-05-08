@@ -14,10 +14,11 @@ namespace BLL.Models
         public string PhoneNumber { get; set; }
         public string ClientName { get; set; }
         public string PayingType { get; set; }
+        public DateTime? PredictedTime { get; set; }
         public decimal? Change { get; set; }
         public MakeOrderModel() { }
 
-        public MakeOrderModel(int clientId,  string address, string phoneNumber, string clientName, string payingType, decimal? change)
+        public MakeOrderModel(int clientId,  string address, string phoneNumber, string clientName, string payingType, decimal? change, DateTime? predictedTime)
         {
             ClientId = clientId;
             Address = address;
@@ -25,6 +26,7 @@ namespace BLL.Models
             ClientName = clientName;
             PayingType = payingType;
             Change = change;
+            PredictedTime = predictedTime;
         }
     }
 }

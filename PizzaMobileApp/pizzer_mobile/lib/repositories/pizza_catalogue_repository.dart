@@ -16,6 +16,19 @@ class PizzaRepository {
     }
   }
 
+  // Future<PizzaModel> getPizzaById(int? id) async {
+  //   Response response = await get(Uri.parse(pizzaUrlGetAll));
+
+  //   if (response.statusCode == 200) {
+  //     final List result = jsonDecode(response.body);
+  //     return result
+  //         .map((e) => PizzaModel.fromJson(e))
+  //         .firstWhere((element) => element.id == id);
+  //   } else {
+  //     throw Exception(response.reasonPhrase);
+  //   }
+  // }
+
   Future<PizzaModel> getBigPizzaByName(String? name) async {
     Response response =
         await get(Uri.parse(pizzaUrlGetAll + '/byname/' + name.toString()));

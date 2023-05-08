@@ -14,6 +14,7 @@ namespace BLL.Models
         public int Id { get; set; }
         public DateTime CreationTime { get; set; }
         public DateTime? FinishedTime { get; set; }
+        public DateTime? PredictedTime { get; set; }
         public decimal Price { get; set; }
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
@@ -34,6 +35,7 @@ namespace BLL.Models
             Id = o.Id;
             CreationTime = o.CreationTime;
             FinishedTime = o.FinishedTime;
+            PredictedTime = o.PredictedTime;
             Price = o.Price;
             Address = o.Address;
             PhoneNumber = o.PhoneNumber;

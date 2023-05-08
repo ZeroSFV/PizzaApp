@@ -28,9 +28,9 @@ namespace WebApi.Controllers
             try 
             { 
                 List<BasketModel> allUserBaskets = _iBasketService.GetAllBasketsByUserId(userId);
-                if (allUserBaskets != null)
+                
                     return new ObjectResult(allUserBaskets);
-                else return BadRequest(new ErrorResponseModel { Status = 500, Description = "У данного пользователя пустая корзина!" });                
+               // else return BadRequest(new ErrorResponseModel { Status = 500, Description = "У данного пользователя пустая корзина!" });                
             }
             catch (Exception e) 
             {

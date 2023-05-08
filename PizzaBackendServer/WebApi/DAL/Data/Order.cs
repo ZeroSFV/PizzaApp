@@ -17,6 +17,7 @@ namespace DAL.Data
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public DateTime CreationTime { get; set; }
+        public DateTime? PredictedTime { get; set; }
         public DateTime? FinishedTime { get; set; }
         public decimal Price { get; set; }
         public string Address { get; set; }

@@ -18,6 +18,8 @@ namespace DAL.Data.Configuration
 
             builder.Property(e => e.CreationTime).HasColumnType("datetime");
 
+            builder.Property(e => e.PredictedTime).HasColumnType("datetime");
+
             builder.Property(e => e.FinishedTime).HasColumnType("datetime");
 
             builder.Property(e => e.Address).HasMaxLength(70);
@@ -65,6 +67,7 @@ namespace DAL.Data.Configuration
                 {
                     Id = 1,
                     CreationTime = new DateTime(2022, 04, 24, 18, 0, 0),
+                    PredictedTime = new DateTime(2022, 04, 24, 19, 0, 0),
                     FinishedTime = new DateTime(2022, 04, 24, 18, 30, 0),
                     Price = 630,
                     Address = "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1",
@@ -81,6 +84,7 @@ namespace DAL.Data.Configuration
                 {
                     Id = 2,
                     CreationTime = new DateTime(2022, 04, 24, 17, 0, 0),
+                    PredictedTime = new DateTime(2022, 04, 24, 20, 0, 0),
                     Price = 630,
                     Address = "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1",
                     PhoneNumber = "+79106991174",
@@ -93,6 +97,7 @@ namespace DAL.Data.Configuration
                 {
                     Id = 3,
                     CreationTime = new DateTime(2022, 04, 24, 14, 0, 0),
+                    PredictedTime = new DateTime(2022, 04, 24, 15, 0, 0),
                     Price = 630,
                     Address = "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1",
                     PhoneNumber = "+79106991174",
@@ -106,6 +111,7 @@ namespace DAL.Data.Configuration
                 {
                     Id = 4,
                     CreationTime = new DateTime(2022, 04, 24, 18, 0, 0),
+                    PredictedTime = new DateTime(2022, 04, 24, 19, 0, 0),
                     Price = 630,
                     Address = "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1",
                     PhoneNumber = "+79106991174",

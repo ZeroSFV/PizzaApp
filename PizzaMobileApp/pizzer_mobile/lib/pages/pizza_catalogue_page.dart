@@ -1,8 +1,8 @@
-import 'package:pizzer_mobile/blocs/pizza_catalogue_events.dart';
-import 'package:pizzer_mobile/blocs/pizza_catalogue_states.dart';
+import 'package:pizzer_mobile/blocs/pizza_catalogue/pizza_catalogue_events.dart';
+import 'package:pizzer_mobile/blocs/pizza_catalogue/pizza_catalogue_states.dart';
 import 'package:pizzer_mobile/repositories/pizza_catalogue_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pizzer_mobile/blocs/pizza_catalogue_blocs.dart';
+import 'package:pizzer_mobile/blocs/pizza_catalogue/pizza_catalogue_blocs.dart';
 import 'package:pizzer_mobile/models/pizza_model.dart';
 import 'package:flutter/material.dart';
 
@@ -19,14 +19,6 @@ class PizzaCataloguePage extends StatelessWidget {
         ),
       ],
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Pizzer',
-            style: TextStyle(fontSize: 25, fontFamily: 'GrandHotel'),
-          ),
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.red,
-        ),
         body: blocBody(),
       ),
     );
@@ -41,7 +33,9 @@ class PizzaCataloguePage extends StatelessWidget {
         builder: (context, state) {
           if (state is PizzaCatalogueLoadingState) {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Colors.red,
+              ),
             );
           }
           if (state is PizzaCatalogueLoadedState) {
@@ -54,7 +48,9 @@ class PizzaCataloguePage extends StatelessWidget {
           }
           if (state is ChosenPizzaLoadingState) {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Colors.red,
+              ),
             );
           }
           if (state is ChosenBigPizzaLoadedState) {

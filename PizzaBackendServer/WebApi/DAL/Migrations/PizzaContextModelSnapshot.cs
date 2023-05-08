@@ -102,6 +102,9 @@ namespace DAL.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<DateTime?>("PredictedTime")
+                        .HasColumnType("datetime");
+
                     b.Property<decimal>("Price")
                         .HasPrecision(8, 2)
                         .HasColumnType("decimal(8,2)");
@@ -137,6 +140,7 @@ namespace DAL.Migrations
                             FinishedTime = new DateTime(2022, 4, 24, 18, 30, 0, 0, DateTimeKind.Unspecified),
                             PayingType = "Наличными",
                             PhoneNumber = "+79106991174",
+                            PredictedTime = new DateTime(2022, 4, 24, 19, 0, 0, 0, DateTimeKind.Unspecified),
                             Price = 630m,
                             StatusId = 5,
                             WorkerId = 3
@@ -150,6 +154,7 @@ namespace DAL.Migrations
                             CreationTime = new DateTime(2022, 4, 24, 17, 0, 0, 0, DateTimeKind.Unspecified),
                             PayingType = "Картой",
                             PhoneNumber = "+79106991174",
+                            PredictedTime = new DateTime(2022, 4, 24, 20, 0, 0, 0, DateTimeKind.Unspecified),
                             Price = 630m,
                             StatusId = 1
                         },
@@ -162,6 +167,7 @@ namespace DAL.Migrations
                             CreationTime = new DateTime(2022, 4, 24, 14, 0, 0, 0, DateTimeKind.Unspecified),
                             PayingType = "Картой",
                             PhoneNumber = "+79106991174",
+                            PredictedTime = new DateTime(2022, 4, 24, 15, 0, 0, 0, DateTimeKind.Unspecified),
                             Price = 630m,
                             StatusId = 6
                         },
@@ -175,6 +181,7 @@ namespace DAL.Migrations
                             CreationTime = new DateTime(2022, 4, 24, 18, 0, 0, 0, DateTimeKind.Unspecified),
                             PayingType = "Наличными",
                             PhoneNumber = "+79106991174",
+                            PredictedTime = new DateTime(2022, 4, 24, 19, 0, 0, 0, DateTimeKind.Unspecified),
                             Price = 630m,
                             StatusId = 3,
                             WorkerId = 3

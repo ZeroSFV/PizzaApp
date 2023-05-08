@@ -14,7 +14,7 @@ namespace BLL.Models
         public string Role { get; set; } = null!;
         public bool IsApproved { get; set; }
         public string Phone { get; set; }
-
+        public int? Bonuses { get; set; }
         public string? Passport { get; set; }
 
         public UserInfoModel() { }
@@ -27,6 +27,7 @@ namespace BLL.Models
             IsApproved = u.IsApproved;
             Phone = u.Phone;
             Passport = u.Passport;
+            Bonuses = u.Bonuses;
         }
     }
 }

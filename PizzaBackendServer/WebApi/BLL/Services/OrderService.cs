@@ -186,6 +186,9 @@ namespace BLL.Services
                 order.Client = client;
             }
             order.CreationTime = DateTime.Now;
+            if (makeOrderModel.PredictedTime == null)
+                order.PredictedTime = DateTime.Now.AddHours(1);
+            else order.PredictedTime = makeOrderModel.PredictedTime;
             order.Address = makeOrderModel.Address;
             order.PhoneNumber = makeOrderModel.PhoneNumber;
             order.ClientName = makeOrderModel.ClientName;

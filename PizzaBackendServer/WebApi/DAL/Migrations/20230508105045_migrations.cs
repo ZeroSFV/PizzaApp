@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DAL.Migrations
 {
-    public partial class MyMigration : Migration
+    public partial class migrations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -113,6 +113,7 @@ namespace DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(type: "datetime", nullable: false),
+                    PredictedTime = table.Column<DateTime>(type: "datetime", nullable: true),
                     FinishedTime = table.Column<DateTime>(type: "datetime", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false),
                     Address = table.Column<string>(type: "varchar(70)", maxLength: 70, nullable: false, collation: "utf8mb4_0900_ai_ci")
@@ -252,13 +253,13 @@ namespace DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "order",
-                columns: new[] { "Id", "Address", "Change", "ClientId", "ClientName", "CourierId", "CreationTime", "FinishedTime", "PayingType", "PhoneNumber", "Price", "StatusId", "WorkerId" },
+                columns: new[] { "Id", "Address", "Change", "ClientId", "ClientName", "CourierId", "CreationTime", "FinishedTime", "PayingType", "PhoneNumber", "PredictedTime", "Price", "StatusId", "WorkerId" },
                 values: new object[,]
                 {
-                    { 1, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", 370m, 1, "Михаил", 4, new DateTime(2022, 4, 24, 18, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 4, 24, 18, 30, 0, 0, DateTimeKind.Unspecified), "Наличными", "+79106991174", 630m, 5, 3 },
-                    { 2, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", null, 1, "Михаил", null, new DateTime(2022, 4, 24, 17, 0, 0, 0, DateTimeKind.Unspecified), null, "Картой", "+79106991174", 630m, 1, null },
-                    { 3, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", null, 1, "Виктор", null, new DateTime(2022, 4, 24, 14, 0, 0, 0, DateTimeKind.Unspecified), null, "Картой", "+79106991174", 630m, 6, null },
-                    { 4, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", 70m, 1, "Михаил", null, new DateTime(2022, 4, 24, 18, 0, 0, 0, DateTimeKind.Unspecified), null, "Наличными", "+79106991174", 630m, 3, 3 }
+                    { 1, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", 370m, 1, "Михаил", 4, new DateTime(2022, 4, 24, 18, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 4, 24, 18, 30, 0, 0, DateTimeKind.Unspecified), "Наличными", "+79106991174", new DateTime(2022, 4, 24, 19, 0, 0, 0, DateTimeKind.Unspecified), 630m, 5, 3 },
+                    { 2, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", null, 1, "Михаил", null, new DateTime(2022, 4, 24, 17, 0, 0, 0, DateTimeKind.Unspecified), null, "Картой", "+79106991174", new DateTime(2022, 4, 24, 20, 0, 0, 0, DateTimeKind.Unspecified), 630m, 1, null },
+                    { 3, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", null, 1, "Виктор", null, new DateTime(2022, 4, 24, 14, 0, 0, 0, DateTimeKind.Unspecified), null, "Картой", "+79106991174", new DateTime(2022, 4, 24, 15, 0, 0, 0, DateTimeKind.Unspecified), 630m, 6, null },
+                    { 4, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", 70m, 1, "Михаил", null, new DateTime(2022, 4, 24, 18, 0, 0, 0, DateTimeKind.Unspecified), null, "Наличными", "+79106991174", new DateTime(2022, 4, 24, 19, 0, 0, 0, DateTimeKind.Unspecified), 630m, 3, 3 }
                 });
 
             migrationBuilder.InsertData(

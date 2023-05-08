@@ -27,9 +27,9 @@ namespace BLL.Services
         public List<BasketModel> GetAllBasketsByUserId(int userId)
         {
             return dataBase.BasketRepository.GetAll()
-                                            .Select(i => new BasketModel(i))
+                                            .Select(i => new BasketModel(i,dataBase))
                                             .Where(i => i.UserId == userId)
-                                            .OrderBy(i => i.Price)
+                                            .OrderBy(i => i.PizzaName)
                                             .ToList();
         }
 
