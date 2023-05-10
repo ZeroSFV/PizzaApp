@@ -13,5 +13,5 @@ class BonusesChange extends BonusesEvent {
 
   BonusesChange(this.bonusesApplied, this.userBonuses, this.basketPrice);
   @override
-  List get props => [];
+  List get props => [bonusesApplied, userBonuses, basketPrice];
 }

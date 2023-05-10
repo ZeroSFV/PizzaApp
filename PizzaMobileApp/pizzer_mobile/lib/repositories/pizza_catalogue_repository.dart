@@ -16,6 +16,18 @@ class PizzaRepository {
     }
   }
 
+  Future<List<PizzaModel>> getFilteredPizzas(String? value) async {
+    Response response = await get(
+        Uri.parse(pizzaUrlGetAll + "/bydescription/" + value.toString()));
+
+    if (response.statusCode == 200) {
+      final List result = jsonDecode(response.body);
+      return result.map((e) => PizzaModel.fromJson(e)).toList();
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
   // Future<PizzaModel> getPizzaById(int? id) async {
   //   Response response = await get(Uri.parse(pizzaUrlGetAll));
 

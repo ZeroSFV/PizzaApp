@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(PizzaContext))]
-    [Migration("20230508105045_migrations")]
+    [Migration("20230510193541_migrations")]
     partial class migrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,6 +85,10 @@ namespace DAL.Migrations
                         .HasMaxLength(70)
                         .HasColumnType("varchar(70)");
 
+                    b.Property<string>("Comment")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
                     b.Property<int?>("CourierId")
                         .HasColumnType("int");
 
@@ -93,6 +97,9 @@ namespace DAL.Migrations
 
                     b.Property<DateTime?>("FinishedTime")
                         .HasColumnType("datetime");
+
+                    b.Property<int>("GivenBonuses")
+                        .HasColumnType("int");
 
                     b.Property<string>("PayingType")
                         .IsRequired()
@@ -112,6 +119,9 @@ namespace DAL.Migrations
                         .HasColumnType("decimal(8,2)");
 
                     b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UsedBonuses")
                         .HasColumnType("int");
 
                     b.Property<int?>("WorkerId")
@@ -140,6 +150,7 @@ namespace DAL.Migrations
                             CourierId = 4,
                             CreationTime = new DateTime(2022, 4, 24, 18, 0, 0, 0, DateTimeKind.Unspecified),
                             FinishedTime = new DateTime(2022, 4, 24, 18, 30, 0, 0, DateTimeKind.Unspecified),
+                            GivenBonuses = 63,
                             PayingType = "Наличными",
                             PhoneNumber = "+79106991174",
                             PredictedTime = new DateTime(2022, 4, 24, 19, 0, 0, 0, DateTimeKind.Unspecified),
@@ -154,6 +165,7 @@ namespace DAL.Migrations
                             ClientId = 1,
                             ClientName = "Михаил",
                             CreationTime = new DateTime(2022, 4, 24, 17, 0, 0, 0, DateTimeKind.Unspecified),
+                            GivenBonuses = 63,
                             PayingType = "Картой",
                             PhoneNumber = "+79106991174",
                             PredictedTime = new DateTime(2022, 4, 24, 20, 0, 0, 0, DateTimeKind.Unspecified),
@@ -167,11 +179,13 @@ namespace DAL.Migrations
                             ClientId = 1,
                             ClientName = "Виктор",
                             CreationTime = new DateTime(2022, 4, 24, 14, 0, 0, 0, DateTimeKind.Unspecified),
+                            GivenBonuses = 63,
                             PayingType = "Картой",
                             PhoneNumber = "+79106991174",
                             PredictedTime = new DateTime(2022, 4, 24, 15, 0, 0, 0, DateTimeKind.Unspecified),
                             Price = 630m,
-                            StatusId = 6
+                            StatusId = 6,
+                            UsedBonuses = 63
                         },
                         new
                         {
@@ -180,7 +194,9 @@ namespace DAL.Migrations
                             Change = 70m,
                             ClientId = 1,
                             ClientName = "Михаил",
+                            Comment = "Пиццы пожалуйста без огурцов",
                             CreationTime = new DateTime(2022, 4, 24, 18, 0, 0, 0, DateTimeKind.Unspecified),
+                            GivenBonuses = 63,
                             PayingType = "Наличными",
                             PhoneNumber = "+79106991174",
                             PredictedTime = new DateTime(2022, 4, 24, 19, 0, 0, 0, DateTimeKind.Unspecified),

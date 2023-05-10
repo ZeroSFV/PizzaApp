@@ -29,12 +29,14 @@ class ClientPage extends StatelessWidget {
           body: BlocBuilder<NavigationBarBloc, NavigationBarState>(
             builder: (BuildContext context, NavigationBarState state) {
               if (state is CataloguePageLoadedState) {
-                return PizzaCataloguePage();
+                return PizzaCataloguePage(
+                    token:
+                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJla3Nfc2Z2QG1haWwucnUiLCJuYW1lIjoi0JzQuNGF0LDQuNC7INCR0LDRg9GB0L7QsiDQlNC80LjRgtGA0LjQtdCy0LjRhyIsInN1YiI6IjUiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwiZXhwIjoxNjg5NzQ3NDExLCJpc3MiOiJQaXp6ZXJCYWNrRW5kIiwiYXVkIjoiUGl6emVyTW9iaWxlIn0.w7pqPIIkWw2HmyPhyRarP6vLJ3WDXmQU_mn-pHxutLg");
               }
               if (state is BasketPageLoadedState) {
                 return BasketPage(
                     token:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJla3Nfc2Z2QG1haWwucnUiLCJuYW1lIjoi0JzQuNGF0LDQuNC7INCR0LDRg9GB0L7QsiIsInN1YiI6IjUiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwiZXhwIjoxNjg5NTU4MDYyLCJpc3MiOiJQaXp6ZXJCYWNrRW5kIiwiYXVkIjoiUGl6emVyTW9iaWxlIn0.4XoZ09N6rmmdbkbM1J7qmC10Oed8c2vRxO6z-l8Cw1Y");
+                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJla3Nfc2Z2QG1haWwucnUiLCJuYW1lIjoi0JzQuNGF0LDQuNC7INCR0LDRg9GB0L7QsiDQlNC80LjRgtGA0LjQtdCy0LjRhyIsInN1YiI6IjUiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwiZXhwIjoxNjg5NzQ3NDExLCJpc3MiOiJQaXp6ZXJCYWNrRW5kIiwiYXVkIjoiUGl6emVyTW9iaWxlIn0.w7pqPIIkWw2HmyPhyRarP6vLJ3WDXmQU_mn-pHxutLg");
               }
               if (state is ProfilePageLoadedState) {
                 return Text('${state.number}');

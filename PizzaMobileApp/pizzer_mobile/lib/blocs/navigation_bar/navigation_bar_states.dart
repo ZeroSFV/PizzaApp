@@ -11,7 +11,7 @@ class CurrentIndexChanged extends NavigationBarState {
   CurrentIndexChanged(this.currentIndex);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [currentIndex];
 }
 
 class CataloguePageLoadedState extends NavigationBarState {

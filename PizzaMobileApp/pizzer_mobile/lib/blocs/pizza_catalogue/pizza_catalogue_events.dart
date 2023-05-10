@@ -34,3 +34,19 @@ class LoadChosenBigPizzaEvent extends PizzaCatalogueEvent {
   @override
   List<Object?> get props => [name];
 }
+
+class LoadFiltersEvent extends PizzaCatalogueEvent {
+  final String? value;
+
+  LoadFiltersEvent(this.value);
+  @override
+  List<Object?> get props => [value];
+}
+
+class LoadFilteredPizzaCatalogueEvent extends PizzaCatalogueEvent {
+  final String? value;
+
+  LoadFilteredPizzaCatalogueEvent(this.value);
+  @override
+  List<Object?> get props => [value];
+}

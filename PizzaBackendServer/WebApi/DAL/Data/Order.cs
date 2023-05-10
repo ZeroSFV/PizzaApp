@@ -25,6 +25,9 @@ namespace DAL.Data
         public string ClientName { get; set; }
         public string PayingType { get; set; }
         public decimal? Change { get; set; }
+        public int? UsedBonuses { get; set; }
+        public int GivenBonuses { get; set; } 
+        public string? Comment { get; set; }
         public int ClientId { get; set; }
         public int? WorkerId { get; set; }
         public int? CourierId { get; set; }

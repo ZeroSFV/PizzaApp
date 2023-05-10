@@ -101,354 +101,506 @@ class BasketPage extends StatelessWidget {
             itemBuilder: (_, index) {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                child: (MediaQuery.of(context).orientation ==
-                        Orientation.portrait)
-                    ? Container(
-                        height: MediaQuery.of(context).size.height / 6,
-                        child: Card(
-                            color: Colors.white,
-                            child: Row(
-                              children: [
-                                Padding(
-                                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                    child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                2,
-                                            child: Text(
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize:
-                                                        (MediaQuery.of(context)
-                                                                .size
-                                                                .height /
-                                                            30)),
-                                                '${basketList[index].pizzaName}' +
-                                                    ' ' +
-                                                    '${basketList[index].sizeName}')))),
-                                Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                        MediaQuery.of(context).size.width / 13,
-                                        MediaQuery.of(context).size.height / 24,
-                                        0,
-                                        0),
-                                    child: Column(children: [
-                                      Center(
-                                          child: Text(
-                                        '${basketList[index].price} Р',
-                                        style: (MediaQuery.of(context)
-                                                    .orientation ==
-                                                Orientation.portrait)
-                                            ? TextStyle(
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .height /
-                                                    40)
-                                            : TextStyle(
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    44),
-                                      )),
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 10),
-                                        child: Container(
-                                          width: (MediaQuery.of(context)
-                                                  .size
-                                                  .width) /
-                                              4.3,
-                                          height: (MediaQuery.of(context)
+                child:
+                    (MediaQuery.of(context).orientation == Orientation.portrait)
+                        ? Container(
+                            height: MediaQuery.of(context).size.height / 6,
+                            child: Card(
+                                color: Colors.white,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        flex: 1,
+                                        child: Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                20, 0, 0, 0),
+                                            child: Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Container(
+                                                    width: MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        2,
+                                                    child: Text(
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontSize: (MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height /
+                                                                30)),
+                                                        '${basketList[index].pizzaName}' +
+                                                            ' ' +
+                                                            '${basketList[index].sizeName}'))))),
+                                    Expanded(
+                                      child: Padding(
+                                          padding: (MediaQuery.of(context)
                                                       .orientation ==
                                                   Orientation.portrait)
-                                              ? (MediaQuery.of(context)
-                                                      .size
-                                                      .width) /
-                                                  12
-                                              : (MediaQuery.of(context)
-                                                      .size
-                                                      .width) /
-                                                  12,
-                                          decoration: BoxDecoration(
-                                            border:
-                                                Border.all(color: Colors.black),
-                                            borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(40.0),
-                                                bottomRight:
-                                                    Radius.circular(40.0),
-                                                topLeft: Radius.circular(40.0),
-                                                bottomLeft:
-                                                    Radius.circular(40.0)),
-                                          ),
-                                          child: Row(children: [
+                                              ? EdgeInsets.fromLTRB(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      13.5,
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      24,
+                                                  0,
+                                                  0)
+                                              : EdgeInsets.fromLTRB(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      13,
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      24,
+                                                  0,
+                                                  0),
+                                          child: Column(children: [
+                                            Center(
+                                                child: Text(
+                                              '${basketList[index].price} Р',
+                                              style: (MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait)
+                                                  ? TextStyle(
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height /
+                                                              40)
+                                                  : TextStyle(
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              44),
+                                            )),
                                             Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    12, 0, 1, 0),
-                                                child: GestureDetector(
-                                                    onTap: () =>
-                                                        BlocProvider.of<ClientBasketBloc>(context).add(
-                                                            DecreaseBasketEvent(
-                                                                token,
-                                                                basketList[index]
-                                                                    .id)),
-                                                    child: Container(
-                                                        width: (MediaQuery.of(context)
-                                                                .size
-                                                                .width) /
-                                                            30,
-                                                        height: (MediaQuery.of(context)
-                                                                    .orientation ==
-                                                                Orientation
-                                                                    .portrait)
-                                                            ? (MediaQuery.of(context)
-                                                                    .size
-                                                                    .width) /
-                                                                12
-                                                            : (MediaQuery.of(context).size.width) / 15,
-                                                        child: Text(
-                                                          "-",
-                                                          style: TextStyle(
-                                                              fontSize: 22),
-                                                        )))),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                    //color: Colors.red,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: Colors.red,
-                                                    ),
-                                                    child: Text(
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        '${basketList[index].amount}',
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 25,
-                                                            fontFamily:
-                                                                "Arial")))),
-                                            Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    0, 1, 10, 0),
-                                                child: GestureDetector(
-                                                    onTap: () => {
-                                                          BlocProvider.of<
+                                              padding: EdgeInsets.only(top: 10),
+                                              child: Container(
+                                                width: (MediaQuery.of(context)
+                                                        .size
+                                                        .width) /
+                                                    4.3,
+                                                height: (MediaQuery.of(context)
+                                                            .orientation ==
+                                                        Orientation.portrait)
+                                                    ? (MediaQuery.of(context)
+                                                            .size
+                                                            .width) /
+                                                        12
+                                                    : (MediaQuery.of(context)
+                                                            .size
+                                                            .width) /
+                                                        12,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: Colors.black),
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  40.0),
+                                                          bottomRight:
+                                                              Radius.circular(
+                                                                  40.0),
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  40.0),
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                  40.0)),
+                                                ),
+                                                child: Row(children: [
+                                                  Expanded(
+                                                      flex: 1,
+                                                      // padding: EdgeInsets.fromLTRB(
+                                                      //     12, 0, 1, 0),
+                                                      child: GestureDetector(
+                                                          onTap: () => BlocProvider.of<
                                                                       ClientBasketBloc>(
                                                                   context)
-                                                              .add(AddToBasketEvent(
+                                                              .add(DecreaseBasketEvent(
                                                                   token,
-                                                                  basketList[
-                                                                          index]
-                                                                      .id))
-                                                        },
-                                                    child: Container(
-                                                        width: (MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width) /
-                                                            30,
-                                                        height: (MediaQuery.of(
+                                                                  basketList[index]
+                                                                      .id)),
+                                                          child: Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        255,
+                                                                        255,
+                                                                        255),
+                                                                borderRadius: BorderRadius.only(
+                                                                    topLeft: Radius
+                                                                        .circular(
+                                                                            40.0),
+                                                                    bottomLeft:
+                                                                        Radius.circular(
+                                                                            40.0)),
+                                                              ),
+                                                              // color: Colors.black,
+                                                              width: (MediaQuery.of(context)
+                                                                      .size
+                                                                      .width) /
+                                                                  25,
+                                                              height: (MediaQuery.of(context).orientation ==
+                                                                      Orientation
+                                                                          .portrait)
+                                                                  ? (MediaQuery.of(context)
+                                                                          .size
+                                                                          .width) /
+                                                                      13
+                                                                  : (MediaQuery.of(context)
+                                                                          .size
+                                                                          .width) /
+                                                                      15,
+                                                              child: Center(
+                                                                  child: Text(
+                                                                "-",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        25),
+                                                              ))))),
+                                                  Expanded(
+                                                      flex: 1,
+                                                      child: Container(
+                                                          height: (MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height) /
+                                                              15,
+                                                          //color: Colors.red,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            shape:
+                                                                BoxShape.circle,
+                                                            color: Colors.red,
+                                                          ),
+                                                          child: Center(
+                                                              child: Text(
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  '${basketList[index].amount}',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          25,
+                                                                      fontFamily:
+                                                                          "Arial"))))),
+                                                  Expanded(
+                                                      flex: 1,
+                                                      // padding: EdgeInsets.fromLTRB(
+                                                      //     0, 1, 10, 0),
+                                                      child: GestureDetector(
+                                                          onTap: () => {
+                                                                BlocProvider.of<
+                                                                            ClientBasketBloc>(
                                                                         context)
-                                                                    .orientation ==
-                                                                Orientation
-                                                                    .portrait)
-                                                            ? (MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width) /
-                                                                12
-                                                            : (MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width) /
-                                                                15,
-                                                        child: Text(
-                                                          "+",
-                                                          style: TextStyle(
-                                                              fontSize: 22),
-                                                        )))),
-                                          ]),
-                                        ),
-                                      )
-                                    ])),
-                              ],
-                            )),
-                      )
-                    : Container(
-                        height: MediaQuery.of(context).size.height / 3,
-                        child: Card(
-                            color: Colors.white,
-                            child: Row(
-                              children: [
-                                Padding(
-                                    padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
-                                    child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                2.5,
-                                            child: Text(
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize:
-                                                        (MediaQuery.of(context)
-                                                                .size
-                                                                .height /
-                                                            15)),
-                                                '${basketList[index].pizzaName}' +
-                                                    ' ' +
-                                                    '${basketList[index].sizeName}')))),
-                                Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                        MediaQuery.of(context).size.width / 4,
-                                        MediaQuery.of(context).size.height / 24,
-                                        0,
-                                        0),
-                                    child: Column(children: [
-                                      Center(
-                                          child: Text(
-                                        '${basketList[index].price} Р',
-                                        style: (MediaQuery.of(context)
-                                                    .orientation ==
-                                                Orientation.portrait)
-                                            ? TextStyle(
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .height /
-                                                    40)
-                                            : TextStyle(
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    44),
-                                      )),
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 10),
-                                        child: Container(
-                                          width: (MediaQuery.of(context)
-                                                  .size
-                                                  .width) /
-                                              4.3,
-                                          height: (MediaQuery.of(context)
-                                                      .orientation ==
-                                                  Orientation.portrait)
-                                              ? (MediaQuery.of(context)
-                                                      .size
-                                                      .width) /
-                                                  12
-                                              : (MediaQuery.of(context)
-                                                      .size
-                                                      .width) /
-                                                  15,
-                                          decoration: BoxDecoration(
-                                            border:
-                                                Border.all(color: Colors.black),
-                                            borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(40.0),
-                                                bottomRight:
-                                                    Radius.circular(40.0),
-                                                topLeft: Radius.circular(40.0),
-                                                bottomLeft:
-                                                    Radius.circular(40.0)),
-                                          ),
-                                          child: Row(children: [
-                                            Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    20, 0, 0, 0),
-                                                child: GestureDetector(
-                                                    onTap: () =>
-                                                        BlocProvider.of<ClientBasketBloc>(context).add(
-                                                            DecreaseBasketEvent(
-                                                                token,
-                                                                basketList[index]
-                                                                    .id)),
-                                                    child: Container(
-                                                        width: (MediaQuery.of(context)
-                                                                .size
-                                                                .width) /
-                                                            12,
-                                                        height: (MediaQuery.of(context)
-                                                                    .orientation ==
-                                                                Orientation
-                                                                    .portrait)
-                                                            ? (MediaQuery.of(context)
-                                                                    .size
-                                                                    .width) /
-                                                                12
-                                                            : (MediaQuery.of(context).size.width) / 15,
-                                                        child: Text(
-                                                          "-",
-                                                          style: TextStyle(
-                                                              fontSize: 22),
-                                                        )))),
-                                            Expanded(
-                                                flex: 1,
+                                                                    .add(AddToBasketEvent(
+                                                                        token,
+                                                                        basketList[index]
+                                                                            .id))
+                                                              },
+                                                          child: Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        255,
+                                                                        255,
+                                                                        255),
+                                                                borderRadius: BorderRadius.only(
+                                                                    topRight: Radius
+                                                                        .circular(
+                                                                            40.0),
+                                                                    bottomRight:
+                                                                        Radius.circular(
+                                                                            40.0)),
+                                                              ),
+                                                              width: (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width) /
+                                                                  25,
+                                                              height: (MediaQuery.of(
+                                                                              context)
+                                                                          .orientation ==
+                                                                      Orientation
+                                                                          .portrait)
+                                                                  ? (MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width) /
+                                                                      13
+                                                                  : (MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width) /
+                                                                      15,
+                                                              child: Center(
+                                                                  child: Text(
+                                                                "+",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        25),
+                                                              ))))),
+                                                ]),
+                                              ),
+                                            )
+                                          ])),
+                                    )
+                                  ],
+                                )),
+                          )
+                        : Container(
+                            height: MediaQuery.of(context).size.height / 3,
+                            child: Card(
+                                color: Colors.white,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        flex: 1,
+                                        child: Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                30, 0, 0, 0),
+                                            child: Align(
+                                                alignment: Alignment.centerLeft,
                                                 child: Container(
-                                                    //color: Colors.red,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: Colors.red,
-                                                    ),
-                                                    child: Text(
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        '${basketList[index].amount}',
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 35,
-                                                            fontFamily:
-                                                                "Arial")))),
-                                            Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    0, 1, 20, 0),
-                                                child: GestureDetector(
-                                                    onTap: () => {
-                                                          BlocProvider.of<
-                                                                      ClientBasketBloc>(
-                                                                  context)
-                                                              .add(AddToBasketEvent(
-                                                                  token,
-                                                                  basketList[
-                                                                          index]
-                                                                      .id))
-                                                        },
-                                                    child: Container(
-                                                        width: (MediaQuery.of(
-                                                                    context)
+                                                    width:
+                                                        MediaQuery.of(context)
                                                                 .size
-                                                                .width) /
-                                                            12,
-                                                        height: (MediaQuery.of(
-                                                                        context)
-                                                                    .orientation ==
-                                                                Orientation
-                                                                    .portrait)
-                                                            ? (MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width) /
-                                                                12
-                                                            : (MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width) /
-                                                                15,
-                                                        child: Text(
-                                                          "+",
-                                                          style: TextStyle(
-                                                              fontSize: 22),
-                                                        )))),
-                                          ]),
-                                        ),
-                                      )
-                                    ])),
-                              ],
-                            )),
-                      ),
+                                                                .width /
+                                                            2.5,
+                                                    child: Text(
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontSize:
+                                                                (MediaQuery.of(context)
+                                                                        .size
+                                                                        .height /
+                                                                    15)),
+                                                        '${basketList[index].pizzaName}' +
+                                                            ' ' +
+                                                            '${basketList[index].sizeName}'))))),
+                                    Expanded(
+                                      child: Padding(
+                                          padding: EdgeInsets.fromLTRB(
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  4,
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  24,
+                                              0,
+                                              0),
+                                          child: Column(children: [
+                                            Center(
+                                                child: Text(
+                                              '${basketList[index].price} Р',
+                                              style: (MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait)
+                                                  ? TextStyle(
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height /
+                                                              40)
+                                                  : TextStyle(
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              44),
+                                            )),
+                                            Padding(
+                                              padding: EdgeInsets.only(top: 10),
+                                              child: Container(
+                                                width: (MediaQuery.of(context)
+                                                        .size
+                                                        .width) /
+                                                    4.3,
+                                                height: (MediaQuery.of(context)
+                                                            .orientation ==
+                                                        Orientation.portrait)
+                                                    ? (MediaQuery.of(context)
+                                                            .size
+                                                            .width) /
+                                                        12
+                                                    : (MediaQuery.of(context)
+                                                            .size
+                                                            .width) /
+                                                        16,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: Colors.black),
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  40.0),
+                                                          bottomRight:
+                                                              Radius.circular(
+                                                                  40.0),
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  40.0),
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                  40.0)),
+                                                ),
+                                                child: Row(children: [
+                                                  Expanded(
+                                                      flex: 1,
+                                                      child: Padding(
+                                                          padding: EdgeInsets
+                                                              .fromLTRB(
+                                                                  10, 0, 0, 0),
+                                                          child:
+                                                              GestureDetector(
+                                                                  onTap: () => BlocProvider.of<
+                                                                              ClientBasketBloc>(
+                                                                          context)
+                                                                      .add(DecreaseBasketEvent(
+                                                                          token,
+                                                                          basketList[index]
+                                                                              .id)),
+                                                                  child: Container(
+                                                                      decoration: BoxDecoration(
+                                                                        color: Color.fromARGB(
+                                                                            255,
+                                                                            255,
+                                                                            255,
+                                                                            255),
+                                                                        borderRadius: BorderRadius.only(
+                                                                            topLeft:
+                                                                                Radius.circular(40.0),
+                                                                            bottomLeft: Radius.circular(40.0)),
+                                                                      ),
+                                                                      // color:
+                                                                      //     Colors.black,
+                                                                      width: (MediaQuery.of(context).size.width) / 10,
+                                                                      height: (MediaQuery.of(context).orientation == Orientation.portrait) ? (MediaQuery.of(context).size.width) / 12 : (MediaQuery.of(context).size.width) / 15,
+                                                                      child: Center(
+                                                                          child: Text(
+                                                                        "-",
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              (MediaQuery.of(context).size.width) / 18,
+                                                                        ),
+                                                                      )))))),
+                                                  Expanded(
+                                                      flex: 1,
+                                                      child: Container(
+                                                          height: (MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height) /
+                                                              8,
+                                                          //color: Colors.red,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            shape:
+                                                                BoxShape.circle,
+                                                            color: Colors.red,
+                                                          ),
+                                                          child: Center(
+                                                              child: Text(
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  '${basketList[index].amount}',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          (MediaQuery.of(context).size.width) /
+                                                                              18,
+                                                                      fontFamily:
+                                                                          "Arial"))))),
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child: Padding(
+                                                        padding:
+                                                            EdgeInsets.fromLTRB(
+                                                                0, 0, 10, 0),
+                                                        child: GestureDetector(
+                                                            onTap: () => {
+                                                                  BlocProvider.of<
+                                                                              ClientBasketBloc>(
+                                                                          context)
+                                                                      .add(AddToBasketEvent(
+                                                                          token,
+                                                                          basketList[index]
+                                                                              .id))
+                                                                },
+                                                            child: Container(
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          255,
+                                                                          255,
+                                                                          255),
+                                                                  borderRadius: BorderRadius.only(
+                                                                      topRight:
+                                                                          Radius.circular(
+                                                                              40.0),
+                                                                      bottomRight:
+                                                                          Radius.circular(
+                                                                              40.0)),
+                                                                ),
+                                                                width: (MediaQuery
+                                                                            .of(
+                                                                                context)
+                                                                        .size
+                                                                        .width) /
+                                                                    10,
+                                                                height: (MediaQuery.of(context)
+                                                                            .orientation ==
+                                                                        Orientation
+                                                                            .portrait)
+                                                                    ? (MediaQuery.of(context)
+                                                                            .size
+                                                                            .width) /
+                                                                        12
+                                                                    : (MediaQuery.of(context)
+                                                                            .size
+                                                                            .width) /
+                                                                        16,
+                                                                child: Center(
+                                                                    child: Text(
+                                                                  "+",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          (MediaQuery.of(context).size.width) /
+                                                                              18),
+                                                                ))))),
+                                                  )
+                                                ]),
+                                              ),
+                                            )
+                                          ])),
+                                    )
+                                  ],
+                                )),
+                          ),
               );
             }),
         Padding(
@@ -464,169 +616,314 @@ class BasketPage extends StatelessWidget {
                       bottom:
                           BorderSide(color: Color.fromARGB(239, 50, 50, 50)))),
               child: Column(children: [
-                Align(
-                    alignment: Alignment.topLeft,
+                Expanded(
+                    flex: 1,
+                    child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait)
+                              ? EdgeInsets.fromLTRB(10, 10, 0, 0)
+                              : EdgeInsets.fromLTRB(10, 0, 0, 0),
+                          child: Text(
+                            "Бонусы",
+                            style: TextStyle(
+                                fontSize: (MediaQuery.of(context).orientation ==
+                                        Orientation.portrait)
+                                    ? 20
+                                    : (MediaQuery.of(context).size.width) / 30,
+                                fontFamily: "Times New Roman"),
+                          ),
+                        ))),
+                Expanded(
                     child: Padding(
-                      padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-                      child: Text(
-                        "Бонусы",
-                        style: TextStyle(
-                            fontSize: 20, fontFamily: "Times New Roman"),
-                      ),
-                    )),
-                BlocProvider(
-                    create: (context) => BonusesBloc(usedBonuses),
-                    child: BlocBuilder<BonusesBloc, BonusesState>(
-                        builder: (context, stateBonuses) {
-                      if (stateBonuses is BonusesAppliedState) {
-                        return Row(children: [
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(8, 10, 0, 0),
-                              child: Text(
-                                '-' + '${stateBonuses.userBonuses}}' ' бонусов',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontFamily: "Times New Roman"),
-                              )),
-                          Padding(
-                              padding: (MediaQuery.of(context).orientation ==
-                                      Orientation.portrait)
-                                  ? EdgeInsets.fromLTRB(70, 0, 0, 0)
-                                  : EdgeInsets.fromLTRB(280, 0, 0, 0),
-                              child: GestureDetector(
-                                child: Container(
-                                  width: (MediaQuery.of(context).orientation ==
-                                          Orientation.portrait)
-                                      ? (MediaQuery.of(context).size.width) / 3
-                                      : (MediaQuery.of(context).size.width) / 5,
-                                  height: (MediaQuery.of(context).orientation ==
-                                          Orientation.portrait)
-                                      ? (MediaQuery.of(context).size.width) / 10
-                                      : (MediaQuery.of(context).size.width) /
-                                          13,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.black),
-                                    color: Color.fromARGB(255, 197, 197, 197),
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(40.0),
-                                        bottomRight: Radius.circular(40.0),
-                                        topLeft: Radius.circular(40.0),
-                                        bottomLeft: Radius.circular(40.0)),
-                                  ),
-                                  child: Center(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                        child: BlocProvider(
+                            create: (context) => BonusesBloc(usedBonuses),
+                            child: BlocBuilder<BonusesBloc, BonusesState>(
+                                builder: (context, stateBonuses) {
+                              if (stateBonuses is BonusesAppliedState) {
+                                return Row(children: [
+                                  Padding(
+                                      padding: EdgeInsets.fromLTRB(8, 10, 0, 0),
                                       child: Text(
-                                    'Отменить',
-                                    style: TextStyle(color: Colors.black),
-                                  )),
-                                ),
-                                onTap: () => {
-                                  BlocProvider.of<BonusesBloc>(context).add(
-                                      BonusesChange(false, user.bonuses,
-                                          state.basketPrice))
-                                },
-                              ))
-                        ]);
-                      }
-                      if (stateBonuses is BonusesDeletedState) {
-                        return Row(children: [
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(8, 10, 0, 0),
-                              child: Text(
-                                'Доступно: ' + '${user.bonuses}',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontFamily: "Times New Roman"),
-                              )),
-                          Padding(
-                              padding: (MediaQuery.of(context).orientation ==
-                                      Orientation.portrait)
-                                  ? EdgeInsets.fromLTRB(70, 0, 0, 0)
-                                  : EdgeInsets.fromLTRB(280, 0, 0, 0),
-                              child: GestureDetector(
-                                child: Container(
-                                  width: (MediaQuery.of(context).orientation ==
-                                          Orientation.portrait)
-                                      ? (MediaQuery.of(context).size.width) / 3
-                                      : (MediaQuery.of(context).size.width) / 5,
-                                  height: (MediaQuery.of(context).orientation ==
-                                          Orientation.portrait)
-                                      ? (MediaQuery.of(context).size.width) / 10
-                                      : (MediaQuery.of(context).size.width) /
-                                          13,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.black),
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(40.0),
-                                        bottomRight: Radius.circular(40.0),
-                                        topLeft: Radius.circular(40.0),
-                                        bottomLeft: Radius.circular(40.0)),
-                                  ),
-                                  child: Center(
+                                        '-' +
+                                            '${stateBonuses.userBonuses}}'
+                                                ' бонусов',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontFamily: "Times New Roman"),
+                                      )),
+                                  Padding(
+                                      padding: (MediaQuery.of(context)
+                                                  .orientation ==
+                                              Orientation.portrait)
+                                          ? EdgeInsets.fromLTRB(70, 0, 0, 0)
+                                          : EdgeInsets.fromLTRB(280, 0, 0, 0),
+                                      child: GestureDetector(
+                                        child: Container(
+                                          width: (MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.portrait)
+                                              ? (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  3
+                                              : (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  5,
+                                          height: (MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.portrait)
+                                              ? (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  10
+                                              : (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  13,
+                                          decoration: BoxDecoration(
+                                            border:
+                                                Border.all(color: Colors.black),
+                                            color: Color.fromARGB(
+                                                255, 197, 197, 197),
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(40.0),
+                                                bottomRight:
+                                                    Radius.circular(40.0),
+                                                topLeft: Radius.circular(40.0),
+                                                bottomLeft:
+                                                    Radius.circular(40.0)),
+                                          ),
+                                          child: Center(
+                                              child: Text(
+                                            'Отменить',
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          )),
+                                        ),
+                                        onTap: () => {
+                                          BlocProvider.of<BonusesBloc>(context)
+                                              .add(BonusesChange(
+                                                  false,
+                                                  user.bonuses,
+                                                  state.basketPrice))
+                                        },
+                                      ))
+                                ]);
+                              }
+                              if (stateBonuses is BonusesDeletedState) {
+                                return Row(children: [
+                                  Padding(
+                                      padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
                                       child: Text(
-                                    'Применить',
-                                    style: TextStyle(color: Colors.black),
-                                  )),
-                                ),
-                                onTap: () => {
-                                  BlocProvider.of<BonusesBloc>(context).add(
-                                      BonusesChange(true, user.bonuses,
-                                          state.basketPrice))
-                                },
-                              ))
-                        ]);
-                      }
-                      if (stateBonuses is NoBonusesState) {
-                        return Row(children: [
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(8, 10, 0, 0),
-                              child: Text(
-                                'Доступно: ' + '${user.bonuses}',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontFamily: "Times New Roman"),
-                              )),
-                          Padding(
-                              padding: (MediaQuery.of(context).orientation ==
-                                      Orientation.portrait)
-                                  ? EdgeInsets.fromLTRB(70, 0, 0, 0)
-                                  : EdgeInsets.fromLTRB(290, 0, 0, 0),
-                              child: GestureDetector(
-                                child: Container(
-                                  width: (MediaQuery.of(context).orientation ==
-                                          Orientation.portrait)
-                                      ? (MediaQuery.of(context).size.width) / 3
-                                      : (MediaQuery.of(context).size.width) / 5,
-                                  height: (MediaQuery.of(context).orientation ==
-                                          Orientation.portrait)
-                                      ? (MediaQuery.of(context).size.width) / 10
-                                      : (MediaQuery.of(context).size.width) /
-                                          13,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.black),
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(40.0),
-                                        bottomRight: Radius.circular(40.0),
-                                        topLeft: Radius.circular(40.0),
-                                        bottomLeft: Radius.circular(40.0)),
-                                  ),
-                                  child: Center(
+                                        'Доступно: ' + '${user.bonuses}',
+                                        style: TextStyle(
+                                            fontSize: (MediaQuery.of(context)
+                                                        .orientation ==
+                                                    Orientation.portrait)
+                                                ? 20
+                                                : (MediaQuery.of(context)
+                                                        .size
+                                                        .width) /
+                                                    30,
+                                            fontFamily: "Times New Roman"),
+                                      )),
+                                  Padding(
+                                      padding:
+                                          (MediaQuery.of(context).orientation ==
+                                                  Orientation.portrait)
+                                              ? EdgeInsets.fromLTRB(
+                                                  (MediaQuery.of(context)
+                                                          .size
+                                                          .width) /
+                                                      4.2,
+                                                  0,
+                                                  0,
+                                                  0)
+                                              : EdgeInsets.fromLTRB(
+                                                  (MediaQuery.of(context)
+                                                          .size
+                                                          .width) /
+                                                      1.9,
+                                                  0,
+                                                  0,
+                                                  0),
+                                      child: GestureDetector(
+                                        child: Container(
+                                          width: (MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.portrait)
+                                              ? (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  3
+                                              : (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  5,
+                                          height: (MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.portrait)
+                                              ? (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  10
+                                              : (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  13,
+                                          decoration: BoxDecoration(
+                                            border:
+                                                Border.all(color: Colors.black),
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(40.0),
+                                                bottomRight:
+                                                    Radius.circular(40.0),
+                                                topLeft: Radius.circular(40.0),
+                                                bottomLeft:
+                                                    Radius.circular(40.0)),
+                                          ),
+                                          child: Center(
+                                              child: Text(
+                                            'Применить',
+                                            style: TextStyle(
+                                                fontFamily: "Times New Roman",
+                                                color: Colors.black,
+                                                fontSize: (MediaQuery.of(
+                                                                context)
+                                                            .orientation ==
+                                                        Orientation.portrait)
+                                                    ? (MediaQuery.of(context)
+                                                            .size
+                                                            .height) /
+                                                        30
+                                                    : (MediaQuery.of(context)
+                                                            .size
+                                                            .width) /
+                                                        30),
+                                          )),
+                                        ),
+                                        onTap: () => {
+                                          BlocProvider.of<BonusesBloc>(context)
+                                              .add(BonusesChange(
+                                                  true,
+                                                  user.bonuses,
+                                                  state.basketPrice))
+                                        },
+                                      ))
+                                ]);
+                              }
+                              if (stateBonuses is NoBonusesState) {
+                                return Row(children: [
+                                  Padding(
+                                      padding:
+                                          (MediaQuery.of(context).orientation ==
+                                                  Orientation.portrait)
+                                              ? EdgeInsets.fromLTRB(8, 0, 0, 0)
+                                              : EdgeInsets.fromLTRB(8, 0, 0, 0),
                                       child: Text(
-                                    'Нет бонусов',
-                                    style: TextStyle(
-                                        color: Color.fromARGB(255, 255, 0, 0)),
-                                  )),
-                                ),
-                                onTap: () => {
-                                  // BlocProvider.of<BonusesBloc>(context)
-                                  //     .add(BonusesChange(true, user.bonuses,state.basketPrice))
-                                },
-                              ))
-                        ]);
-                      }
-                      return Container();
-                    }))
+                                        'Доступно: ' + '${user.bonuses}',
+                                        style: TextStyle(
+                                            fontSize: (MediaQuery.of(context)
+                                                        .orientation ==
+                                                    Orientation.portrait)
+                                                ? 20
+                                                : (MediaQuery.of(context)
+                                                        .size
+                                                        .width) /
+                                                    30,
+                                            fontFamily: "Times New Roman"),
+                                      )),
+                                  Padding(
+                                      padding:
+                                          (MediaQuery.of(context).orientation ==
+                                                  Orientation.portrait)
+                                              ? EdgeInsets.fromLTRB(
+                                                  (MediaQuery.of(context)
+                                                          .size
+                                                          .width) /
+                                                      4.2,
+                                                  0,
+                                                  0,
+                                                  0)
+                                              : EdgeInsets.fromLTRB(
+                                                  (MediaQuery.of(context)
+                                                          .size
+                                                          .width) /
+                                                      1.9,
+                                                  0,
+                                                  0,
+                                                  0),
+                                      child: GestureDetector(
+                                        child: Container(
+                                          width: (MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.portrait)
+                                              ? (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  3
+                                              : (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  5,
+                                          height: (MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.portrait)
+                                              ? (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  10
+                                              : (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  13,
+                                          decoration: BoxDecoration(
+                                            border:
+                                                Border.all(color: Colors.black),
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(40.0),
+                                                bottomRight:
+                                                    Radius.circular(40.0),
+                                                topLeft: Radius.circular(40.0),
+                                                bottomLeft:
+                                                    Radius.circular(40.0)),
+                                          ),
+                                          child: Center(
+                                              child: Text(
+                                            'Нет бонусов',
+                                            style: TextStyle(
+                                                fontFamily: "Times New Roman",
+                                                color: Color.fromARGB(
+                                                    255, 255, 0, 0),
+                                                fontSize: (MediaQuery.of(
+                                                                context)
+                                                            .orientation ==
+                                                        Orientation.portrait)
+                                                    ? (MediaQuery.of(context)
+                                                            .size
+                                                            .height) /
+                                                        30
+                                                    : (MediaQuery.of(context)
+                                                            .size
+                                                            .width) /
+                                                        30),
+                                          )),
+                                        ),
+                                        onTap: () => {
+                                          // BlocProvider.of<BonusesBloc>(context)
+                                          //     .add(BonusesChange(true, user.bonuses,state.basketPrice))
+                                        },
+                                      ))
+                                ]);
+                              }
+                              return Container();
+                            }))))
               ]),
             ))
       ],

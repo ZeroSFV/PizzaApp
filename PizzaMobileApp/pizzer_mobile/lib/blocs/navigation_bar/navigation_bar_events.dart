@@ -11,5 +11,5 @@ class PageTapped extends NavigationBarEvent {
 
   PageTapped(this.index);
   @override
-  List get props => [];
+  List get props => [index];
 }

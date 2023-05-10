@@ -11,7 +11,7 @@ class BonusesAppliedState extends BonusesState {
   BonusesAppliedState(this.userBonuses);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [userBonuses];
 }
 
 class BonusesDeletedState extends BonusesState {

@@ -187,9 +187,33 @@ namespace BLL.Services
             }
             order.CreationTime = DateTime.Now;
             if (makeOrderModel.PredictedTime == null)
-                order.PredictedTime = DateTime.Now.AddHours(1);
+            {
+                int summ = 0;
+                foreach (var b in baskets)
+                {
+                    summ += b.Amount;
+                }
+                if (summ < 5)
+                    order.PredictedTime = DateTime.Now.AddHours(1);
+                else if (summ < 10)
+                    order.PredictedTime = DateTime.Now.AddHours(2);
+                else if (summ < 15)
+                    order.PredictedTime = DateTime.Now.AddHours(3);
+                else if (summ < 20)
+                    order.PredictedTime = DateTime.Now.AddHours(4);
+                else if (summ < 25)
+                    order.PredictedTime = DateTime.Now.AddHours(5);
+                else if (summ < 30)
+                    order.PredictedTime = DateTime.Now.AddHours(6);
+                else if (summ < 35)
+                    order.PredictedTime = DateTime.Now.AddHours(7);
+                else order.PredictedTime = DateTime.Now.AddHours(12);
+            }
             else order.PredictedTime = makeOrderModel.PredictedTime;
             order.Address = makeOrderModel.Address;
+            order.UsedBonuses = makeOrderModel.UsedBonuses;
+            order.GivenBonuses = makeOrderModel.GivenBonuses;
+            order.Comment = makeOrderModel.Comment;
             order.PhoneNumber = makeOrderModel.PhoneNumber;
             order.ClientName = makeOrderModel.ClientName;
             order.PayingType = makeOrderModel.PayingType;

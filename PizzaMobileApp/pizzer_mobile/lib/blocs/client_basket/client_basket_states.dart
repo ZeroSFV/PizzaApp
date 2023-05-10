@@ -18,7 +18,7 @@ class ClientBasketLoadedState extends ClientBasketState {
   final double basketPrice;
   ClientBasketLoadedState(this.baskets, this.user, this.basketPrice);
   @override
-  List<Object?> get props => [baskets, user];
+  List<Object?> get props => [baskets, user, basketPrice];
 }
 
 class ClientBasketErrorState extends ClientBasketState {

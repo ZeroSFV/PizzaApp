@@ -40,6 +40,22 @@ class BasketRepository {
     }
   }
 
+  Future<void> createBasket(int? userId, int? pizzaId) async {
+    String Url = basketUrl + '/createBasket';
+    Response resPost = await post(Uri.parse(Url),
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(<String, dynamic>{
+          "userId": userId,
+          "pizzaId": pizzaId,
+        }));
+    if (resPost.statusCode != 200) {
+      throw Exception(resPost.reasonPhrase);
+    }
+  }
+
   Future<void> deleteBasket(int? basketId) async {
     String Url = basketUrl + '/deleteBasket/' + basketId.toString();
     Response resDelete = await delete(

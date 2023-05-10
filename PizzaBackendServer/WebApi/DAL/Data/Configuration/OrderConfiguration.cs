@@ -34,6 +34,8 @@ namespace DAL.Data.Configuration
 
             builder.Property(e => e.PayingType).HasMaxLength(20);
 
+            builder.Property(e => e.Comment).HasMaxLength(256);
+
             builder.HasIndex(e => e.ClientId, "client_idx");
 
             builder.HasIndex(e => e.WorkerId, "worker_idx");
@@ -75,6 +77,7 @@ namespace DAL.Data.Configuration
                     ClientName = "Михаил",
                     PayingType = "Наличными",
                     Change = 370,
+                    GivenBonuses = 63,
                     StatusId = 5,
                     ClientId = 1,
                     WorkerId = 3,
@@ -90,6 +93,7 @@ namespace DAL.Data.Configuration
                     PhoneNumber = "+79106991174",
                     ClientName = "Михаил",
                     PayingType = "Картой",
+                    GivenBonuses = 63,
                     StatusId = 1,
                     ClientId = 1,
                 },
@@ -105,6 +109,8 @@ namespace DAL.Data.Configuration
                     PayingType = "Картой",
                     StatusId = 6,
                     ClientId = 1,
+                    GivenBonuses = 63, 
+                    UsedBonuses = 63,
 
                 },
                 new Order
@@ -120,9 +126,11 @@ namespace DAL.Data.Configuration
                     Change = 70,
                     StatusId = 3,
                     ClientId = 1,
-                    WorkerId = 3
+                    WorkerId = 3,
+                    GivenBonuses = 63,
+                    Comment = "Пиццы пожалуйста без огурцов"
                 }
-                );
+                ) ;
         }
 
     }

@@ -11,7 +11,7 @@ class LoadClientBasketEvent extends ClientBasketEvent {
 
   LoadClientBasketEvent(this.token);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [token];
 }
 
 class AddToBasketEvent extends ClientBasketEvent {
@@ -20,7 +20,7 @@ class AddToBasketEvent extends ClientBasketEvent {
 
   AddToBasketEvent(this.token, this.selectedIndex);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [selectedIndex];
 }
 
 class DecreaseBasketEvent extends ClientBasketEvent {
@@ -29,5 +29,5 @@ class DecreaseBasketEvent extends ClientBasketEvent {
 
   DecreaseBasketEvent(this.token, this.selectedIndex);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [token, selectedIndex];
 }

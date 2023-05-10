@@ -18,6 +18,25 @@ class PizzaCatalogueLoadedState extends PizzaCatalogueState {
   List<Object?> get props => [pizzas];
 }
 
+class LoadingFilteredPizzaCatalogueState extends PizzaCatalogueState {
+  @override
+  List<Object?> get props => [];
+}
+
+class FilteredPizzaCatalogueLoadedState extends PizzaCatalogueState {
+  final List<PizzaModel> filteredPizzas;
+  FilteredPizzaCatalogueLoadedState(this.filteredPizzas);
+  @override
+  List<Object?> get props => [filteredPizzas];
+}
+
+class FilteredPizzaCatalogueErrorState extends PizzaCatalogueState {
+  final String error;
+  FilteredPizzaCatalogueErrorState(this.error);
+  @override
+  List<Object?> get props => [error];
+}
+
 class PizzaCatalogueErrorState extends PizzaCatalogueState {
   final String error;
   PizzaCatalogueErrorState(this.error);
@@ -51,4 +70,11 @@ class ChosenPizzaErrorState extends PizzaCatalogueState {
   ChosenPizzaErrorState(this.error);
   @override
   List<Object?> get props => [error];
+}
+
+class LoadedFiltersState extends PizzaCatalogueState {
+  final String? value;
+  LoadedFiltersState(this.value);
+  @override
+  List<Object?> get props => [value];
 }

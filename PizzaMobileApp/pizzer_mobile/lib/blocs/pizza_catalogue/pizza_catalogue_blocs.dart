@@ -19,6 +19,17 @@ class PizzaCatalogueBloc
       }
     });
 
+    on<LoadFilteredPizzaCatalogueEvent>((event, emit) async {
+      emit(LoadingFilteredPizzaCatalogueState());
+      try {
+        final filteredPizzas =
+            await _pizzaRepository.getFilteredPizzas(event.value);
+        emit(FilteredPizzaCatalogueLoadedState(filteredPizzas));
+      } catch (e) {
+        emit(FilteredPizzaCatalogueErrorState(e.toString()));
+      }
+    });
+
     on<LoadChosenPizzaEvent>(((event, emit) async {
       emit(ChosenPizzaLoadingState(event.name));
       try {
@@ -50,6 +61,11 @@ class PizzaCatalogueBloc
       } catch (e) {
         emit(ChosenPizzaErrorState(e.toString()));
       }
+    }));
+
+    on<LoadFiltersEvent>(((event, emit) async {
+      // emit(ChosenPizzaLoadingState(event.name));
+      emit(LoadedFiltersState(event.value));
     }));
   }
 }

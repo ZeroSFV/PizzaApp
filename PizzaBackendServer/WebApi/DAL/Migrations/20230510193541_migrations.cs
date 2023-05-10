@@ -125,6 +125,10 @@ namespace DAL.Migrations
                     PayingType = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false, collation: "utf8mb4_0900_ai_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Change = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: true),
+                    UsedBonuses = table.Column<int>(type: "int", nullable: true),
+                    GivenBonuses = table.Column<int>(type: "int", nullable: false),
+                    Comment = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true, collation: "utf8mb4_0900_ai_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     ClientId = table.Column<int>(type: "int", nullable: false),
                     WorkerId = table.Column<int>(type: "int", nullable: true),
                     CourierId = table.Column<int>(type: "int", nullable: true),
@@ -253,13 +257,13 @@ namespace DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "order",
-                columns: new[] { "Id", "Address", "Change", "ClientId", "ClientName", "CourierId", "CreationTime", "FinishedTime", "PayingType", "PhoneNumber", "PredictedTime", "Price", "StatusId", "WorkerId" },
+                columns: new[] { "Id", "Address", "Change", "ClientId", "ClientName", "Comment", "CourierId", "CreationTime", "FinishedTime", "GivenBonuses", "PayingType", "PhoneNumber", "PredictedTime", "Price", "StatusId", "UsedBonuses", "WorkerId" },
                 values: new object[,]
                 {
-                    { 1, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", 370m, 1, "Михаил", 4, new DateTime(2022, 4, 24, 18, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 4, 24, 18, 30, 0, 0, DateTimeKind.Unspecified), "Наличными", "+79106991174", new DateTime(2022, 4, 24, 19, 0, 0, 0, DateTimeKind.Unspecified), 630m, 5, 3 },
-                    { 2, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", null, 1, "Михаил", null, new DateTime(2022, 4, 24, 17, 0, 0, 0, DateTimeKind.Unspecified), null, "Картой", "+79106991174", new DateTime(2022, 4, 24, 20, 0, 0, 0, DateTimeKind.Unspecified), 630m, 1, null },
-                    { 3, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", null, 1, "Виктор", null, new DateTime(2022, 4, 24, 14, 0, 0, 0, DateTimeKind.Unspecified), null, "Картой", "+79106991174", new DateTime(2022, 4, 24, 15, 0, 0, 0, DateTimeKind.Unspecified), 630m, 6, null },
-                    { 4, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", 70m, 1, "Михаил", null, new DateTime(2022, 4, 24, 18, 0, 0, 0, DateTimeKind.Unspecified), null, "Наличными", "+79106991174", new DateTime(2022, 4, 24, 19, 0, 0, 0, DateTimeKind.Unspecified), 630m, 3, 3 }
+                    { 1, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", 370m, 1, "Михаил", null, 4, new DateTime(2022, 4, 24, 18, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 4, 24, 18, 30, 0, 0, DateTimeKind.Unspecified), 63, "Наличными", "+79106991174", new DateTime(2022, 4, 24, 19, 0, 0, 0, DateTimeKind.Unspecified), 630m, 5, null, 3 },
+                    { 2, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", null, 1, "Михаил", null, null, new DateTime(2022, 4, 24, 17, 0, 0, 0, DateTimeKind.Unspecified), null, 63, "Картой", "+79106991174", new DateTime(2022, 4, 24, 20, 0, 0, 0, DateTimeKind.Unspecified), 630m, 1, null, null },
+                    { 3, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", null, 1, "Виктор", null, null, new DateTime(2022, 4, 24, 14, 0, 0, 0, DateTimeKind.Unspecified), null, 63, "Картой", "+79106991174", new DateTime(2022, 4, 24, 15, 0, 0, 0, DateTimeKind.Unspecified), 630m, 6, 63, null },
+                    { 4, "Ул. Курьяновская, д.25, кв 20, этаж 5, подъезд 1", 70m, 1, "Михаил", "Пиццы пожалуйста без огурцов", null, new DateTime(2022, 4, 24, 18, 0, 0, 0, DateTimeKind.Unspecified), null, 63, "Наличными", "+79106991174", new DateTime(2022, 4, 24, 19, 0, 0, 0, DateTimeKind.Unspecified), 630m, 3, null, 3 }
                 });
 
             migrationBuilder.InsertData(
