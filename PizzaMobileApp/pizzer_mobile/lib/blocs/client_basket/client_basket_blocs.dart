@@ -1,3 +1,4 @@
+import 'package:pizzer_mobile/blocs/bonuses_bloc/bonuses_states.dart';
 import 'package:pizzer_mobile/blocs/client_basket/client_basket_events.dart';
 import 'package:pizzer_mobile/blocs/client_basket/client_basket_states.dart';
 import 'package:pizzer_mobile/repositories/basket_repository.dart';
@@ -8,6 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ClientBasketBloc extends Bloc<ClientBasketEvent, ClientBasketState> {
   final BasketRepository _basketRepository;
   final UserInfoRepository _userInfoRepository;
+  bool? bonusesApplied = false;
+  int? usedBonuses = 0;
+  //double basketPrice = 0;
 
   ClientBasketBloc(this._basketRepository, this._userInfoRepository)
       : super(ClientBasketLoadingState()) {
@@ -16,11 +20,12 @@ class ClientBasketBloc extends Bloc<ClientBasketEvent, ClientBasketState> {
       try {
         final userInfo = await _userInfoRepository.getUserInfo(event.token);
         final baskets = await _basketRepository.getBasketsOfUser(userInfo.id);
-        double basketsPrice = 0;
+        int basketsPrice = 0;
         if (baskets.isNotEmpty) {
           baskets.forEach((e) {
-            basketsPrice += (e.price as double);
+            basketsPrice += (e.price as int);
           });
+          // basketPrice = basketsPrice;
           emit(ClientBasketLoadedState(baskets, userInfo, basketsPrice));
         } else {
           emit(ClientBasketEmptyState());
@@ -28,6 +33,29 @@ class ClientBasketBloc extends Bloc<ClientBasketEvent, ClientBasketState> {
       } catch (e) {
         emit(ClientBasketErrorState(e.toString()));
       }
+    });
+
+    on<AppliedBonusesEvent>((event, emit) async {
+      int basketPrice;
+      if (event.user.bonuses! <= event.basketPrice * 0.15) {
+        basketPrice = event.basketPrice - (event.user.bonuses as int);
+        bonusesApplied = true;
+        usedBonuses = event.user.bonuses;
+        emit(ClientBasketLoadedState(event.baskets, event.user, basketPrice));
+      } else if (event.user.bonuses! > event.basketPrice * 0.15) {
+        basketPrice = (event.basketPrice - (event.basketPrice * 0.15).toInt());
+        bonusesApplied = true;
+        usedBonuses = (event.basketPrice * 0.15).toInt();
+        emit(ClientBasketLoadedState(event.baskets, event.user, basketPrice));
+      }
+    });
+
+    on<DisbandedBonusesEvent>((event, emit) async {
+      int basketPrice = event.basketPrice;
+      basketPrice = basketPrice + (usedBonuses as int);
+      bonusesApplied = false;
+      usedBonuses = 0;
+      emit(ClientBasketLoadedState(event.baskets, event.user, basketPrice));
     });
 
     on<AddToBasketEvent>((event, emit) async {
@@ -38,7 +66,7 @@ class ClientBasketBloc extends Bloc<ClientBasketEvent, ClientBasketState> {
             baskets.firstWhere((element) => element.id == event.selectedIndex);
         oneBasket.amount = oneBasket.amount! + 1;
         await _basketRepository.updateBasket(oneBasket);
-        double basketsPrice = 0;
+        int basketsPrice = 0;
         // if (baskets.isNotEmpty) {
         //   baskets.forEach((e) async {
         //     if (e.id == event.selectedIndex) {
@@ -49,12 +77,23 @@ class ClientBasketBloc extends Bloc<ClientBasketEvent, ClientBasketState> {
         final newBaskets =
             await _basketRepository.getBasketsOfUser(userInfo.id);
         if (newBaskets.isNotEmpty) {
-          newBaskets.forEach((e) async {
-            if (e.id == event.selectedIndex) {
-              basketsPrice += (e.price as double);
-            }
+          newBaskets.forEach((e) {
+            // if (e.id == event.selectedIndex) {
+            basketsPrice += (e.price as int);
+            // }
           });
-          emit(ClientBasketLoadedState(newBaskets, userInfo, basketsPrice));
+          if (bonusesApplied == true) {
+            if (userInfo.bonuses! <= basketsPrice * 0.15) {
+              usedBonuses = userInfo.bonuses;
+              basketsPrice = basketsPrice - (userInfo.bonuses as int);
+              emit(ClientBasketLoadedState(newBaskets, userInfo, basketsPrice));
+            } else if (userInfo.bonuses! > basketsPrice * 0.15) {
+              basketsPrice = basketsPrice - (basketsPrice * 0.15).toInt();
+              usedBonuses = (basketsPrice * 0.15).toInt();
+              emit(ClientBasketLoadedState(newBaskets, userInfo, basketsPrice));
+            }
+          } else
+            emit(ClientBasketLoadedState(newBaskets, userInfo, basketsPrice));
         } else {
           emit(ClientBasketEmptyState());
         }
@@ -72,31 +111,57 @@ class ClientBasketBloc extends Bloc<ClientBasketEvent, ClientBasketState> {
         oneBasket.amount = oneBasket.amount! - 1;
         if (oneBasket.amount != 0) {
           await _basketRepository.updateBasket(oneBasket);
-          double basketsPrice = 0;
+          int basketsPrice = 0;
           final newBaskets =
               await _basketRepository.getBasketsOfUser(userInfo.id);
           if (newBaskets.isNotEmpty) {
-            newBaskets.forEach((e) async {
-              if (e.id == event.selectedIndex) {
-                basketsPrice += (e.price as double);
-              }
+            newBaskets.forEach((e) {
+              // if (e.id == event.selectedIndex) {
+              basketsPrice += (e.price as int);
+              //}
             });
-            emit(ClientBasketLoadedState(newBaskets, userInfo, basketsPrice));
+            if (bonusesApplied == true) {
+              if (userInfo.bonuses! <= basketsPrice * 0.15) {
+                usedBonuses = userInfo.bonuses;
+                basketsPrice = basketsPrice - (userInfo.bonuses as int);
+                emit(ClientBasketLoadedState(
+                    newBaskets, userInfo, basketsPrice));
+              } else if (userInfo.bonuses! > basketsPrice * 0.15) {
+                basketsPrice = basketsPrice - (basketsPrice * 0.15).toInt();
+                usedBonuses = (basketsPrice * 0.15).toInt();
+                emit(ClientBasketLoadedState(
+                    newBaskets, userInfo, basketsPrice));
+              }
+            } else
+              emit(ClientBasketLoadedState(newBaskets, userInfo, basketsPrice));
           } else {
             emit(ClientBasketEmptyState());
           }
         } else if (oneBasket.amount == 0) {
           await _basketRepository.deleteBasket(oneBasket.id);
-          double basketsPrice = 0;
+          int basketsPrice = 0;
           final newBaskets =
               await _basketRepository.getBasketsOfUser(userInfo.id);
           if (newBaskets.isNotEmpty) {
-            newBaskets.forEach((e) async {
-              if (e.id == event.selectedIndex) {
-                basketsPrice += (e.price as double);
-              }
+            newBaskets.forEach((e) {
+              // if (e.id == event.selectedIndex) {
+              basketsPrice += (e.price as int);
+              // }
             });
-            emit(ClientBasketLoadedState(newBaskets, userInfo, basketsPrice));
+            if (bonusesApplied == true) {
+              if (userInfo.bonuses! <= basketsPrice * 0.15) {
+                usedBonuses = userInfo.bonuses;
+                basketsPrice = basketsPrice - (userInfo.bonuses as int);
+                emit(ClientBasketLoadedState(
+                    newBaskets, userInfo, basketsPrice));
+              } else if (userInfo.bonuses! > basketsPrice * 0.15) {
+                basketsPrice = basketsPrice - (basketsPrice * 0.15).toInt();
+                usedBonuses = (basketsPrice * 0.15).toInt();
+                emit(ClientBasketLoadedState(
+                    newBaskets, userInfo, basketsPrice));
+              }
+            } else
+              emit(ClientBasketLoadedState(newBaskets, userInfo, basketsPrice));
           } else {
             emit(ClientBasketEmptyState());
           }

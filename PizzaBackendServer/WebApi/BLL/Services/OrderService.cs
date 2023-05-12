@@ -86,6 +86,13 @@ namespace BLL.Services
             var curOrder = dataBase.OrderRepository.Get(orderId);
             if (curOrder != null)
             {
+                var user = dataBase.UserRepository.Get(curOrder.ClientId);
+                if (user != null)
+                {
+                    user.Bonuses -= curOrder.GivenBonuses;
+                    user.Bonuses += curOrder.UsedBonuses;
+                    dataBase.UserRepository.Update(user);
+                }
                 curOrder.StatusId = 6;
                 Save();
             }
@@ -176,6 +183,12 @@ namespace BLL.Services
         public int MakeOrder(MakeOrderModel makeOrderModel)
         {
             var client = dataBase.UserRepository.Get(makeOrderModel.ClientId);
+            if (client != null)
+            {
+                client.Bonuses += makeOrderModel.GivenBonuses;
+                if (client.Bonuses != null)
+                client.Bonuses -= makeOrderModel.UsedBonuses;
+            }
             var baskets = dataBase.BasketRepository.GetAll()
                                                    .Where(i => i.UserId == makeOrderModel.ClientId)
                                                    .ToList();
@@ -228,6 +241,10 @@ namespace BLL.Services
                 {
                     order.Price += b.Price;
                 }
+            }
+            if (makeOrderModel.UsedBonuses != 0)
+            {
+                order.Price = order.Price - (decimal)makeOrderModel.UsedBonuses;
             }
             order.StatusId = 1;
             order.Status = dataBase.StatusRepository.Get(order.StatusId);

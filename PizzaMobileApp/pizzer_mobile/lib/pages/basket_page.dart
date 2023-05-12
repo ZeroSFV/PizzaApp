@@ -16,6 +16,12 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:pizzer_mobile/blocs/delivery_info/delivery_info_bloc.dart';
 import 'package:pizzer_mobile/blocs/delivery_info/delivery_info_events.dart';
 import 'package:pizzer_mobile/blocs/delivery_info/delivery_info_states.dart';
+import 'package:pizzer_mobile/blocs/payment_type/payment_type_bloc.dart';
+import 'package:pizzer_mobile/blocs/payment_type/payment_type_events.dart';
+import 'package:pizzer_mobile/blocs/payment_type/payment_type_states.dart';
+import 'package:pizzer_mobile/blocs/app_bloc/app_bloc.dart';
+import 'package:pizzer_mobile/blocs/app_bloc/app_events.dart';
+import 'package:pizzer_mobile/blocs/app_bloc/app_states.dart';
 
 class BasketPage extends StatelessWidget {
   BasketPage({super.key, this.token});
@@ -96,8 +102,20 @@ class BasketPage extends StatelessWidget {
     List<BasketModel> basketList = state.baskets;
     bool usedBonuses = false;
     UserInfoModel user = state.user;
-    double basketPrice = state.basketPrice;
+    int basketPrice = state.basketPrice;
     int givenBonuses = (basketPrice * 0.1).toInt();
+    String? paymentType;
+    String? change;
+    int? bonusesUsed = BlocProvider.of<ClientBasketBloc>(context).usedBonuses;
+    // if (usedBonuses == false) bonusesUsed = 0;
+    // if (usedBonuses == true) {
+    //   if (user.bonuses! <= basketPrice * 0.15) {
+    //     bonusesUsed = user.bonuses as int;
+    //   } else if (user.bonuses! > basketPrice * 0.15) {
+    //     bonusesUsed = (basketPrice * 0.15).toInt();
+    //     basketPrice = basketPrice - bonusesUsed;
+    //   }
+    // }
     return SingleChildScrollView(
         child: Column(children: [
       ListView.builder(
@@ -632,23 +650,50 @@ class BasketPage extends StatelessWidget {
                           child: BlocBuilder<BonusesBloc, BonusesState>(
                               builder: (context, stateBonuses) {
                             if (stateBonuses is BonusesAppliedState) {
+                              // bonusesUsed = stateBonuses.userBonuses!.toInt();
+                              // basketPrice =
+                              //     basketPrice - bonusesUsed.toDouble();
                               return Row(children: [
                                 Padding(
                                     padding: EdgeInsets.fromLTRB(8, 10, 0, 0),
                                     child: Text(
                                       '-' +
-                                          '${stateBonuses.userBonuses}}'
+                                          '${BlocProvider.of<ClientBasketBloc>(context).usedBonuses}'
                                               ' бонусов',
                                       style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: (MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.portrait)
+                                              ? (MediaQuery.of(context)
+                                                      .size
+                                                      .height) /
+                                                  30
+                                              : (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  30,
                                           fontFamily: "Times New Roman"),
                                     )),
                                 Padding(
                                     padding:
                                         (MediaQuery.of(context).orientation ==
                                                 Orientation.portrait)
-                                            ? EdgeInsets.fromLTRB(70, 0, 0, 0)
-                                            : EdgeInsets.fromLTRB(280, 0, 0, 0),
+                                            ? EdgeInsets.fromLTRB(
+                                                (MediaQuery.of(context)
+                                                        .size
+                                                        .width) /
+                                                    3.8,
+                                                0,
+                                                0,
+                                                0)
+                                            : EdgeInsets.fromLTRB(
+                                                (MediaQuery.of(context)
+                                                        .size
+                                                        .width) /
+                                                    1.8,
+                                                0,
+                                                0,
+                                                0),
                                     child: GestureDetector(
                                       child: Container(
                                         width: (MediaQuery.of(context)
@@ -689,15 +734,34 @@ class BasketPage extends StatelessWidget {
                                         child: Center(
                                             child: Text(
                                           'Отменить',
-                                          style: TextStyle(color: Colors.black),
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: (MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait)
+                                                  ? (MediaQuery.of(context)
+                                                          .size
+                                                          .height) /
+                                                      30
+                                                  : (MediaQuery.of(context)
+                                                          .size
+                                                          .width) /
+                                                      30),
                                         )),
                                       ),
                                       onTap: () => {
+                                        usedBonuses = false,
                                         BlocProvider.of<BonusesBloc>(context)
                                             .add(BonusesChange(
                                                 false,
                                                 user.bonuses,
-                                                state.basketPrice))
+                                                state.basketPrice)),
+                                        // basketPrice += bonusesUsed,
+                                        // bonusesUsed = 0
+                                        BlocProvider.of<ClientBasketBloc>(
+                                                context)
+                                            .add(DisbandedBonusesEvent(
+                                                basketList, user, basketPrice))
                                       },
                                     ))
                               ]);
@@ -798,11 +862,21 @@ class BasketPage extends StatelessWidget {
                                         )),
                                       ),
                                       onTap: () => {
+                                        usedBonuses = true,
                                         BlocProvider.of<BonusesBloc>(context)
                                             .add(BonusesChange(
                                                 true,
                                                 user.bonuses,
-                                                state.basketPrice))
+                                                state.basketPrice)),
+                                        BlocProvider.of<ClientBasketBloc>(
+                                                context)
+                                            .add(AppliedBonusesEvent(
+                                                basketList, user, basketPrice)),
+
+                                        // bonusesUsed =
+                                        //     BlocProvider.of<BonusesBloc>(
+                                        //             context)
+                                        //         .bonuses!,
                                       },
                                     ))
                               ]);
@@ -935,7 +1009,13 @@ class BasketPage extends StatelessWidget {
                               child: Text(
                                 "Доставка",
                                 style: TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.w800),
+                                    fontSize: MediaQuery.of(context)
+                                                .orientation ==
+                                            Orientation.portrait
+                                        ? 30
+                                        : MediaQuery.of(context).size.width /
+                                            25,
+                                    fontWeight: FontWeight.w800),
                               ))),
                       Align(
                           alignment: Alignment.topLeft,
@@ -949,7 +1029,14 @@ class BasketPage extends StatelessWidget {
                                                 context)
                                             .add(AddressChangedEvent(value)),
                                     style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: MediaQuery.of(context)
+                                                    .orientation ==
+                                                Orientation.portrait
+                                            ? 20
+                                            : MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                30,
                                         fontFamily: "Times New Roman"),
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -963,7 +1050,14 @@ class BasketPage extends StatelessWidget {
                                         ),
                                         hintText: 'Адрес',
                                         hintStyle: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: MediaQuery.of(context)
+                                                        .orientation ==
+                                                    Orientation.portrait
+                                                ? 20
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    30,
                                             fontFamily: "Times New Roman")),
                                   )))),
                       Align(
@@ -978,7 +1072,14 @@ class BasketPage extends StatelessWidget {
                                                   context)
                                               .add(FlatChangedEvent(value)),
                                       style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.portrait
+                                              ? 20
+                                              : MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  30,
                                           fontFamily: "Times New Roman"),
                                       decoration: InputDecoration(
                                           border: OutlineInputBorder(
@@ -992,7 +1093,14 @@ class BasketPage extends StatelessWidget {
                                           ),
                                           hintText: '№ квартиры / офиса',
                                           hintStyle: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait
+                                                  ? 20
+                                                  : MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      30,
                                               fontFamily: "Times New Roman")),
                                       keyboardType: TextInputType.number,
                                       inputFormatters: <TextInputFormatter>[
@@ -1014,7 +1122,14 @@ class BasketPage extends StatelessWidget {
                                                   DeliveryInfoBloc>(context)
                                               .add(EntranceChangedEvent(value)),
                                           style: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait
+                                                  ? 20
+                                                  : MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      30,
                                               fontFamily: "Times New Roman"),
                                           decoration: InputDecoration(
                                               border: OutlineInputBorder(
@@ -1030,7 +1145,15 @@ class BasketPage extends StatelessWidget {
                                               ),
                                               hintText: 'Подъезд',
                                               hintStyle: TextStyle(
-                                                  fontSize: 20,
+                                                  fontSize: MediaQuery.of(
+                                                                  context)
+                                                              .orientation ==
+                                                          Orientation.portrait
+                                                      ? 20
+                                                      : MediaQuery.of(context)
+                                                              .size
+                                                              .width /
+                                                          30,
                                                   fontFamily:
                                                       "Times New Roman")),
                                           keyboardType: TextInputType.number,
@@ -1039,14 +1162,17 @@ class BasketPage extends StatelessWidget {
                                                 .digitsOnly
                                           ]))),
                               Padding(
-                                  padding: EdgeInsets.only(left: 20),
+                                  padding: EdgeInsets.only(
+                                      left: MediaQuery.of(context).orientation == Orientation.portrait
+                                          ? MediaQuery.of(context).size.width /
+                                              30
+                                          : MediaQuery.of(context).size.width /
+                                              14),
                                   child: SizedBox(
-                                      width:
-                                          (MediaQuery.of(context).size.width) /
-                                              2.20,
+                                      width: (MediaQuery.of(context).size.width) /
+                                          2.20,
                                       child: TextField(
-                                          onChanged: (value) => BlocProvider.of<
-                                                  DeliveryInfoBloc>(context)
+                                          onChanged: (value) => BlocProvider.of<DeliveryInfoBloc>(context)
                                               .add(FloorChangedEvent(value)),
                                           style: TextStyle(
                                               fontSize: 20,
@@ -1065,9 +1191,10 @@ class BasketPage extends StatelessWidget {
                                               ),
                                               hintText: 'Этаж',
                                               hintStyle: TextStyle(
-                                                  fontSize: 20,
-                                                  fontFamily:
-                                                      "Times New Roman")),
+                                                  fontSize: MediaQuery.of(context).orientation == Orientation.portrait
+                                                      ? 20
+                                                      : MediaQuery.of(context).size.width / 30,
+                                                  fontFamily: "Times New Roman")),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -1100,11 +1227,18 @@ class BasketPage extends StatelessWidget {
                                               bottomLeft:
                                                   Radius.circular(40.0)),
                                         ),
-                                        hintText: '+8 (9__) ___-__-__',
+                                        hintText: 'Номер телефона',
                                         hintStyle: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: MediaQuery.of(context)
+                                                        .orientation ==
+                                                    Orientation.portrait
+                                                ? 20
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    30,
                                             fontFamily: "Times New Roman")),
-                                    keyboardType: TextInputType.number,
+                                    keyboardType: TextInputType.phone,
                                     // inputFormatters: <TextInputFormatter>[
                                     //   MaskTextInputFormatter(
                                     //       mask: '+8 (9##) ###-##-##',
@@ -1112,108 +1246,108 @@ class BasketPage extends StatelessWidget {
                                     //       type: MaskAutoCompletionType.lazy),
                                     // ]
                                   )))),
-                      Center(
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              child: Container(
-                                  width: (MediaQuery.of(context).size.width),
-                                  height: (MediaQuery.of(context).orientation ==
-                                          Orientation.portrait)
-                                      ? (MediaQuery.of(context).size.width) / 12
-                                      : (MediaQuery.of(context).size.width) /
-                                          12,
-                                  decoration: BoxDecoration(
-                                    //color: Color.fromARGB(200, 210, 210, 210),
-                                    border: Border.all(
-                                      color: Color.fromARGB(199, 118, 118, 118),
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(40.0),
-                                        bottomRight: Radius.circular(40.0),
-                                        topLeft: Radius.circular(40.0),
-                                        bottomLeft: Radius.circular(40.0)),
-                                  ),
-                                  child: Row(children: [
-                                    Container(
-                                      width:
-                                          (MediaQuery.of(context).size.width) /
-                                              2,
-                                      height:
-                                          (MediaQuery.of(context).size.width) /
-                                              8,
-                                      decoration: BoxDecoration(
-                                        color: Color.fromARGB(255, 255, 32, 16),
+                      // Center(
+                      //     child: Padding(
+                      //         padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      //         child: Container(
+                      //             width: (MediaQuery.of(context).size.width),
+                      //             height: (MediaQuery.of(context).orientation ==
+                      //                     Orientation.portrait)
+                      //                 ? (MediaQuery.of(context).size.width) / 12
+                      //                 : (MediaQuery.of(context).size.width) /
+                      //                     12,
+                      //             decoration: BoxDecoration(
+                      //               //color: Color.fromARGB(200, 210, 210, 210),
+                      //               border: Border.all(
+                      //                 color: Color.fromARGB(199, 118, 118, 118),
+                      //               ),
+                      //               borderRadius: BorderRadius.only(
+                      //                   topRight: Radius.circular(40.0),
+                      //                   bottomRight: Radius.circular(40.0),
+                      //                   topLeft: Radius.circular(40.0),
+                      //                   bottomLeft: Radius.circular(40.0)),
+                      //             ),
+                      //             child: Row(children: [
+                      //               Container(
+                      //                 width:
+                      //                     (MediaQuery.of(context).size.width) /
+                      //                         2,
+                      //                 height:
+                      //                     (MediaQuery.of(context).size.width) /
+                      //                         8,
+                      //                 decoration: BoxDecoration(
+                      //                   color: Color.fromARGB(255, 255, 32, 16),
 
-                                        /// border: Border.all(color: Colors.black),
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(40.0),
-                                            bottomRight: Radius.circular(40.0),
-                                            topLeft: Radius.circular(40.0),
-                                            bottomLeft: Radius.circular(40.0)),
-                                      ),
-                                      child: Center(
-                                          child: Text(
-                                        "Как можно быстрее",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: (MediaQuery.of(context)
-                                                        .orientation ==
-                                                    Orientation.portrait)
-                                                ? (MediaQuery.of(context)
-                                                        .size
-                                                        .width) /
-                                                    30
-                                                : (MediaQuery.of(context)
-                                                        .size
-                                                        .width) /
-                                                    50),
-                                      )),
-                                    ),
-                                    GestureDetector(
-                                        onTap: () => {
-                                              // BlocProvider.of<PizzaCatalogueBloc>(context)
-                                              //     .add(LoadChosenMediumPizzaEvent(
-                                              //         bigPizza.name))
-                                            },
-                                        child: Container(
-                                            width: (MediaQuery.of(context)
-                                                    .size
-                                                    .width) /
-                                                2.28,
-                                            height: (MediaQuery.of(context)
-                                                    .size
-                                                    .width) /
-                                                8,
-                                            decoration: BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 238, 238, 238),
-                                              //color: Colors.black,
-                                              borderRadius: BorderRadius.only(
-                                                  topRight:
-                                                      Radius.circular(40.0),
-                                                  bottomRight:
-                                                      Radius.circular(40.0)),
-                                            ),
-                                            child: Center(
-                                                child: Text(
-                                              "Ко времени",
-                                              style: TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 162, 162, 162),
-                                                  fontSize: (MediaQuery.of(
-                                                                  context)
-                                                              .orientation ==
-                                                          Orientation.portrait)
-                                                      ? (MediaQuery.of(context)
-                                                              .size
-                                                              .width) /
-                                                          30
-                                                      : (MediaQuery.of(context)
-                                                              .size
-                                                              .width) /
-                                                          50),
-                                            ))))
-                                  ])))),
+                      //                   /// border: Border.all(color: Colors.black),
+                      //                   borderRadius: BorderRadius.only(
+                      //                       topRight: Radius.circular(40.0),
+                      //                       bottomRight: Radius.circular(40.0),
+                      //                       topLeft: Radius.circular(40.0),
+                      //                       bottomLeft: Radius.circular(40.0)),
+                      //                 ),
+                      //                 child: Center(
+                      //                     child: Text(
+                      //                   "Как можно быстрее",
+                      //                   style: TextStyle(
+                      //                       color: Colors.white,
+                      //                       fontSize: (MediaQuery.of(context)
+                      //                                   .orientation ==
+                      //                               Orientation.portrait)
+                      //                           ? (MediaQuery.of(context)
+                      //                                   .size
+                      //                                   .width) /
+                      //                               30
+                      //                           : (MediaQuery.of(context)
+                      //                                   .size
+                      //                                   .width) /
+                      //                               50),
+                      //                 )),
+                      //               ),
+                      //               GestureDetector(
+                      //                   onTap: () => {
+                      //                         // BlocProvider.of<PizzaCatalogueBloc>(context)
+                      //                         //     .add(LoadChosenMediumPizzaEvent(
+                      //                         //         bigPizza.name))
+                      //                       },
+                      //                   child: Container(
+                      //                       width: (MediaQuery.of(context)
+                      //                               .size
+                      //                               .width) /
+                      //                           2.28,
+                      //                       height: (MediaQuery.of(context)
+                      //                               .size
+                      //                               .width) /
+                      //                           8,
+                      //                       decoration: BoxDecoration(
+                      //                         color: Color.fromARGB(
+                      //                             255, 238, 238, 238),
+                      //                         //color: Colors.black,
+                      //                         borderRadius: BorderRadius.only(
+                      //                             topRight:
+                      //                                 Radius.circular(40.0),
+                      //                             bottomRight:
+                      //                                 Radius.circular(40.0)),
+                      //                       ),
+                      //                       child: Center(
+                      //                           child: Text(
+                      //                         "Ко времени",
+                      //                         style: TextStyle(
+                      //                             color: Color.fromARGB(
+                      //                                 255, 162, 162, 162),
+                      //                             fontSize: (MediaQuery.of(
+                      //                                             context)
+                      //                                         .orientation ==
+                      //                                     Orientation.portrait)
+                      //                                 ? (MediaQuery.of(context)
+                      //                                         .size
+                      //                                         .width) /
+                      //                                     30
+                      //                                 : (MediaQuery.of(context)
+                      //                                         .size
+                      //                                         .width) /
+                      //                                     50),
+                      //                       ))))
+                      //             ])))),
                       Align(
                           alignment: Alignment.topLeft,
                           child: Padding(
@@ -1228,9 +1362,20 @@ class BasketPage extends StatelessWidget {
                                                 context)
                                             .add(CommentChangedEvent(value)),
                                     style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: MediaQuery.of(context)
+                                                    .orientation ==
+                                                Orientation.portrait
+                                            ? 20
+                                            : MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                30,
                                         fontFamily: "Times New Roman"),
-                                    maxLines: 5,
+                                    maxLines:
+                                        MediaQuery.of(context).orientation ==
+                                                Orientation.portrait
+                                            ? 5
+                                            : 6,
                                     maxLength: 256,
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -1245,151 +1390,418 @@ class BasketPage extends StatelessWidget {
                                         hintText:
                                             'Комментарий курьеру или работнику...',
                                         hintStyle: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: MediaQuery.of(context)
+                                                        .orientation ==
+                                                    Orientation.portrait
+                                                ? 20
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    30,
                                             fontFamily: "Times New Roman")),
                                   )))),
                     ]),
                   ),
-                  Container(
-                      child: Column(
-                    children: [
-                      Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              child: Text(
-                                "Оплата",
-                                style: TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.w800),
-                              ))),
-                      Center(
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              child: Container(
-                                  width: (MediaQuery.of(context).size.width),
-                                  height: (MediaQuery.of(context).orientation ==
-                                          Orientation.portrait)
-                                      ? (MediaQuery.of(context).size.width) / 12
-                                      : (MediaQuery.of(context).size.width) /
-                                          12,
-                                  decoration: BoxDecoration(
-                                    //color: Color.fromARGB(200, 210, 210, 210),
-                                    border: Border.all(
-                                      color: Color.fromARGB(199, 118, 118, 118),
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(40.0),
-                                        bottomRight: Radius.circular(40.0),
-                                        topLeft: Radius.circular(40.0),
-                                        bottomLeft: Radius.circular(40.0)),
-                                  ),
-                                  child: Row(children: [
-                                    Container(
-                                      width:
-                                          (MediaQuery.of(context).size.width) /
-                                              2,
-                                      height:
-                                          (MediaQuery.of(context).size.width) /
-                                              8,
-                                      decoration: BoxDecoration(
-                                        color: Color.fromARGB(255, 255, 32, 16),
-
-                                        /// border: Border.all(color: Colors.black),
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(40.0),
-                                            bottomRight: Radius.circular(40.0),
-                                            topLeft: Radius.circular(40.0),
-                                            bottomLeft: Radius.circular(40.0)),
-                                      ),
-                                      child: Center(
-                                          child: Text(
-                                        "Наличными",
+                  BlocProvider(
+                      create: (context) =>
+                          PaymentTypeBloc()..add(CashChosenEvent()),
+                      child: BlocBuilder<PaymentTypeBloc, PaymentTypeState>(
+                          builder: (context, statePayment) {
+                        if (statePayment is CashPaymentState) {
+                          paymentType = "Наличными";
+                          change = statePayment.change;
+                          return Container(
+                              child: Column(
+                            children: [
+                              Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                      child: Text(
+                                        "Оплата",
                                         style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: (MediaQuery.of(context)
+                                            fontSize: MediaQuery.of(context)
                                                         .orientation ==
-                                                    Orientation.portrait)
-                                                ? (MediaQuery.of(context)
+                                                    Orientation.portrait
+                                                ? 30
+                                                : MediaQuery.of(context)
                                                         .size
-                                                        .width) /
-                                                    30
-                                                : (MediaQuery.of(context)
-                                                        .size
-                                                        .width) /
-                                                    50),
-                                      )),
-                                    ),
-                                    GestureDetector(
-                                        onTap: () => {
-                                              // BlocProvider.of<PizzaCatalogueBloc>(context)
-                                              //     .add(LoadChosenMediumPizzaEvent(
-                                              //         bigPizza.name))
-                                            },
-                                        child: Container(
-                                            width: (MediaQuery.of(context)
-                                                    .size
-                                                    .width) /
-                                                2.28,
-                                            height: (MediaQuery.of(context)
-                                                    .size
-                                                    .width) /
-                                                8,
-                                            decoration: BoxDecoration(
+                                                        .width /
+                                                    25,
+                                            fontWeight: FontWeight.w800),
+                                      ))),
+                              Center(
+                                  child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                      child: Container(
+                                          width: (MediaQuery.of(context)
+                                              .size
+                                              .width),
+                                          height: (MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.portrait)
+                                              ? (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  12
+                                              : (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  12,
+                                          decoration: BoxDecoration(
+                                            //color: Color.fromARGB(200, 210, 210, 210),
+                                            border: Border.all(
                                               color: Color.fromARGB(
-                                                  255, 251, 251, 251),
-                                              //color: Colors.black,
-                                              borderRadius: BorderRadius.only(
-                                                  topRight:
-                                                      Radius.circular(40.0),
-                                                  bottomRight:
-                                                      Radius.circular(40.0)),
+                                                  199, 118, 118, 118),
                                             ),
-                                            child: Center(
-                                                child: Text(
-                                              "Картой",
-                                              style: TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 162, 162, 162),
-                                                  fontSize: (MediaQuery.of(
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(40.0),
+                                                bottomRight:
+                                                    Radius.circular(40.0),
+                                                topLeft: Radius.circular(40.0),
+                                                bottomLeft:
+                                                    Radius.circular(40.0)),
+                                          ),
+                                          child: Row(children: [
+                                            Container(
+                                              width: (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  2,
+                                              height: (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  8,
+                                              decoration: BoxDecoration(
+                                                color: Color.fromARGB(
+                                                    255, 255, 32, 16),
+
+                                                /// border: Border.all(color: Colors.black),
+                                                borderRadius: BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(40.0),
+                                                    bottomRight:
+                                                        Radius.circular(40.0),
+                                                    topLeft:
+                                                        Radius.circular(40.0),
+                                                    bottomLeft:
+                                                        Radius.circular(40.0)),
+                                              ),
+                                              child: Center(
+                                                  child: Text(
+                                                "Наличными",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: (MediaQuery.of(
+                                                                    context)
+                                                                .orientation ==
+                                                            Orientation
+                                                                .portrait)
+                                                        ? (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width) /
+                                                            30
+                                                        : (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width) /
+                                                            50),
+                                              )),
+                                            ),
+                                            GestureDetector(
+                                                onTap: () => {
+                                                      paymentType = "Картой",
+                                                      change = "",
+                                                      BlocProvider.of<
+                                                                  PaymentTypeBloc>(
+                                                              context)
+                                                          .add(
+                                                              CardChosenEvent())
+                                                    },
+                                                child: Container(
+                                                    width:
+                                                        (MediaQuery.of(context)
+                                                                .size
+                                                                .width) /
+                                                            2.28,
+                                                    height:
+                                                        (MediaQuery.of(context)
+                                                                .size
+                                                                .width) /
+                                                            8,
+                                                    decoration: BoxDecoration(
+                                                      color: Color.fromARGB(
+                                                          255, 251, 251, 251),
+                                                      //color: Colors.black,
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                              topRight: Radius
+                                                                  .circular(
+                                                                      40.0),
+                                                              bottomRight: Radius
+                                                                  .circular(
+                                                                      40.0)),
+                                                    ),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Картой",
+                                                      style: TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              162,
+                                                              162,
+                                                              162),
+                                                          fontSize: (MediaQuery.of(
+                                                                          context)
+                                                                      .orientation ==
+                                                                  Orientation
+                                                                      .portrait)
+                                                              ? (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width) /
+                                                                  30
+                                                              : (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width) /
+                                                                  50),
+                                                    ))))
+                                          ])))),
+                              Padding(
+                                  padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                  child: SizedBox(
+                                      width:
+                                          (MediaQuery.of(context).size.width),
+                                      child: TextField(
+                                          onChanged: (value) => {
+                                                BlocProvider.of<
+                                                            PaymentTypeBloc>(
+                                                        context)
+                                                    .add(ChangeChangedEvent(
+                                                        value)),
+                                                change = value
+                                              },
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait
+                                                  ? 20
+                                                  : MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      30,
+                                              fontFamily: "Times New Roman"),
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(40.0),
+                                                    bottomRight:
+                                                        Radius.circular(40.0),
+                                                    topLeft:
+                                                        Radius.circular(40.0),
+                                                    bottomLeft:
+                                                        Radius.circular(40.0)),
+                                              ),
+                                              hintText: 'Нужна сдача: 0 Р',
+                                              hintStyle: TextStyle(
+                                                  fontSize: MediaQuery.of(
                                                                   context)
                                                               .orientation ==
-                                                          Orientation.portrait)
-                                                      ? (MediaQuery.of(context)
+                                                          Orientation.portrait
+                                                      ? 20
+                                                      : MediaQuery.of(context)
                                                               .size
-                                                              .width) /
-                                                          30
-                                                      : (MediaQuery.of(context)
-                                                              .size
-                                                              .width) /
-                                                          50),
-                                            ))))
-                                  ])))),
-                      Padding(
-                          padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                          child: SizedBox(
-                              width: (MediaQuery.of(context).size.width),
-                              child: TextField(
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontFamily: "Times New Roman"),
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(40.0),
-                                            bottomRight: Radius.circular(40.0),
-                                            topLeft: Radius.circular(40.0),
-                                            bottomLeft: Radius.circular(40.0)),
-                                      ),
-                                      hintText: 'Нужна сдача с: 0 Р',
-                                      hintStyle: TextStyle(
-                                          fontSize: 20,
-                                          fontFamily: "Times New Roman")),
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ])))
-                    ],
-                  )),
+                                                              .width /
+                                                          30,
+                                                  fontFamily:
+                                                      "Times New Roman")),
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: <TextInputFormatter>[
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
+                                          ])))
+                            ],
+                          ));
+                        }
+                        if (statePayment is CardPaymentState) {
+                          paymentType = "Картой";
+                          change = "";
+                          return Container(
+                              child: Column(
+                            children: [
+                              Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                      child: Text(
+                                        "Оплата",
+                                        style: TextStyle(
+                                            fontSize: MediaQuery.of(context)
+                                                        .orientation ==
+                                                    Orientation.portrait
+                                                ? 30
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    25,
+                                            fontWeight: FontWeight.w800),
+                                      ))),
+                              Center(
+                                  child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                      child: Container(
+                                          width: (MediaQuery.of(context)
+                                              .size
+                                              .width),
+                                          height: (MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.portrait)
+                                              ? (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  12
+                                              : (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  12,
+                                          decoration: BoxDecoration(
+                                            //color: Color.fromARGB(200, 210, 210, 210),
+                                            border: Border.all(
+                                              color: Color.fromARGB(
+                                                  199, 118, 118, 118),
+                                            ),
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(40.0),
+                                                bottomRight:
+                                                    Radius.circular(40.0),
+                                                topLeft: Radius.circular(40.0),
+                                                bottomLeft:
+                                                    Radius.circular(40.0)),
+                                          ),
+                                          child: Row(children: [
+                                            GestureDetector(
+                                                onTap: () => {
+                                                      BlocProvider.of<
+                                                                  PaymentTypeBloc>(
+                                                              context)
+                                                          .add(
+                                                              CashChosenEvent())
+                                                    },
+                                                child: Container(
+                                                    width:
+                                                        (MediaQuery.of(context)
+                                                                .size
+                                                                .width) /
+                                                            2.28,
+                                                    height:
+                                                        (MediaQuery.of(context)
+                                                                .size
+                                                                .width) /
+                                                            8,
+                                                    decoration: BoxDecoration(
+                                                      color: Color.fromARGB(
+                                                          255, 251, 251, 251),
+                                                      //color: Colors.black,
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                              topLeft: Radius
+                                                                  .circular(
+                                                                      40.0),
+                                                              bottomLeft: Radius
+                                                                  .circular(
+                                                                      40.0)),
+                                                    ),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Наличными",
+                                                      style: TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              162,
+                                                              162,
+                                                              162),
+                                                          fontSize: (MediaQuery.of(
+                                                                          context)
+                                                                      .orientation ==
+                                                                  Orientation
+                                                                      .portrait)
+                                                              ? (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width) /
+                                                                  30
+                                                              : (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width) /
+                                                                  50),
+                                                    )))),
+                                            Container(
+                                              width: (MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait)
+                                                  ? (MediaQuery.of(context)
+                                                          .size
+                                                          .width) /
+                                                      1.99
+                                                  : (MediaQuery.of(context)
+                                                          .size
+                                                          .width) /
+                                                      1.8475,
+                                              height: (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  8,
+                                              decoration: BoxDecoration(
+                                                color: Color.fromARGB(
+                                                    255, 255, 32, 16),
+
+                                                /// border: Border.all(color: Colors.black),
+                                                borderRadius: BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(40.0),
+                                                    bottomRight:
+                                                        Radius.circular(40.0),
+                                                    topLeft:
+                                                        Radius.circular(40.0),
+                                                    bottomLeft:
+                                                        Radius.circular(40.0)),
+                                              ),
+                                              child: Center(
+                                                  child: Text(
+                                                "Картой",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: (MediaQuery.of(
+                                                                    context)
+                                                                .orientation ==
+                                                            Orientation
+                                                                .portrait)
+                                                        ? (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width) /
+                                                            30
+                                                        : (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width) /
+                                                            50),
+                                              )),
+                                            ),
+                                          ])))),
+                            ],
+                          ));
+                        }
+                        return Container();
+                      })),
                   Row(
                     children: [
                       Expanded(
@@ -1400,14 +1812,23 @@ class BasketPage extends StatelessWidget {
                                 "Бонусов за заказ",
                                 style: TextStyle(
                                     fontFamily: "Times New Roman",
-                                    fontSize: 20),
+                                    fontSize: MediaQuery.of(context)
+                                                .orientation ==
+                                            Orientation.portrait
+                                        ? 20
+                                        : MediaQuery.of(context).size.width /
+                                            30),
                               ))),
                       Expanded(
                           flex: 1,
                           child: Text('${givenBonuses}',
                               style: TextStyle(
                                   fontFamily: "Times New Roman",
-                                  fontSize: 20,
+                                  fontSize: MediaQuery.of(context)
+                                              .orientation ==
+                                          Orientation.portrait
+                                      ? 20
+                                      : MediaQuery.of(context).size.width / 30,
                                   color: Colors.red)))
                     ],
                   ),
@@ -1421,7 +1842,12 @@ class BasketPage extends StatelessWidget {
                                 "К оплате",
                                 style: TextStyle(
                                     fontFamily: "Times New Roman",
-                                    fontSize: 25,
+                                    fontSize: MediaQuery.of(context)
+                                                .orientation ==
+                                            Orientation.portrait
+                                        ? 25
+                                        : MediaQuery.of(context).size.width /
+                                            28,
                                     fontWeight: FontWeight.w800),
                               ))),
                       Expanded(
@@ -1429,7 +1855,11 @@ class BasketPage extends StatelessWidget {
                           child: Text('${basketPrice}',
                               style: TextStyle(
                                   fontFamily: "Times New Roman",
-                                  fontSize: 25,
+                                  fontSize: MediaQuery.of(context)
+                                              .orientation ==
+                                          Orientation.portrait
+                                      ? 25
+                                      : MediaQuery.of(context).size.width / 28,
                                   fontWeight: FontWeight.w800)))
                     ],
                   ),
@@ -1479,7 +1909,13 @@ class BasketPage extends StatelessWidget {
                               child: Text(
                                 "Доставка",
                                 style: TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.w800),
+                                    fontSize: MediaQuery.of(context)
+                                                .orientation ==
+                                            Orientation.portrait
+                                        ? 30
+                                        : MediaQuery.of(context).size.width /
+                                            25,
+                                    fontWeight: FontWeight.w800),
                               ))),
                       Align(
                           alignment: Alignment.topLeft,
@@ -1495,7 +1931,14 @@ class BasketPage extends StatelessWidget {
                                                 context)
                                             .add(AddressChangedEvent(value)),
                                     style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: MediaQuery.of(context)
+                                                    .orientation ==
+                                                Orientation.portrait
+                                            ? 20
+                                            : MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                30,
                                         fontFamily: "Times New Roman"),
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -1509,7 +1952,14 @@ class BasketPage extends StatelessWidget {
                                         ),
                                         hintText: 'Адрес',
                                         hintStyle: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: MediaQuery.of(context)
+                                                        .orientation ==
+                                                    Orientation.portrait
+                                                ? 20
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    30,
                                             fontFamily: "Times New Roman")),
                                   )))),
                       Align(
@@ -1526,7 +1976,14 @@ class BasketPage extends StatelessWidget {
                                                   context)
                                               .add(FlatChangedEvent(value)),
                                       style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.portrait
+                                              ? 20
+                                              : MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  30,
                                           fontFamily: "Times New Roman"),
                                       decoration: InputDecoration(
                                           border: OutlineInputBorder(
@@ -1540,7 +1997,14 @@ class BasketPage extends StatelessWidget {
                                           ),
                                           hintText: '№ квартиры / офиса',
                                           hintStyle: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait
+                                                  ? 20
+                                                  : MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      30,
                                               fontFamily: "Times New Roman")),
                                       keyboardType: TextInputType.number,
                                       inputFormatters: <TextInputFormatter>[
@@ -1564,7 +2028,14 @@ class BasketPage extends StatelessWidget {
                                                   DeliveryInfoBloc>(context)
                                               .add(EntranceChangedEvent(value)),
                                           style: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait
+                                                  ? 20
+                                                  : MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      30,
                                               fontFamily: "Times New Roman"),
                                           decoration: InputDecoration(
                                               border: OutlineInputBorder(
@@ -1580,7 +2051,15 @@ class BasketPage extends StatelessWidget {
                                               ),
                                               hintText: 'Подъезд',
                                               hintStyle: TextStyle(
-                                                  fontSize: 20,
+                                                  fontSize: MediaQuery.of(
+                                                                  context)
+                                                              .orientation ==
+                                                          Orientation.portrait
+                                                      ? 20
+                                                      : MediaQuery.of(context)
+                                                              .size
+                                                              .width /
+                                                          30,
                                                   fontFamily:
                                                       "Times New Roman")),
                                           keyboardType: TextInputType.number,
@@ -1589,19 +2068,27 @@ class BasketPage extends StatelessWidget {
                                                 .digitsOnly
                                           ]))),
                               Padding(
-                                  padding: EdgeInsets.only(left: 20),
+                                  padding: EdgeInsets.only(
+                                      left: MediaQuery.of(context).orientation ==
+                                              Orientation.portrait
+                                          ? MediaQuery.of(context).size.width /
+                                              30
+                                          : MediaQuery.of(context).size.width /
+                                              14),
                                   child: SizedBox(
-                                      width:
-                                          (MediaQuery.of(context).size.width) /
-                                              2.20,
+                                      width: (MediaQuery.of(context).size.width) /
+                                          2.20,
                                       child: TextField(
                                           // controller: TextEditingController(
                                           //     text: stateInfo.floor),
-                                          onChanged: (value) => BlocProvider.of<
-                                                  DeliveryInfoBloc>(context)
+                                          onChanged: (value) => BlocProvider.of<DeliveryInfoBloc>(context)
                                               .add(FloorChangedEvent(value)),
                                           style: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait
+                                                  ? 20
+                                                  : MediaQuery.of(context).size.width / 30,
                                               fontFamily: "Times New Roman"),
                                           decoration: InputDecoration(
                                               border: OutlineInputBorder(
@@ -1616,10 +2103,7 @@ class BasketPage extends StatelessWidget {
                                                         Radius.circular(40.0)),
                                               ),
                                               hintText: 'Этаж',
-                                              hintStyle: TextStyle(
-                                                  fontSize: 20,
-                                                  fontFamily:
-                                                      "Times New Roman")),
+                                              hintStyle: TextStyle(fontSize: MediaQuery.of(context).orientation == Orientation.portrait ? 20 : MediaQuery.of(context).size.width / 30, fontFamily: "Times New Roman")),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -1642,7 +2126,14 @@ class BasketPage extends StatelessWidget {
                                             .add(PhoneChangedEvent(value)),
                                     maxLength: 11,
                                     style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: MediaQuery.of(context)
+                                                    .orientation ==
+                                                Orientation.portrait
+                                            ? 20
+                                            : MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                30,
                                         fontFamily: "Times New Roman"),
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -1656,112 +2147,119 @@ class BasketPage extends StatelessWidget {
                                         ),
                                         hintText: 'Номер телефона',
                                         hintStyle: TextStyle(
-                                            fontSize: 20,
-                                            fontFamily: "Times New Roman")),
-                                    keyboardType: TextInputType.number,
-                                  )))),
-                      Center(
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              child: Container(
-                                  width: (MediaQuery.of(context).size.width),
-                                  height: (MediaQuery.of(context).orientation ==
-                                          Orientation.portrait)
-                                      ? (MediaQuery.of(context).size.width) / 12
-                                      : (MediaQuery.of(context).size.width) /
-                                          12,
-                                  decoration: BoxDecoration(
-                                    //color: Color.fromARGB(200, 210, 210, 210),
-                                    border: Border.all(
-                                      color: Color.fromARGB(199, 118, 118, 118),
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(40.0),
-                                        bottomRight: Radius.circular(40.0),
-                                        topLeft: Radius.circular(40.0),
-                                        bottomLeft: Radius.circular(40.0)),
-                                  ),
-                                  child: Row(children: [
-                                    Container(
-                                      width:
-                                          (MediaQuery.of(context).size.width) /
-                                              2,
-                                      height:
-                                          (MediaQuery.of(context).size.width) /
-                                              8,
-                                      decoration: BoxDecoration(
-                                        color: Color.fromARGB(255, 255, 32, 16),
-
-                                        /// border: Border.all(color: Colors.black),
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(40.0),
-                                            bottomRight: Radius.circular(40.0),
-                                            topLeft: Radius.circular(40.0),
-                                            bottomLeft: Radius.circular(40.0)),
-                                      ),
-                                      child: Center(
-                                          child: Text(
-                                        "Как можно быстрее",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: (MediaQuery.of(context)
+                                            fontSize: MediaQuery.of(context)
                                                         .orientation ==
-                                                    Orientation.portrait)
-                                                ? (MediaQuery.of(context)
+                                                    Orientation.portrait
+                                                ? 20
+                                                : MediaQuery.of(context)
                                                         .size
-                                                        .width) /
-                                                    30
-                                                : (MediaQuery.of(context)
-                                                        .size
-                                                        .width) /
-                                                    50),
-                                      )),
-                                    ),
-                                    GestureDetector(
-                                        onTap: () => {
-                                              // BlocProvider.of<PizzaCatalogueBloc>(context)
-                                              //     .add(LoadChosenMediumPizzaEvent(
-                                              //         bigPizza.name))
-                                            },
-                                        child: Container(
-                                            width: (MediaQuery.of(context)
-                                                    .size
-                                                    .width) /
-                                                2.28,
-                                            height: (MediaQuery.of(context)
-                                                    .size
-                                                    .width) /
-                                                8,
-                                            decoration: BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 238, 238, 238),
-                                              //color: Colors.black,
-                                              borderRadius: BorderRadius.only(
-                                                  topRight:
-                                                      Radius.circular(40.0),
-                                                  bottomRight:
-                                                      Radius.circular(40.0)),
-                                            ),
-                                            child: Center(
-                                                child: Text(
-                                              "Ко времени",
-                                              style: TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 162, 162, 162),
-                                                  fontSize: (MediaQuery.of(
-                                                                  context)
-                                                              .orientation ==
-                                                          Orientation.portrait)
-                                                      ? (MediaQuery.of(context)
-                                                              .size
-                                                              .width) /
-                                                          30
-                                                      : (MediaQuery.of(context)
-                                                              .size
-                                                              .width) /
-                                                          50),
-                                            ))))
-                                  ])))),
+                                                        .width /
+                                                    30,
+                                            fontFamily: "Times New Roman")),
+                                    keyboardType: TextInputType.phone,
+                                  )))),
+                      // Center(
+                      //     child: Padding(
+                      //         padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      //         child: Container(
+                      //             width: (MediaQuery.of(context).size.width),
+                      //             height: (MediaQuery.of(context).orientation ==
+                      //                     Orientation.portrait)
+                      //                 ? (MediaQuery.of(context).size.width) / 12
+                      //                 : (MediaQuery.of(context).size.width) /
+                      //                     12,
+                      //             decoration: BoxDecoration(
+                      //               //color: Color.fromARGB(200, 210, 210, 210),
+                      //               border: Border.all(
+                      //                 color: Color.fromARGB(199, 118, 118, 118),
+                      //               ),
+                      //               borderRadius: BorderRadius.only(
+                      //                   topRight: Radius.circular(40.0),
+                      //                   bottomRight: Radius.circular(40.0),
+                      //                   topLeft: Radius.circular(40.0),
+                      //                   bottomLeft: Radius.circular(40.0)),
+                      //             ),
+                      //             child: Row(children: [
+                      //               Container(
+                      //                 width:
+                      //                     (MediaQuery.of(context).size.width) /
+                      //                         2,
+                      //                 height:
+                      //                     (MediaQuery.of(context).size.width) /
+                      //                         8,
+                      //                 decoration: BoxDecoration(
+                      //                   color: Color.fromARGB(255, 255, 32, 16),
+
+                      //                   /// border: Border.all(color: Colors.black),
+                      //                   borderRadius: BorderRadius.only(
+                      //                       topRight: Radius.circular(40.0),
+                      //                       bottomRight: Radius.circular(40.0),
+                      //                       topLeft: Radius.circular(40.0),
+                      //                       bottomLeft: Radius.circular(40.0)),
+                      //                 ),
+                      //                 child: Center(
+                      //                     child: Text(
+                      //                   "Как можно быстрее",
+                      //                   style: TextStyle(
+                      //                       color: Colors.white,
+                      //                       fontSize: (MediaQuery.of(context)
+                      //                                   .orientation ==
+                      //                               Orientation.portrait)
+                      //                           ? (MediaQuery.of(context)
+                      //                                   .size
+                      //                                   .width) /
+                      //                               30
+                      //                           : (MediaQuery.of(context)
+                      //                                   .size
+                      //                                   .width) /
+                      //                               50),
+                      //                 )),
+                      //               ),
+                      //               GestureDetector(
+                      //                   onTap: () => {
+                      //                         // BlocProvider.of<PizzaCatalogueBloc>(context)
+                      //                         //     .add(LoadChosenMediumPizzaEvent(
+                      //                         //         bigPizza.name))
+                      //                       },
+                      //                   child: Container(
+                      //                       width: (MediaQuery.of(context)
+                      //                               .size
+                      //                               .width) /
+                      //                           2.28,
+                      //                       height: (MediaQuery.of(context)
+                      //                               .size
+                      //                               .width) /
+                      //                           8,
+                      //                       decoration: BoxDecoration(
+                      //                         color: Color.fromARGB(
+                      //                             255, 238, 238, 238),
+                      //                         //color: Colors.black,
+                      //                         borderRadius: BorderRadius.only(
+                      //                             topRight:
+                      //                                 Radius.circular(40.0),
+                      //                             bottomRight:
+                      //                                 Radius.circular(40.0)),
+                      //                       ),
+                      //                       child: Center(
+                      //                           child: Text(
+                      //                         "Ко времени",
+                      //                         style: TextStyle(
+                      //                             color: Color.fromARGB(
+                      //                                 255, 162, 162, 162),
+                      //                             fontSize: (MediaQuery.of(
+                      //                                             context)
+                      //                                         .orientation ==
+                      //                                     Orientation.portrait)
+                      //                                 ? (MediaQuery.of(context)
+                      //                                         .size
+                      //                                         .width) /
+                      //                                     30
+                      //                                 : (MediaQuery.of(context)
+                      //                                         .size
+                      //                                         .width) /
+                      //                                     50),
+                      //                       ))))
+                      //             ])))),
                       Align(
                           alignment: Alignment.topLeft,
                           child: Padding(
@@ -1778,9 +2276,20 @@ class BasketPage extends StatelessWidget {
                                                 context)
                                             .add(CommentChangedEvent(value)),
                                     style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: MediaQuery.of(context)
+                                                    .orientation ==
+                                                Orientation.portrait
+                                            ? 20
+                                            : MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                30,
                                         fontFamily: "Times New Roman"),
-                                    maxLines: 5,
+                                    maxLines:
+                                        MediaQuery.of(context).orientation ==
+                                                Orientation.portrait
+                                            ? 5
+                                            : 6,
                                     maxLength: 256,
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -1795,151 +2304,418 @@ class BasketPage extends StatelessWidget {
                                         hintText:
                                             'Комментарий курьеру или работнику...',
                                         hintStyle: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: MediaQuery.of(context)
+                                                        .orientation ==
+                                                    Orientation.portrait
+                                                ? 20
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    30,
                                             fontFamily: "Times New Roman")),
                                   )))),
                     ]),
                   ),
-                  Container(
-                      child: Column(
-                    children: [
-                      Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              child: Text(
-                                "Оплата",
-                                style: TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.w800),
-                              ))),
-                      Center(
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              child: Container(
-                                  width: (MediaQuery.of(context).size.width),
-                                  height: (MediaQuery.of(context).orientation ==
-                                          Orientation.portrait)
-                                      ? (MediaQuery.of(context).size.width) / 12
-                                      : (MediaQuery.of(context).size.width) /
-                                          12,
-                                  decoration: BoxDecoration(
-                                    //color: Color.fromARGB(200, 210, 210, 210),
-                                    border: Border.all(
-                                      color: Color.fromARGB(199, 118, 118, 118),
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(40.0),
-                                        bottomRight: Radius.circular(40.0),
-                                        topLeft: Radius.circular(40.0),
-                                        bottomLeft: Radius.circular(40.0)),
-                                  ),
-                                  child: Row(children: [
-                                    Container(
-                                      width:
-                                          (MediaQuery.of(context).size.width) /
-                                              2,
-                                      height:
-                                          (MediaQuery.of(context).size.width) /
-                                              8,
-                                      decoration: BoxDecoration(
-                                        color: Color.fromARGB(255, 255, 32, 16),
-
-                                        /// border: Border.all(color: Colors.black),
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(40.0),
-                                            bottomRight: Radius.circular(40.0),
-                                            topLeft: Radius.circular(40.0),
-                                            bottomLeft: Radius.circular(40.0)),
-                                      ),
-                                      child: Center(
-                                          child: Text(
-                                        "Наличными",
+                  BlocProvider(
+                      create: (context) =>
+                          PaymentTypeBloc()..add(CashChosenEvent()),
+                      child: BlocBuilder<PaymentTypeBloc, PaymentTypeState>(
+                          builder: (context, statePayment) {
+                        if (statePayment is CashPaymentState) {
+                          paymentType = "Наличными";
+                          change = statePayment.change;
+                          return Container(
+                              child: Column(
+                            children: [
+                              Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                      child: Text(
+                                        "Оплата",
                                         style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: (MediaQuery.of(context)
+                                            fontSize: MediaQuery.of(context)
                                                         .orientation ==
-                                                    Orientation.portrait)
-                                                ? (MediaQuery.of(context)
+                                                    Orientation.portrait
+                                                ? 30
+                                                : MediaQuery.of(context)
                                                         .size
-                                                        .width) /
-                                                    30
-                                                : (MediaQuery.of(context)
-                                                        .size
-                                                        .width) /
-                                                    50),
-                                      )),
-                                    ),
-                                    GestureDetector(
-                                        onTap: () => {
-                                              // BlocProvider.of<PizzaCatalogueBloc>(context)
-                                              //     .add(LoadChosenMediumPizzaEvent(
-                                              //         bigPizza.name))
-                                            },
-                                        child: Container(
-                                            width: (MediaQuery.of(context)
-                                                    .size
-                                                    .width) /
-                                                2.28,
-                                            height: (MediaQuery.of(context)
-                                                    .size
-                                                    .width) /
-                                                8,
-                                            decoration: BoxDecoration(
+                                                        .width /
+                                                    25,
+                                            fontWeight: FontWeight.w800),
+                                      ))),
+                              Center(
+                                  child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                      child: Container(
+                                          width: (MediaQuery.of(context)
+                                              .size
+                                              .width),
+                                          height: (MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.portrait)
+                                              ? (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  12
+                                              : (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  12,
+                                          decoration: BoxDecoration(
+                                            //color: Color.fromARGB(200, 210, 210, 210),
+                                            border: Border.all(
                                               color: Color.fromARGB(
-                                                  255, 251, 251, 251),
-                                              //color: Colors.black,
-                                              borderRadius: BorderRadius.only(
-                                                  topRight:
-                                                      Radius.circular(40.0),
-                                                  bottomRight:
-                                                      Radius.circular(40.0)),
+                                                  199, 118, 118, 118),
                                             ),
-                                            child: Center(
-                                                child: Text(
-                                              "Картой",
-                                              style: TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 162, 162, 162),
-                                                  fontSize: (MediaQuery.of(
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(40.0),
+                                                bottomRight:
+                                                    Radius.circular(40.0),
+                                                topLeft: Radius.circular(40.0),
+                                                bottomLeft:
+                                                    Radius.circular(40.0)),
+                                          ),
+                                          child: Row(children: [
+                                            Container(
+                                              width: (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  2,
+                                              height: (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  8,
+                                              decoration: BoxDecoration(
+                                                color: Color.fromARGB(
+                                                    255, 255, 32, 16),
+
+                                                /// border: Border.all(color: Colors.black),
+                                                borderRadius: BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(40.0),
+                                                    bottomRight:
+                                                        Radius.circular(40.0),
+                                                    topLeft:
+                                                        Radius.circular(40.0),
+                                                    bottomLeft:
+                                                        Radius.circular(40.0)),
+                                              ),
+                                              child: Center(
+                                                  child: Text(
+                                                "Наличными",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: (MediaQuery.of(
+                                                                    context)
+                                                                .orientation ==
+                                                            Orientation
+                                                                .portrait)
+                                                        ? (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width) /
+                                                            30
+                                                        : (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width) /
+                                                            50),
+                                              )),
+                                            ),
+                                            GestureDetector(
+                                                onTap: () => {
+                                                      paymentType = "Картой",
+                                                      change = "",
+                                                      BlocProvider.of<
+                                                                  PaymentTypeBloc>(
+                                                              context)
+                                                          .add(
+                                                              CardChosenEvent())
+                                                    },
+                                                child: Container(
+                                                    width:
+                                                        (MediaQuery.of(context)
+                                                                .size
+                                                                .width) /
+                                                            2.28,
+                                                    height:
+                                                        (MediaQuery.of(context)
+                                                                .size
+                                                                .width) /
+                                                            8,
+                                                    decoration: BoxDecoration(
+                                                      color: Color.fromARGB(
+                                                          255, 251, 251, 251),
+                                                      //color: Colors.black,
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                              topRight: Radius
+                                                                  .circular(
+                                                                      40.0),
+                                                              bottomRight: Radius
+                                                                  .circular(
+                                                                      40.0)),
+                                                    ),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Картой",
+                                                      style: TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              162,
+                                                              162,
+                                                              162),
+                                                          fontSize: (MediaQuery.of(
+                                                                          context)
+                                                                      .orientation ==
+                                                                  Orientation
+                                                                      .portrait)
+                                                              ? (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width) /
+                                                                  30
+                                                              : (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width) /
+                                                                  50),
+                                                    ))))
+                                          ])))),
+                              Padding(
+                                  padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                  child: SizedBox(
+                                      width:
+                                          (MediaQuery.of(context).size.width),
+                                      child: TextField(
+                                          onChanged: (value) => {
+                                                BlocProvider.of<
+                                                            PaymentTypeBloc>(
+                                                        context)
+                                                    .add(ChangeChangedEvent(
+                                                        value)),
+                                                change = value
+                                              },
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait
+                                                  ? 20
+                                                  : MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      30,
+                                              fontFamily: "Times New Roman"),
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(40.0),
+                                                    bottomRight:
+                                                        Radius.circular(40.0),
+                                                    topLeft:
+                                                        Radius.circular(40.0),
+                                                    bottomLeft:
+                                                        Radius.circular(40.0)),
+                                              ),
+                                              hintText: 'Нужна сдача: 0 Р',
+                                              hintStyle: TextStyle(
+                                                  fontSize: MediaQuery.of(
                                                                   context)
                                                               .orientation ==
-                                                          Orientation.portrait)
-                                                      ? (MediaQuery.of(context)
+                                                          Orientation.portrait
+                                                      ? 20
+                                                      : MediaQuery.of(context)
                                                               .size
-                                                              .width) /
-                                                          30
-                                                      : (MediaQuery.of(context)
-                                                              .size
-                                                              .width) /
-                                                          50),
-                                            ))))
-                                  ])))),
-                      Padding(
-                          padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                          child: SizedBox(
-                              width: (MediaQuery.of(context).size.width),
-                              child: TextField(
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontFamily: "Times New Roman"),
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(40.0),
-                                            bottomRight: Radius.circular(40.0),
-                                            topLeft: Radius.circular(40.0),
-                                            bottomLeft: Radius.circular(40.0)),
-                                      ),
-                                      hintText: 'Нужна сдача с: 0 Р',
-                                      hintStyle: TextStyle(
-                                          fontSize: 20,
-                                          fontFamily: "Times New Roman")),
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ])))
-                    ],
-                  )),
+                                                              .width /
+                                                          30,
+                                                  fontFamily:
+                                                      "Times New Roman")),
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: <TextInputFormatter>[
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
+                                          ])))
+                            ],
+                          ));
+                        }
+                        if (statePayment is CardPaymentState) {
+                          paymentType = "Картой";
+                          change = "";
+                          return Container(
+                              child: Column(
+                            children: [
+                              Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                      child: Text(
+                                        "Оплата",
+                                        style: TextStyle(
+                                            fontSize: MediaQuery.of(context)
+                                                        .orientation ==
+                                                    Orientation.portrait
+                                                ? 30
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    25,
+                                            fontWeight: FontWeight.w800),
+                                      ))),
+                              Center(
+                                  child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                      child: Container(
+                                          width: (MediaQuery.of(context)
+                                              .size
+                                              .width),
+                                          height: (MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.portrait)
+                                              ? (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  12
+                                              : (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  12,
+                                          decoration: BoxDecoration(
+                                            //color: Color.fromARGB(200, 210, 210, 210),
+                                            border: Border.all(
+                                              color: Color.fromARGB(
+                                                  199, 118, 118, 118),
+                                            ),
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(40.0),
+                                                bottomRight:
+                                                    Radius.circular(40.0),
+                                                topLeft: Radius.circular(40.0),
+                                                bottomLeft:
+                                                    Radius.circular(40.0)),
+                                          ),
+                                          child: Row(children: [
+                                            GestureDetector(
+                                                onTap: () => {
+                                                      BlocProvider.of<
+                                                                  PaymentTypeBloc>(
+                                                              context)
+                                                          .add(
+                                                              CashChosenEvent())
+                                                    },
+                                                child: Container(
+                                                    width:
+                                                        (MediaQuery.of(context)
+                                                                .size
+                                                                .width) /
+                                                            2.28,
+                                                    height:
+                                                        (MediaQuery.of(context)
+                                                                .size
+                                                                .width) /
+                                                            8,
+                                                    decoration: BoxDecoration(
+                                                      color: Color.fromARGB(
+                                                          255, 251, 251, 251),
+                                                      //color: Colors.black,
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                              topLeft: Radius
+                                                                  .circular(
+                                                                      40.0),
+                                                              bottomLeft: Radius
+                                                                  .circular(
+                                                                      40.0)),
+                                                    ),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Наличными",
+                                                      style: TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              162,
+                                                              162,
+                                                              162),
+                                                          fontSize: (MediaQuery.of(
+                                                                          context)
+                                                                      .orientation ==
+                                                                  Orientation
+                                                                      .portrait)
+                                                              ? (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width) /
+                                                                  30
+                                                              : (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width) /
+                                                                  50),
+                                                    )))),
+                                            Container(
+                                              width: (MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait)
+                                                  ? (MediaQuery.of(context)
+                                                          .size
+                                                          .width) /
+                                                      1.99
+                                                  : (MediaQuery.of(context)
+                                                          .size
+                                                          .width) /
+                                                      1.8475,
+                                              height: (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  8,
+                                              decoration: BoxDecoration(
+                                                color: Color.fromARGB(
+                                                    255, 255, 32, 16),
+
+                                                /// border: Border.all(color: Colors.black),
+                                                borderRadius: BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(40.0),
+                                                    bottomRight:
+                                                        Radius.circular(40.0),
+                                                    topLeft:
+                                                        Radius.circular(40.0),
+                                                    bottomLeft:
+                                                        Radius.circular(40.0)),
+                                              ),
+                                              child: Center(
+                                                  child: Text(
+                                                "Картой",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: (MediaQuery.of(
+                                                                    context)
+                                                                .orientation ==
+                                                            Orientation
+                                                                .portrait)
+                                                        ? (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width) /
+                                                            30
+                                                        : (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width) /
+                                                            50),
+                                              )),
+                                            ),
+                                          ])))),
+                            ],
+                          ));
+                        }
+                        return Container();
+                      })),
                   Row(
                     children: [
                       Expanded(
@@ -1950,14 +2726,23 @@ class BasketPage extends StatelessWidget {
                                 "Бонусов за заказ",
                                 style: TextStyle(
                                     fontFamily: "Times New Roman",
-                                    fontSize: 20),
+                                    fontSize: MediaQuery.of(context)
+                                                .orientation ==
+                                            Orientation.portrait
+                                        ? 20
+                                        : MediaQuery.of(context).size.width /
+                                            30),
                               ))),
                       Expanded(
                           flex: 1,
                           child: Text('${givenBonuses}',
                               style: TextStyle(
                                   fontFamily: "Times New Roman",
-                                  fontSize: 20,
+                                  fontSize: MediaQuery.of(context)
+                                              .orientation ==
+                                          Orientation.portrait
+                                      ? 20
+                                      : MediaQuery.of(context).size.width / 30,
                                   color: Colors.red)))
                     ],
                   ),
@@ -1971,7 +2756,12 @@ class BasketPage extends StatelessWidget {
                                 "К оплате",
                                 style: TextStyle(
                                     fontFamily: "Times New Roman",
-                                    fontSize: 25,
+                                    fontSize: MediaQuery.of(context)
+                                                .orientation ==
+                                            Orientation.portrait
+                                        ? 25
+                                        : MediaQuery.of(context).size.width /
+                                            28,
                                     fontWeight: FontWeight.w800),
                               ))),
                       Expanded(
@@ -1979,7 +2769,11 @@ class BasketPage extends StatelessWidget {
                           child: Text('${basketPrice}',
                               style: TextStyle(
                                   fontFamily: "Times New Roman",
-                                  fontSize: 25,
+                                  fontSize: MediaQuery.of(context)
+                                              .orientation ==
+                                          Orientation.portrait
+                                      ? 25
+                                      : MediaQuery.of(context).size.width / 28,
                                   fontWeight: FontWeight.w800)))
                     ],
                   ),
@@ -2029,7 +2823,13 @@ class BasketPage extends StatelessWidget {
                               child: Text(
                                 "Доставка",
                                 style: TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.w800),
+                                    fontSize: MediaQuery.of(context)
+                                                .orientation ==
+                                            Orientation.portrait
+                                        ? 30
+                                        : MediaQuery.of(context).size.width /
+                                            25,
+                                    fontWeight: FontWeight.w800),
                               ))),
                       Align(
                           alignment: Alignment.topLeft,
@@ -2045,7 +2845,14 @@ class BasketPage extends StatelessWidget {
                                                 context)
                                             .add(AddressChangedEvent(value)),
                                     style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: MediaQuery.of(context)
+                                                    .orientation ==
+                                                Orientation.portrait
+                                            ? 20
+                                            : MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                30,
                                         fontFamily: "Times New Roman"),
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -2059,7 +2866,14 @@ class BasketPage extends StatelessWidget {
                                         ),
                                         hintText: 'Адрес',
                                         hintStyle: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: MediaQuery.of(context)
+                                                        .orientation ==
+                                                    Orientation.portrait
+                                                ? 20
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    30,
                                             fontFamily: "Times New Roman")),
                                   )))),
                       Align(
@@ -2076,7 +2890,14 @@ class BasketPage extends StatelessWidget {
                                                   context)
                                               .add(FlatChangedEvent(value)),
                                       style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.portrait
+                                              ? 20
+                                              : MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  30,
                                           fontFamily: "Times New Roman"),
                                       decoration: InputDecoration(
                                           border: OutlineInputBorder(
@@ -2090,7 +2911,14 @@ class BasketPage extends StatelessWidget {
                                           ),
                                           hintText: '№ квартиры / офиса',
                                           hintStyle: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait
+                                                  ? 20
+                                                  : MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      30,
                                               fontFamily: "Times New Roman")),
                                       keyboardType: TextInputType.number,
                                       inputFormatters: <TextInputFormatter>[
@@ -2114,7 +2942,14 @@ class BasketPage extends StatelessWidget {
                                                   DeliveryInfoBloc>(context)
                                               .add(EntranceChangedEvent(value)),
                                           style: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait
+                                                  ? 20
+                                                  : MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      30,
                                               fontFamily: "Times New Roman"),
                                           decoration: InputDecoration(
                                               border: OutlineInputBorder(
@@ -2130,7 +2965,15 @@ class BasketPage extends StatelessWidget {
                                               ),
                                               hintText: 'Подъезд',
                                               hintStyle: TextStyle(
-                                                  fontSize: 20,
+                                                  fontSize: MediaQuery.of(
+                                                                  context)
+                                                              .orientation ==
+                                                          Orientation.portrait
+                                                      ? 20
+                                                      : MediaQuery.of(context)
+                                                              .size
+                                                              .width /
+                                                          30,
                                                   fontFamily:
                                                       "Times New Roman")),
                                           keyboardType: TextInputType.number,
@@ -2139,19 +2982,27 @@ class BasketPage extends StatelessWidget {
                                                 .digitsOnly
                                           ]))),
                               Padding(
-                                  padding: EdgeInsets.only(left: 20),
+                                  padding: EdgeInsets.only(
+                                      left: MediaQuery.of(context).orientation ==
+                                              Orientation.portrait
+                                          ? MediaQuery.of(context).size.width /
+                                              30
+                                          : MediaQuery.of(context).size.width /
+                                              14),
                                   child: SizedBox(
-                                      width:
-                                          (MediaQuery.of(context).size.width) /
-                                              2.20,
+                                      width: (MediaQuery.of(context).size.width) /
+                                          2.20,
                                       child: TextField(
                                           // controller: TextEditingController(
                                           //     text: stateInfo.floor),
-                                          onChanged: (value) => BlocProvider.of<
-                                                  DeliveryInfoBloc>(context)
+                                          onChanged: (value) => BlocProvider.of<DeliveryInfoBloc>(context)
                                               .add(FloorChangedEvent(value)),
                                           style: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait
+                                                  ? 20
+                                                  : MediaQuery.of(context).size.width / 30,
                                               fontFamily: "Times New Roman"),
                                           decoration: InputDecoration(
                                               border: OutlineInputBorder(
@@ -2166,10 +3017,7 @@ class BasketPage extends StatelessWidget {
                                                         Radius.circular(40.0)),
                                               ),
                                               hintText: 'Этаж',
-                                              hintStyle: TextStyle(
-                                                  fontSize: 20,
-                                                  fontFamily:
-                                                      "Times New Roman")),
+                                              hintStyle: TextStyle(fontSize: MediaQuery.of(context).orientation == Orientation.portrait ? 20 : MediaQuery.of(context).size.width / 30, fontFamily: "Times New Roman")),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -2192,7 +3040,14 @@ class BasketPage extends StatelessWidget {
                                                 context)
                                             .add(PhoneChangedEvent(value)),
                                     style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: MediaQuery.of(context)
+                                                    .orientation ==
+                                                Orientation.portrait
+                                            ? 20
+                                            : MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                30,
                                         fontFamily: "Times New Roman"),
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -2204,11 +3059,18 @@ class BasketPage extends StatelessWidget {
                                               bottomLeft:
                                                   Radius.circular(40.0)),
                                         ),
-                                        hintText: '+8 (9__) ___-__-__',
+                                        hintText: 'Номер телефона',
                                         hintStyle: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: MediaQuery.of(context)
+                                                        .orientation ==
+                                                    Orientation.portrait
+                                                ? 20
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    30,
                                             fontFamily: "Times New Roman")),
-                                    keyboardType: TextInputType.number,
+                                    keyboardType: TextInputType.phone,
                                     //inputFormatters: <TextInputFormatter>[
                                     //   MaskTextInputFormatter(
                                     //       mask: '+8 (9##) ###-##-##',
@@ -2216,108 +3078,108 @@ class BasketPage extends StatelessWidget {
                                     //       type: MaskAutoCompletionType.lazy),
                                     // ]
                                   )))),
-                      Center(
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              child: Container(
-                                  width: (MediaQuery.of(context).size.width),
-                                  height: (MediaQuery.of(context).orientation ==
-                                          Orientation.portrait)
-                                      ? (MediaQuery.of(context).size.width) / 12
-                                      : (MediaQuery.of(context).size.width) /
-                                          12,
-                                  decoration: BoxDecoration(
-                                    //color: Color.fromARGB(200, 210, 210, 210),
-                                    border: Border.all(
-                                      color: Color.fromARGB(199, 118, 118, 118),
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(40.0),
-                                        bottomRight: Radius.circular(40.0),
-                                        topLeft: Radius.circular(40.0),
-                                        bottomLeft: Radius.circular(40.0)),
-                                  ),
-                                  child: Row(children: [
-                                    Container(
-                                      width:
-                                          (MediaQuery.of(context).size.width) /
-                                              2,
-                                      height:
-                                          (MediaQuery.of(context).size.width) /
-                                              8,
-                                      decoration: BoxDecoration(
-                                        color: Color.fromARGB(255, 255, 32, 16),
+                      // Center(
+                      //     child: Padding(
+                      //         padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      //         child: Container(
+                      //             width: (MediaQuery.of(context).size.width),
+                      //             height: (MediaQuery.of(context).orientation ==
+                      //                     Orientation.portrait)
+                      //                 ? (MediaQuery.of(context).size.width) / 12
+                      //                 : (MediaQuery.of(context).size.width) /
+                      //                     12,
+                      //             decoration: BoxDecoration(
+                      //               //color: Color.fromARGB(200, 210, 210, 210),
+                      //               border: Border.all(
+                      //                 color: Color.fromARGB(199, 118, 118, 118),
+                      //               ),
+                      //               borderRadius: BorderRadius.only(
+                      //                   topRight: Radius.circular(40.0),
+                      //                   bottomRight: Radius.circular(40.0),
+                      //                   topLeft: Radius.circular(40.0),
+                      //                   bottomLeft: Radius.circular(40.0)),
+                      //             ),
+                      //             child: Row(children: [
+                      //               Container(
+                      //                 width:
+                      //                     (MediaQuery.of(context).size.width) /
+                      //                         2,
+                      //                 height:
+                      //                     (MediaQuery.of(context).size.width) /
+                      //                         8,
+                      //                 decoration: BoxDecoration(
+                      //                   color: Color.fromARGB(255, 255, 32, 16),
 
-                                        /// border: Border.all(color: Colors.black),
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(40.0),
-                                            bottomRight: Radius.circular(40.0),
-                                            topLeft: Radius.circular(40.0),
-                                            bottomLeft: Radius.circular(40.0)),
-                                      ),
-                                      child: Center(
-                                          child: Text(
-                                        "Как можно быстрее",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: (MediaQuery.of(context)
-                                                        .orientation ==
-                                                    Orientation.portrait)
-                                                ? (MediaQuery.of(context)
-                                                        .size
-                                                        .width) /
-                                                    30
-                                                : (MediaQuery.of(context)
-                                                        .size
-                                                        .width) /
-                                                    50),
-                                      )),
-                                    ),
-                                    GestureDetector(
-                                        onTap: () => {
-                                              // BlocProvider.of<PizzaCatalogueBloc>(context)
-                                              //     .add(LoadChosenMediumPizzaEvent(
-                                              //         bigPizza.name))
-                                            },
-                                        child: Container(
-                                            width: (MediaQuery.of(context)
-                                                    .size
-                                                    .width) /
-                                                2.28,
-                                            height: (MediaQuery.of(context)
-                                                    .size
-                                                    .width) /
-                                                8,
-                                            decoration: BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 238, 238, 238),
-                                              //color: Colors.black,
-                                              borderRadius: BorderRadius.only(
-                                                  topRight:
-                                                      Radius.circular(40.0),
-                                                  bottomRight:
-                                                      Radius.circular(40.0)),
-                                            ),
-                                            child: Center(
-                                                child: Text(
-                                              "Ко времени",
-                                              style: TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 162, 162, 162),
-                                                  fontSize: (MediaQuery.of(
-                                                                  context)
-                                                              .orientation ==
-                                                          Orientation.portrait)
-                                                      ? (MediaQuery.of(context)
-                                                              .size
-                                                              .width) /
-                                                          30
-                                                      : (MediaQuery.of(context)
-                                                              .size
-                                                              .width) /
-                                                          50),
-                                            ))))
-                                  ])))),
+                      //                   /// border: Border.all(color: Colors.black),
+                      //                   borderRadius: BorderRadius.only(
+                      //                       topRight: Radius.circular(40.0),
+                      //                       bottomRight: Radius.circular(40.0),
+                      //                       topLeft: Radius.circular(40.0),
+                      //                       bottomLeft: Radius.circular(40.0)),
+                      //                 ),
+                      //                 child: Center(
+                      //                     child: Text(
+                      //                   "Как можно быстрее",
+                      //                   style: TextStyle(
+                      //                       color: Colors.white,
+                      //                       fontSize: (MediaQuery.of(context)
+                      //                                   .orientation ==
+                      //                               Orientation.portrait)
+                      //                           ? (MediaQuery.of(context)
+                      //                                   .size
+                      //                                   .width) /
+                      //                               30
+                      //                           : (MediaQuery.of(context)
+                      //                                   .size
+                      //                                   .width) /
+                      //                               50),
+                      //                 )),
+                      //               ),
+                      //               GestureDetector(
+                      //                   onTap: () => {
+                      //                         // BlocProvider.of<PizzaCatalogueBloc>(context)
+                      //                         //     .add(LoadChosenMediumPizzaEvent(
+                      //                         //         bigPizza.name))
+                      //                       },
+                      //                   child: Container(
+                      //                       width: (MediaQuery.of(context)
+                      //                               .size
+                      //                               .width) /
+                      //                           2.28,
+                      //                       height: (MediaQuery.of(context)
+                      //                               .size
+                      //                               .width) /
+                      //                           8,
+                      //                       decoration: BoxDecoration(
+                      //                         color: Color.fromARGB(
+                      //                             255, 238, 238, 238),
+                      //                         //color: Colors.black,
+                      //                         borderRadius: BorderRadius.only(
+                      //                             topRight:
+                      //                                 Radius.circular(40.0),
+                      //                             bottomRight:
+                      //                                 Radius.circular(40.0)),
+                      //                       ),
+                      //                       child: Center(
+                      //                           child: Text(
+                      //                         "Ко времени",
+                      //                         style: TextStyle(
+                      //                             color: Color.fromARGB(
+                      //                                 255, 162, 162, 162),
+                      //                             fontSize: (MediaQuery.of(
+                      //                                             context)
+                      //                                         .orientation ==
+                      //                                     Orientation.portrait)
+                      //                                 ? (MediaQuery.of(context)
+                      //                                         .size
+                      //                                         .width) /
+                      //                                     30
+                      //                                 : (MediaQuery.of(context)
+                      //                                         .size
+                      //                                         .width) /
+                      //                                     50),
+                      //                       ))))
+                      //             ])))),
                       Align(
                           alignment: Alignment.topLeft,
                           child: Padding(
@@ -2334,9 +3196,20 @@ class BasketPage extends StatelessWidget {
                                                 context)
                                             .add(CommentChangedEvent(value)),
                                     style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: MediaQuery.of(context)
+                                                    .orientation ==
+                                                Orientation.portrait
+                                            ? 20
+                                            : MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                30,
                                         fontFamily: "Times New Roman"),
-                                    maxLines: 5,
+                                    maxLines:
+                                        MediaQuery.of(context).orientation ==
+                                                Orientation.portrait
+                                            ? 5
+                                            : 6,
                                     maxLength: 256,
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -2351,151 +3224,420 @@ class BasketPage extends StatelessWidget {
                                         hintText:
                                             'Комментарий курьеру или работнику...',
                                         hintStyle: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: MediaQuery.of(context)
+                                                        .orientation ==
+                                                    Orientation.portrait
+                                                ? 20
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    30,
                                             fontFamily: "Times New Roman")),
                                   )))),
                     ]),
                   ),
-                  Container(
-                      child: Column(
-                    children: [
-                      Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              child: Text(
-                                "Оплата",
-                                style: TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.w800),
-                              ))),
-                      Center(
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              child: Container(
-                                  width: (MediaQuery.of(context).size.width),
-                                  height: (MediaQuery.of(context).orientation ==
-                                          Orientation.portrait)
-                                      ? (MediaQuery.of(context).size.width) / 12
-                                      : (MediaQuery.of(context).size.width) /
-                                          12,
-                                  decoration: BoxDecoration(
-                                    //color: Color.fromARGB(200, 210, 210, 210),
-                                    border: Border.all(
-                                      color: Color.fromARGB(199, 118, 118, 118),
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(40.0),
-                                        bottomRight: Radius.circular(40.0),
-                                        topLeft: Radius.circular(40.0),
-                                        bottomLeft: Radius.circular(40.0)),
-                                  ),
-                                  child: Row(children: [
-                                    Container(
-                                      width:
-                                          (MediaQuery.of(context).size.width) /
-                                              2,
-                                      height:
-                                          (MediaQuery.of(context).size.width) /
-                                              8,
-                                      decoration: BoxDecoration(
-                                        color: Color.fromARGB(255, 255, 32, 16),
-
-                                        /// border: Border.all(color: Colors.black),
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(40.0),
-                                            bottomRight: Radius.circular(40.0),
-                                            topLeft: Radius.circular(40.0),
-                                            bottomLeft: Radius.circular(40.0)),
-                                      ),
-                                      child: Center(
-                                          child: Text(
-                                        "Наличными",
+                  BlocProvider(
+                      create: (context) =>
+                          PaymentTypeBloc()..add(CashChosenEvent()),
+                      child: BlocBuilder<PaymentTypeBloc, PaymentTypeState>(
+                          builder: (context, statePayment) {
+                        if (statePayment is CashPaymentState) {
+                          paymentType = "Наличными";
+                          change = statePayment.change;
+                          return Container(
+                              child: Column(
+                            children: [
+                              Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                      child: Text(
+                                        "Оплата",
                                         style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: (MediaQuery.of(context)
+                                            fontSize: MediaQuery.of(context)
                                                         .orientation ==
-                                                    Orientation.portrait)
-                                                ? (MediaQuery.of(context)
+                                                    Orientation.portrait
+                                                ? 30
+                                                : MediaQuery.of(context)
                                                         .size
-                                                        .width) /
-                                                    30
-                                                : (MediaQuery.of(context)
-                                                        .size
-                                                        .width) /
-                                                    50),
-                                      )),
-                                    ),
-                                    GestureDetector(
-                                        onTap: () => {
-                                              // BlocProvider.of<PizzaCatalogueBloc>(context)
-                                              //     .add(LoadChosenMediumPizzaEvent(
-                                              //         bigPizza.name))
-                                            },
-                                        child: Container(
-                                            width: (MediaQuery.of(context)
-                                                    .size
-                                                    .width) /
-                                                2.28,
-                                            height: (MediaQuery.of(context)
-                                                    .size
-                                                    .width) /
-                                                8,
-                                            decoration: BoxDecoration(
+                                                        .width /
+                                                    25,
+                                            fontWeight: FontWeight.w800),
+                                      ))),
+                              Center(
+                                  child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                      child: Container(
+                                          width: (MediaQuery.of(context)
+                                              .size
+                                              .width),
+                                          height: (MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.portrait)
+                                              ? (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  12
+                                              : (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  12,
+                                          decoration: BoxDecoration(
+                                            //color: Color.fromARGB(200, 210, 210, 210),
+                                            border: Border.all(
                                               color: Color.fromARGB(
-                                                  255, 251, 251, 251),
-                                              //color: Colors.black,
-                                              borderRadius: BorderRadius.only(
-                                                  topRight:
-                                                      Radius.circular(40.0),
-                                                  bottomRight:
-                                                      Radius.circular(40.0)),
+                                                  199, 118, 118, 118),
                                             ),
-                                            child: Center(
-                                                child: Text(
-                                              "Картой",
-                                              style: TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 162, 162, 162),
-                                                  fontSize: (MediaQuery.of(
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(40.0),
+                                                bottomRight:
+                                                    Radius.circular(40.0),
+                                                topLeft: Radius.circular(40.0),
+                                                bottomLeft:
+                                                    Radius.circular(40.0)),
+                                          ),
+                                          child: Row(children: [
+                                            Container(
+                                              width: (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  2,
+                                              height: (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  8,
+                                              decoration: BoxDecoration(
+                                                color: Color.fromARGB(
+                                                    255, 255, 32, 16),
+
+                                                /// border: Border.all(color: Colors.black),
+                                                borderRadius: BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(40.0),
+                                                    bottomRight:
+                                                        Radius.circular(40.0),
+                                                    topLeft:
+                                                        Radius.circular(40.0),
+                                                    bottomLeft:
+                                                        Radius.circular(40.0)),
+                                              ),
+                                              child: Center(
+                                                  child: Text(
+                                                "Наличными",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: (MediaQuery.of(
+                                                                    context)
+                                                                .orientation ==
+                                                            Orientation
+                                                                .portrait)
+                                                        ? (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width) /
+                                                            30
+                                                        : (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width) /
+                                                            50),
+                                              )),
+                                            ),
+                                            GestureDetector(
+                                                onTap: () => {
+                                                      paymentType = "Картой",
+                                                      change = "",
+                                                      BlocProvider.of<
+                                                                  PaymentTypeBloc>(
+                                                              context)
+                                                          .add(
+                                                              CardChosenEvent()),
+                                                      change = "0",
+                                                    },
+                                                child: Container(
+                                                    width:
+                                                        (MediaQuery.of(context)
+                                                                .size
+                                                                .width) /
+                                                            2.28,
+                                                    height:
+                                                        (MediaQuery.of(context)
+                                                                .size
+                                                                .width) /
+                                                            8,
+                                                    decoration: BoxDecoration(
+                                                      color: Color.fromARGB(
+                                                          255, 251, 251, 251),
+                                                      //color: Colors.black,
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                              topRight: Radius
+                                                                  .circular(
+                                                                      40.0),
+                                                              bottomRight: Radius
+                                                                  .circular(
+                                                                      40.0)),
+                                                    ),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Картой",
+                                                      style: TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              162,
+                                                              162,
+                                                              162),
+                                                          fontSize: (MediaQuery.of(
+                                                                          context)
+                                                                      .orientation ==
+                                                                  Orientation
+                                                                      .portrait)
+                                                              ? (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width) /
+                                                                  30
+                                                              : (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width) /
+                                                                  50),
+                                                    ))))
+                                          ])))),
+                              Padding(
+                                  padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                  child: SizedBox(
+                                      width:
+                                          (MediaQuery.of(context).size.width),
+                                      child: TextField(
+                                          onChanged: (value) => {
+                                                BlocProvider.of<
+                                                            PaymentTypeBloc>(
+                                                        context)
+                                                    .add(ChangeChangedEvent(
+                                                        value)),
+                                                change = value
+                                              },
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait
+                                                  ? 20
+                                                  : MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      30,
+                                              fontFamily: "Times New Roman"),
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(40.0),
+                                                    bottomRight:
+                                                        Radius.circular(40.0),
+                                                    topLeft:
+                                                        Radius.circular(40.0),
+                                                    bottomLeft:
+                                                        Radius.circular(40.0)),
+                                              ),
+                                              hintText: 'Нужна сдача: 0 Р',
+                                              hintStyle: TextStyle(
+                                                  fontSize: MediaQuery.of(
                                                                   context)
                                                               .orientation ==
-                                                          Orientation.portrait)
-                                                      ? (MediaQuery.of(context)
+                                                          Orientation.portrait
+                                                      ? 20
+                                                      : MediaQuery.of(context)
                                                               .size
-                                                              .width) /
-                                                          30
-                                                      : (MediaQuery.of(context)
-                                                              .size
-                                                              .width) /
-                                                          50),
-                                            ))))
-                                  ])))),
-                      Padding(
-                          padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                          child: SizedBox(
-                              width: (MediaQuery.of(context).size.width),
-                              child: TextField(
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontFamily: "Times New Roman"),
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(40.0),
-                                            bottomRight: Radius.circular(40.0),
-                                            topLeft: Radius.circular(40.0),
-                                            bottomLeft: Radius.circular(40.0)),
-                                      ),
-                                      hintText: 'Нужна сдача с: 0 Р',
-                                      hintStyle: TextStyle(
-                                          fontSize: 20,
-                                          fontFamily: "Times New Roman")),
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ])))
-                    ],
-                  )),
+                                                              .width /
+                                                          30,
+                                                  fontFamily:
+                                                      "Times New Roman")),
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: <TextInputFormatter>[
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
+                                          ])))
+                            ],
+                          ));
+                        }
+                        if (statePayment is CardPaymentState) {
+                          paymentType = "Картой";
+                          change = "";
+                          return Container(
+                              child: Column(
+                            children: [
+                              Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                      child: Text(
+                                        "Оплата",
+                                        style: TextStyle(
+                                            fontSize: MediaQuery.of(context)
+                                                        .orientation ==
+                                                    Orientation.portrait
+                                                ? 30
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    25,
+                                            fontWeight: FontWeight.w800),
+                                      ))),
+                              Center(
+                                  child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                      child: Container(
+                                          width: (MediaQuery.of(context)
+                                              .size
+                                              .width),
+                                          height: (MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.portrait)
+                                              ? (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  12
+                                              : (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  12,
+                                          decoration: BoxDecoration(
+                                            //color: Color.fromARGB(200, 210, 210, 210),
+                                            border: Border.all(
+                                              color: Color.fromARGB(
+                                                  199, 118, 118, 118),
+                                            ),
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(40.0),
+                                                bottomRight:
+                                                    Radius.circular(40.0),
+                                                topLeft: Radius.circular(40.0),
+                                                bottomLeft:
+                                                    Radius.circular(40.0)),
+                                          ),
+                                          child: Row(children: [
+                                            GestureDetector(
+                                                onTap: () => {
+                                                      BlocProvider.of<
+                                                                  PaymentTypeBloc>(
+                                                              context)
+                                                          .add(
+                                                              CashChosenEvent()),
+                                                      paymentType = "Наличными"
+                                                    },
+                                                child: Container(
+                                                    width:
+                                                        (MediaQuery.of(context)
+                                                                .size
+                                                                .width) /
+                                                            2.28,
+                                                    height:
+                                                        (MediaQuery.of(context)
+                                                                .size
+                                                                .width) /
+                                                            8,
+                                                    decoration: BoxDecoration(
+                                                      color: Color.fromARGB(
+                                                          255, 251, 251, 251),
+                                                      //color: Colors.black,
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                              topLeft: Radius
+                                                                  .circular(
+                                                                      40.0),
+                                                              bottomLeft: Radius
+                                                                  .circular(
+                                                                      40.0)),
+                                                    ),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Наличными",
+                                                      style: TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              162,
+                                                              162,
+                                                              162),
+                                                          fontSize: (MediaQuery.of(
+                                                                          context)
+                                                                      .orientation ==
+                                                                  Orientation
+                                                                      .portrait)
+                                                              ? (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width) /
+                                                                  30
+                                                              : (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width) /
+                                                                  50),
+                                                    )))),
+                                            Container(
+                                              width: (MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait)
+                                                  ? (MediaQuery.of(context)
+                                                          .size
+                                                          .width) /
+                                                      1.99
+                                                  : (MediaQuery.of(context)
+                                                          .size
+                                                          .width) /
+                                                      1.8475,
+                                              height: (MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                                  8,
+                                              decoration: BoxDecoration(
+                                                color: Color.fromARGB(
+                                                    255, 255, 32, 16),
+
+                                                /// border: Border.all(color: Colors.black),
+                                                borderRadius: BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(40.0),
+                                                    bottomRight:
+                                                        Radius.circular(40.0),
+                                                    topLeft:
+                                                        Radius.circular(40.0),
+                                                    bottomLeft:
+                                                        Radius.circular(40.0)),
+                                              ),
+                                              child: Center(
+                                                  child: Text(
+                                                "Картой",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: (MediaQuery.of(
+                                                                    context)
+                                                                .orientation ==
+                                                            Orientation
+                                                                .portrait)
+                                                        ? (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width) /
+                                                            30
+                                                        : (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width) /
+                                                            50),
+                                              )),
+                                            ),
+                                          ])))),
+                            ],
+                          ));
+                        }
+                        return Container();
+                      })),
                   Row(
                     children: [
                       Expanded(
@@ -2506,14 +3648,23 @@ class BasketPage extends StatelessWidget {
                                 "Бонусов за заказ",
                                 style: TextStyle(
                                     fontFamily: "Times New Roman",
-                                    fontSize: 20),
+                                    fontSize: MediaQuery.of(context)
+                                                .orientation ==
+                                            Orientation.portrait
+                                        ? 20
+                                        : MediaQuery.of(context).size.width /
+                                            30),
                               ))),
                       Expanded(
                           flex: 1,
                           child: Text('${givenBonuses}',
                               style: TextStyle(
                                   fontFamily: "Times New Roman",
-                                  fontSize: 20,
+                                  fontSize: MediaQuery.of(context)
+                                              .orientation ==
+                                          Orientation.portrait
+                                      ? 20
+                                      : MediaQuery.of(context).size.width / 30,
                                   color: Colors.red)))
                     ],
                   ),
@@ -2527,7 +3678,12 @@ class BasketPage extends StatelessWidget {
                                 "К оплате",
                                 style: TextStyle(
                                     fontFamily: "Times New Roman",
-                                    fontSize: 25,
+                                    fontSize: MediaQuery.of(context)
+                                                .orientation ==
+                                            Orientation.portrait
+                                        ? 25
+                                        : MediaQuery.of(context).size.width /
+                                            28,
                                     fontWeight: FontWeight.w800),
                               ))),
                       Expanded(
@@ -2535,7 +3691,11 @@ class BasketPage extends StatelessWidget {
                           child: Text('${basketPrice}',
                               style: TextStyle(
                                   fontFamily: "Times New Roman",
-                                  fontSize: 25,
+                                  fontSize: MediaQuery.of(context)
+                                              .orientation ==
+                                          Orientation.portrait
+                                      ? 25
+                                      : MediaQuery.of(context).size.width / 28,
                                   fontWeight: FontWeight.w800)))
                     ],
                   ),
@@ -2567,7 +3727,24 @@ class BasketPage extends StatelessWidget {
                                 fontSize: 30),
                           )),
                         ),
-                        onTap: () => {},
+                        onTap: () => {
+                          BlocProvider.of<AppBloc>(context).add(
+                              ClientCreatedOrderEvent(
+                                  token.toString(),
+                                  stateInfo.address.toString() +
+                                      ", кв. " +
+                                      stateInfo.flat.toString() +
+                                      ", подъезд" +
+                                      stateInfo.entrance.toString() +
+                                      ", этаж " +
+                                      stateInfo.floor.toString(),
+                                  stateInfo.phone.toString(),
+                                  paymentType.toString(),
+                                  change,
+                                  bonusesUsed,
+                                  givenBonuses,
+                                  stateInfo.comment))
+                        },
                       ))
                 ],
               );

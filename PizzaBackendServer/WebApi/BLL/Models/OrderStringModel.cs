@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BLL.Interfaces;
 using DAL.Data;
 using Microsoft.EntityFrameworkCore.Storage;
+using MimeKit.Cryptography;
 
 namespace BLL.Models
 {
@@ -15,7 +16,12 @@ namespace BLL.Models
         public int Count { get; set; }
         public int PizzaId { get; set; }
         public int OrderId { get; set; }
-        public PizzaModel Pizza { get; set; }
+        public string? PizzaName { get; set; }
+        public string? SizeName { get; set; }
+        public decimal? PizzaPrice { get; set; }
+
+
+      //  public PizzaModel Pizza { get; set; }
         public OrderStringModel() { }
 
         public OrderStringModel(OrderString os, IUnitOfWork dataBase)
@@ -24,7 +30,18 @@ namespace BLL.Models
             Count = os.Count;
             PizzaId = os.PizzaId;
             OrderId = os.OrderId;
-            Pizza = new PizzaModel(dataBase.PizzaRepository.Get(os.PizzaId), dataBase);
+            var pizza = dataBase.PizzaRepository.Get(PizzaId);
+            //Pizza = new PizzaModel(dataBase.PizzaRepository.Get(os.PizzaId), dataBase);
+            if (pizza != null)
+            {
+                PizzaName = pizza.Name;
+                PizzaPrice = pizza.Price;
+                var size = dataBase.SizeRepository.Get(pizza.SizeId);
+                if (size != null)
+                {
+                    SizeName = size.Name;
+                }
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pizzer_mobile/pages/pizza_catalogue_page.dart';
 import 'package:pizzer_mobile/pages/client_page.dart';
+import 'package:pizzer_mobile/pages/app_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Pizzer',
-      home: ClientPage(),
+      home: AppPage(),
     );
   }
 }

@@ -9,6 +9,9 @@ import 'package:pizzer_mobile/pages/basket_page.dart';
 import 'package:pizzer_mobile/pages/pizza_catalogue_page.dart';
 
 class ClientPage extends StatelessWidget {
+  String? token;
+  ClientPage({super.key, this.token});
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -18,25 +21,23 @@ class ClientPage extends StatelessWidget {
           ),
         ],
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text(
-              'Pizzer',
-              style: TextStyle(fontSize: 25, fontFamily: 'GrandHotel'),
-            ),
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.red,
-          ),
+          // appBar: AppBar(
+          //   title: const Text(
+          //     'Pizzer',
+          //     style: TextStyle(fontSize: 25, fontFamily: 'GrandHotel'),
+          //   ),
+          //   backgroundColor: Colors.white,
+          //   foregroundColor: Colors.red,
+          // ),
           body: BlocBuilder<NavigationBarBloc, NavigationBarState>(
             builder: (BuildContext context, NavigationBarState state) {
               if (state is CataloguePageLoadedState) {
-                return PizzaCataloguePage(
-                    token:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJla3Nfc2Z2QG1haWwucnUiLCJuYW1lIjoi0JzQuNGF0LDQuNC7INCR0LDRg9GB0L7QsiDQlNC80LjRgtGA0LjQtdCy0LjRhyIsInN1YiI6IjUiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwiZXhwIjoxNjg5NzQ3NDExLCJpc3MiOiJQaXp6ZXJCYWNrRW5kIiwiYXVkIjoiUGl6emVyTW9iaWxlIn0.w7pqPIIkWw2HmyPhyRarP6vLJ3WDXmQU_mn-pHxutLg");
+                return PizzaCataloguePage(token: token);
+                //"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJla3Nfc2Z2QG1haWwucnUiLCJuYW1lIjoi0JzQuNGF0LDQuNC7INCR0LDRg9GB0L7QsiDQlNC80LjRgtGA0LjQtdCy0LjRhyIsInN1YiI6IjUiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwiZXhwIjoxNjg5NzQ3NDExLCJpc3MiOiJQaXp6ZXJCYWNrRW5kIiwiYXVkIjoiUGl6emVyTW9iaWxlIn0.w7pqPIIkWw2HmyPhyRarP6vLJ3WDXmQU_mn-pHxutLg");
               }
               if (state is BasketPageLoadedState) {
-                return BasketPage(
-                    token:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJla3Nfc2Z2QG1haWwucnUiLCJuYW1lIjoi0JzQuNGF0LDQuNC7INCR0LDRg9GB0L7QsiDQlNC80LjRgtGA0LjQtdCy0LjRhyIsInN1YiI6IjUiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwiZXhwIjoxNjg5NzQ3NDExLCJpc3MiOiJQaXp6ZXJCYWNrRW5kIiwiYXVkIjoiUGl6emVyTW9iaWxlIn0.w7pqPIIkWw2HmyPhyRarP6vLJ3WDXmQU_mn-pHxutLg");
+                return BasketPage(token: token);
+                // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJla3Nfc2Z2QG1haWwucnUiLCJuYW1lIjoi0JzQuNGF0LDQuNC7INCR0LDRg9GB0L7QsiDQlNC80LjRgtGA0LjQtdCy0LjRhyIsInN1YiI6IjUiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwiZXhwIjoxNjg5NzQ3NDExLCJpc3MiOiJQaXp6ZXJCYWNrRW5kIiwiYXVkIjoiUGl6emVyTW9iaWxlIn0.w7pqPIIkWw2HmyPhyRarP6vLJ3WDXmQU_mn-pHxutLg");
               }
               if (state is ProfilePageLoadedState) {
                 return Text('${state.number}');

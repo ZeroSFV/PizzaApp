@@ -15,7 +15,7 @@ class ClientBasketLoadingState extends ClientBasketState {
 class ClientBasketLoadedState extends ClientBasketState {
   final List<BasketModel> baskets;
   final UserInfoModel user;
-  final double basketPrice;
+  final int basketPrice;
   ClientBasketLoadedState(this.baskets, this.user, this.basketPrice);
   @override
   List<Object?> get props => [baskets, user, basketPrice];
