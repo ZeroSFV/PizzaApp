@@ -174,13 +174,13 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("cancelOrder")]
-        public IActionResult CancelOrder([FromBody] int orderId)
+        public IActionResult CancelOrder([FromBody] OrderIdModel orderIdModel)
         {
             if (ModelState.IsValid)
             {
-                if (_iOrderService.CheckIfOrderCanBeCancelled(orderId) == true)
+                if (_iOrderService.CheckIfOrderCanBeCancelled(orderIdModel.Id) == true)
                 {
-                    _iOrderService.CancelThisOrder(orderId);
+                    _iOrderService.CancelThisOrder(orderIdModel.Id);
                     var msg = new
                     {
                         message = "Заказ был отменён"
@@ -199,11 +199,11 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("toNextStatus")]
-        public IActionResult ToNextStatus([FromBody] int orderId)
+        public IActionResult ToNextStatus([FromBody] OrderIdModel orderIdModel)
         {
             if (ModelState.IsValid)
             {
-                _iOrderService.ChangeToNextStatus(orderId);
+                _iOrderService.ChangeToNextStatus(orderIdModel.Id);
                 var msg = new
                 {
                     message = "Заказ был переведен в следующий статус"

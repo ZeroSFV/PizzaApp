@@ -186,6 +186,31 @@ namespace BLL.Services
             }
         }
 
+        public void UpdateUser(UserUpdateModel userUpdateModel) 
+        { 
+            var user = dataBase.UserRepository.Get(userUpdateModel.Id);
+            if (user != null) 
+            { 
+                user.Name = userUpdateModel.Name;
+                user.Phone = userUpdateModel.Phones;
+                dataBase.UserRepository.Update(user);
+                Save();
+            }
+        }
+
+        public void UpdateWorkerCourier(WorkerCourierUpdateModel workerCourierUpdateModel)
+        {
+            var user = dataBase.UserRepository.Get(workerCourierUpdateModel.Id);
+            if (user != null)
+            {
+                user.Name = workerCourierUpdateModel.Name;
+                user.Phone = workerCourierUpdateModel.Phones;
+                user.Passport = workerCourierUpdateModel.Passport;
+                dataBase.UserRepository.Update(user);
+                Save();
+            }
+        }
+
         public void ApproveUser(int userId)
         {
             var user = dataBase.UserRepository.GetAll()

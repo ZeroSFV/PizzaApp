@@ -3734,7 +3734,7 @@ class BasketPage extends StatelessWidget {
                                   stateInfo.address.toString() +
                                       ", кв. " +
                                       stateInfo.flat.toString() +
-                                      ", подъезд" +
+                                      ", подъезд " +
                                       stateInfo.entrance.toString() +
                                       ", этаж " +
                                       stateInfo.floor.toString(),

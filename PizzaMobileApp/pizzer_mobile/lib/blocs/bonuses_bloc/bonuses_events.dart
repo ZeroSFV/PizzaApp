@@ -9,7 +9,7 @@ abstract class BonusesEvent extends Equatable {
 class BonusesChange extends BonusesEvent {
   final bool bonusesApplied;
   final int? userBonuses;
-  final double basketPrice;
+  final int basketPrice;
 
   BonusesChange(this.bonusesApplied, this.userBonuses, this.basketPrice);
   @override

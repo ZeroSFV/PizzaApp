@@ -23,7 +23,7 @@ class ClientBasketBloc extends Bloc<ClientBasketEvent, ClientBasketState> {
         int basketsPrice = 0;
         if (baskets.isNotEmpty) {
           baskets.forEach((e) {
-            basketsPrice += (e.price as int);
+            basketsPrice += e.price!.toInt();
           });
           // basketPrice = basketsPrice;
           emit(ClientBasketLoadedState(baskets, userInfo, basketsPrice));
@@ -79,7 +79,7 @@ class ClientBasketBloc extends Bloc<ClientBasketEvent, ClientBasketState> {
         if (newBaskets.isNotEmpty) {
           newBaskets.forEach((e) {
             // if (e.id == event.selectedIndex) {
-            basketsPrice += (e.price as int);
+            basketsPrice += e.price!.toInt();
             // }
           });
           if (bonusesApplied == true) {
@@ -117,7 +117,7 @@ class ClientBasketBloc extends Bloc<ClientBasketEvent, ClientBasketState> {
           if (newBaskets.isNotEmpty) {
             newBaskets.forEach((e) {
               // if (e.id == event.selectedIndex) {
-              basketsPrice += (e.price as int);
+              basketsPrice += e.price!.toInt();
               //}
             });
             if (bonusesApplied == true) {
@@ -145,7 +145,7 @@ class ClientBasketBloc extends Bloc<ClientBasketEvent, ClientBasketState> {
           if (newBaskets.isNotEmpty) {
             newBaskets.forEach((e) {
               // if (e.id == event.selectedIndex) {
-              basketsPrice += (e.price as int);
+              basketsPrice += e.price!.toInt();
               // }
             });
             if (bonusesApplied == true) {

@@ -7,6 +7,7 @@ import 'package:pizzer_mobile/blocs/navigation_bar/navigation_bar_events.dart';
 import 'package:pizzer_mobile/blocs/navigation_bar/navigation_bar_states.dart';
 import 'package:pizzer_mobile/pages/basket_page.dart';
 import 'package:pizzer_mobile/pages/pizza_catalogue_page.dart';
+import 'package:pizzer_mobile/pages/profile_page.dart';
 
 class ClientPage extends StatelessWidget {
   String? token;
@@ -40,7 +41,7 @@ class ClientPage extends StatelessWidget {
                 // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJla3Nfc2Z2QG1haWwucnUiLCJuYW1lIjoi0JzQuNGF0LDQuNC7INCR0LDRg9GB0L7QsiDQlNC80LjRgtGA0LjQtdCy0LjRhyIsInN1YiI6IjUiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwiZXhwIjoxNjg5NzQ3NDExLCJpc3MiOiJQaXp6ZXJCYWNrRW5kIiwiYXVkIjoiUGl6emVyTW9iaWxlIn0.w7pqPIIkWw2HmyPhyRarP6vLJ3WDXmQU_mn-pHxutLg");
               }
               if (state is ProfilePageLoadedState) {
-                return Text('${state.number}');
+                return ProfilePage(token: token);
               }
               return Container();
             },

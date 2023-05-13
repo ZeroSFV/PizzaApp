@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 @immutable
 abstract class AppEvent extends Equatable {
@@ -56,8 +57,17 @@ class ClientCreatedOrderEvent extends AppEvent {
       ];
 }
 
+class CheckIfOrderFinishedEvent extends AppEvent {
+  String? token;
+  Timer timer;
+  CheckIfOrderFinishedEvent(this.token, this.timer);
+  @override
+  List get props => [token, timer];
+}
+
 class ClientReturnedToOrderingEvent extends AppEvent {
-  ClientReturnedToOrderingEvent();
+  String? token;
+  ClientReturnedToOrderingEvent(this.token);
   @override
   List get props => [];
 }

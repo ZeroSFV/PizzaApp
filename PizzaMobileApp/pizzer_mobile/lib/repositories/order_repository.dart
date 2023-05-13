@@ -17,11 +17,31 @@ class OrderRepository {
       final result = jsonDecode(response.body);
       final orderResult = OrderModel.fromJsonSingle(result);
       return respResult;
-    } else {
+    } else if (response.statusCode == 400) {
       final responseError = jsonDecode(response.body);
       final reqResult = RequestModel.fromJson(responseError);
       bool badResult = false;
       return badResult;
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
+  Future<OrderModel> getUserActiveOrder(int? userId) async {
+    String Url = orderUrl + '/userActiveOrder/' + userId.toString();
+    Response response = await get(Uri.parse(Url));
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      final orderResult = OrderModel.fromJsonSingle(result);
+      return orderResult;
+    } else if (response.statusCode == 400) {
+      final responseError = jsonDecode(response.body);
+      final reqResult = RequestModel.fromJson(responseError);
+      bool badResult = false;
+      return OrderModel();
+    } else {
+      throw Exception(response.reasonPhrase);
     }
   }
 
@@ -44,6 +64,19 @@ class OrderRepository {
           "givenBonuses": makeOrderModel.givenBonuses,
           "comment": makeOrderModel.comment
         }));
+    if (resPost.statusCode != 200) {
+      throw Exception(resPost.reasonPhrase);
+    }
+  }
+
+  Future<void> cancelOrder(int? orderId) async {
+    String Url = orderUrl + '/cancelOrder';
+    Response resPost = await put(Uri.parse(Url),
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(<String, dynamic>{"id": orderId}));
     if (resPost.statusCode != 200) {
       throw Exception(resPost.reasonPhrase);
     }

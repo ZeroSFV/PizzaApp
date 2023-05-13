@@ -50,5 +50,23 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         //emit((e.toString()));
       }
     });
+
+    on<CheckIfOrderFinishedEvent>((event, emit) async {
+      try {
+        final userInfo = await _userInfoRepository.getUserInfo(event.token);
+        final activeOrder =
+            await _orderRepository.checkActiveOrder(userInfo.id);
+        if (activeOrder == false) {
+          event.timer.cancel();
+          emit(ShowUserFinishOrderState(event.token));
+        }
+      } catch (e) {
+        emit(ServerErrorState(e.toString()));
+      }
+    });
+
+    on<ClientReturnedToOrderingEvent>(((event, emit) {
+      emit(ClientNoOrderState(event.token));
+    }));
   }
 }

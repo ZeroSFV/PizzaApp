@@ -90,3 +90,19 @@ class AdminState extends AppState {
   @override
   List<Object?> get props => [];
 }
+
+class ServerErrorState extends AppState {
+  String? error;
+  ServerErrorState(this.error);
+
+  @override
+  List<Object?> get props => [error];
+}
+
+class ShowUserFinishOrderState extends AppState {
+  String? token;
+  ShowUserFinishOrderState(this.token);
+
+  @override
+  List<Object?> get props => [token];
+}

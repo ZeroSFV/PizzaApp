@@ -11,7 +11,7 @@ import 'package:pizzer_mobile/repositories/order_repository.dart';
 import 'package:pizzer_mobile/repositories/user_info_repository.dart';
 
 class AppPage extends StatelessWidget {
-  const AppPage({super.key});
+  AppPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +34,67 @@ class AppPage extends StatelessWidget {
           ),
           body: BlocBuilder<AppBloc, AppState>(
             builder: (BuildContext context, AppState state) {
+              // Timer timer = Timer.periodic(
+              //     Duration(seconds: 10), (Timer t) => print("xd"));
               if (state is ClientNoOrderState) {
                 return ClientPage(token: state.token);
               }
               if (state is ClientActiveOrderState) {
-                return ClientOrderPage();
+                // const oneSec = Duration(seconds: 3);
+                // Timer timer = Timer.periodic(
+                //     oneSec,
+                //     (timer) => BlocProvider.of<AppBloc>(context)
+                //         .add(CheckIfOrderFinishedEvent(state.token, timer)));
+                return ClientOrderPage(token: state.token);
+              }
+              if (state is ShowUserFinishOrderState) {
+                return Center(
+                  child: Column(
+                    children: [
+                      Text(
+                          "Ваш заказ доставлен. Нажмите ОК, чтобы вернуться к созданию заказов",
+                          style: TextStyle(
+                            fontFamily: "Times New Roman",
+                            fontSize: (MediaQuery.of(context).orientation ==
+                                    Orientation.portrait)
+                                ? MediaQuery.of(context).size.width / 8
+                                : MediaQuery.of(context).size.width / 24,
+                          )),
+                      GestureDetector(
+                        child: Container(
+                          width: (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait)
+                              ? (MediaQuery.of(context).size.width) / 1.4
+                              : (MediaQuery.of(context).size.width) / 1.25,
+                          height: (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait)
+                              ? (MediaQuery.of(context).size.width) / 15
+                              : (MediaQuery.of(context).size.width) / 13,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.black, width: 2),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(40.0),
+                                bottomRight: Radius.circular(40.0),
+                                topLeft: Radius.circular(40.0),
+                                bottomLeft: Radius.circular(40.0)),
+                          ),
+                          child: Center(
+                              child: Text(
+                            'ОК',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontSize: 30),
+                          )),
+                        ),
+                        onTap: () => {
+                          BlocProvider.of<AppBloc>(context)
+                              .add(ClientReturnedToOrderingEvent(state.token))
+                        },
+                      ),
+                    ],
+                  ),
+                );
               }
               // if (state is ProfilePageLoadedState) {
               //   return Text('${state.number}');

@@ -41,5 +41,40 @@ namespace WebApi.Controllers
             }
         }
 
+        [HttpPut("updateClient")]
+        public IActionResult UpdateClient([FromBody] UserUpdateModel userUpdateModel)
+        {
+            if (ModelState.IsValid)
+            {
+                _iUserService.UpdateUser(userUpdateModel);
+                var msg = new
+                {
+                    message = "Пользователь изменён"
+                };
+                return Ok(msg);
+            }
+            else
+            {
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Неверные входные данные" });
+            }
+        }
+
+        [HttpPut("updateWorkerCourier")]
+        public IActionResult UpdateWorkerCourier([FromBody] WorkerCourierUpdateModel workerCourierUpdateModel)
+        {
+            if (ModelState.IsValid)
+            {
+                _iUserService.UpdateWorkerCourier(workerCourierUpdateModel);
+                var msg = new
+                {
+                    message = "Пользователь изменён"
+                };
+                return Ok(msg);
+            }
+            else
+            {
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Неверные входные данные" });
+            }
+        }
     }
 }
