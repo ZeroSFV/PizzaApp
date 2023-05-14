@@ -39,7 +39,8 @@ namespace Dinner.Controllers
                             _iAccountService.CreateUser(user);
                             var msg = new
                             {
-                                message = "Регистрация прошла успешно! Ссылка с подтверждением отправлена по вашему адресу электронной почты!"
+                                Status = 200,
+                                Description = "Регистрация прошла успешно! Ссылка с подтверждением отправлена по вашему адресу электронной почты!"
                             };
                             return Ok(msg);
                         }
@@ -90,12 +91,51 @@ namespace Dinner.Controllers
 
         [HttpPut]
         [Route("resetpassword")]
-        public IActionResult ResetPassword([FromBody] string email)
+        public IActionResult ResetPassword([FromBody] ResetPasswordModel resetPasswordModel)
         {
-            if (_iAccountService.CheckUserByEmail(email) == true)
+            if (_iAccountService.CheckUserByEmail(resetPasswordModel.Email) == true)
             {
-                _iAccountService.ResetPasswordOfUser(email);
-                return Ok("Новый пароль отправлен на электронную почту!");
+                try
+                {
+                    _iAccountService.ResetPasswordOfUser(resetPasswordModel.Email);
+                    return Ok("Новый пароль отправлен на электронную почту!");
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = new
+                    {
+                        message = "Неверные входные данные",
+                        error = ex.Message
+                    };
+                    return BadRequest(errorMsg);
+                }
+            }
+            else
+            {
+                return BadRequest(new ErrorResponseModel { Status = 500, Description = "Данного пользователя не существует" });
+            }
+        }
+
+        [HttpPut]
+        [Route("approveUser")]
+        public IActionResult approveUser([FromBody] ApprovalUserModel approvalUserModel)
+        {
+            if (ModelState.IsValid == true)
+            {
+                try
+                {
+                    _iAccountService.ApproveUser(approvalUserModel);
+                    return Ok("Пользователь подтвержден!");
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = new
+                    {
+                        message = "Неверные входные данные",
+                        error = ex.Message
+                    };
+                    return BadRequest(errorMsg);
+                }
             }
             else
             {

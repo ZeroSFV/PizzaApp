@@ -40,5 +40,5 @@ class ProfileErrorState extends ProfileState {
   final String? error;
   ProfileErrorState(this.error);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [error];
 }

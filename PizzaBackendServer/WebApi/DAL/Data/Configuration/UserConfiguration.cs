@@ -20,6 +20,8 @@ namespace DAL.Data.Configuration
 
             builder.Property(e => e.Name).HasMaxLength(70);
 
+            builder.Property(e => e.ApprovalCode).HasMaxLength(6);
+
             builder.Property(e => e.Password).HasMaxLength(200);
 
             builder.Property(e => e.Role).HasMaxLength(50);
@@ -40,7 +42,8 @@ namespace DAL.Data.Configuration
                     Password = "1U+u9QwJ8SdXuiRip3b83S7jiu06Z0PxlaPHFOJZJ+Q=:tiUz98Ow0IbpP7gWSLBCcA==",
                     Role = "user",
                     Bonuses = 0,
-                    Phone = "+79106991174"
+                    Phone = "+79106991174", 
+                    ApprovalCode = "123321"
                 },
                 new User
                 {
@@ -51,7 +54,8 @@ namespace DAL.Data.Configuration
                     Password = "8eqn6A6N11WY0k4j8PLlVfcmDvnUQZJOvTtxdBYtINA=:5tZTJitFXi/473n+fWFzog==",
                     Role = "admin",
                     Phone = "+79106151273",
-                    Passport = "2415 771077"
+                    Passport = "2415 771077",
+                    ApprovalCode = "123321"
                 },
                 new User
                 {
@@ -62,7 +66,8 @@ namespace DAL.Data.Configuration
                     Password = "ucPtmgnShnsbFBQVZg7kNukEDDluMTr2/fYAq3odDF8=:amw/M3NvUh1kzCQkIJnVIg==",
                     Role = "worker",
                     Phone = "+79156251375",
-                    Passport = "2416 772076"
+                    Passport = "2416 772076",
+                    ApprovalCode = "123321"
                 },
                 new User
                 {
@@ -73,7 +78,8 @@ namespace DAL.Data.Configuration
                     Password = "ucPtmgnShnsbFBQVZg7kNukEDDluMTr2/fYAq3odDF8=:amw/M3NvUh1kzCQkIJnVIg==",
                     Role = "courier",
                     Phone = "+79176221355",
-                    Passport = "2316 771071"
+                    Passport = "2316 771071",
+                    ApprovalCode = "123321"
                 }
                 );
         }

@@ -48,8 +48,66 @@ namespace BLL.Services
                 Phone = signUpModel.Phone,
                 RefreshToken = null
             };
+            Random rd = new Random();
+            int length = 6;
+
+            const string chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < length; i++)
+            {
+                int index = rd.Next(chars.Length);
+                sb.Append(chars[index]);
+            }
+            user.ApprovalCode = sb.ToString();
             dataBase.UserRepository.Create(user);
             Save();
+
+            string jsonFromFile;
+            using (var reader = new StreamReader("./Options/SenderCredentials.json"))
+            {
+                jsonFromFile = reader.ReadToEnd();
+            }
+            var credentialsFromJson = JsonConvert.DeserializeObject<CredentialsModel>(jsonFromFile);
+
+            var emailMessage = new MimeMessage();
+            emailMessage.From.Add(new MailboxAddress("Пиццерия Pizzer", credentialsFromJson.Email));
+            emailMessage.To.Add(new MailboxAddress("", signUpModel.Email));
+            emailMessage.Subject = "Код подтверждения";
+            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            {
+                Text = "Ваш код подтверждения: " + sb.ToString() + " - Введите его при следующем заходе в приложение!"
+            };
+
+            using (var client = new SmtpClient())
+            {
+                if (credentialsFromJson.Email.Contains("@yandex.ru"))
+                {
+                    await client.ConnectAsync("smtp.yandex.ru", 25, false);
+                }
+                else if (credentialsFromJson.Email.Contains("@gmail.com"))
+                {
+                    await client.ConnectAsync("smtp.gmail.com", 587, false);
+                }
+                else if (credentialsFromJson.Email.Contains("@mail.ru"))
+                {
+                    await client.ConnectAsync("smtp.mail.ru", 25, false);
+                }
+                await client.AuthenticateAsync(credentialsFromJson.Email, credentialsFromJson.Password);
+                await client.SendAsync(emailMessage);
+
+                await client.DisconnectAsync(true);
+            }
+        }
+
+        public void ApproveUser(ApprovalUserModel approvalUserModel)
+        {
+            var user = dataBase.UserRepository.Get(approvalUserModel.Id);
+            if (user != null) 
+            {
+                user.IsApproved = (sbyte)1;
+                dataBase.UserRepository.Update(user);
+                Save();
+            }
         }
 
         public UserModel GetUserByEmailAndPassword(string email, string password)
@@ -93,6 +151,7 @@ namespace BLL.Services
             var user = dataBase.UserRepository.GetAll()
                                               .Where(i => i.Email == email)
                                               .FirstOrDefault();
+
             if (user != null)
             {
                 Random rd = new Random();

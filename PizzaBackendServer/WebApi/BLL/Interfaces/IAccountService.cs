@@ -15,5 +15,6 @@ namespace BLL.Interfaces
         void UpdateUser(UserModel userModel);
         bool ChangePasswordOfUser(ChangePasswordModel changePasswordModel);
         Task ResetPasswordOfUser(string email);
+        void ApproveUser(ApprovalUserModel approvalUserModel);
     }
 }

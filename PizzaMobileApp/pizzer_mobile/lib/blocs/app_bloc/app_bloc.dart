@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:pizzer_mobile/blocs/app_bloc/app_events.dart';
 import 'package:pizzer_mobile/blocs/app_bloc/app_states.dart';
 import 'package:pizzer_mobile/repositories/order_repository.dart';
@@ -11,9 +12,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
   AppBloc(this._userInfoRepository, this._orderRepository)
       : super(SignInState()) {
-    on<SignInSubmittedEvent>((event, emit) async {
-      final String token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJla3Nfc2Z2QG1haWwucnUiLCJuYW1lIjoi0JzQuNGF0LDQuNC7INCR0LDRg9GB0L7QsiDQlNC80LjRgtGA0LjQtdCy0LjRhyIsInN1YiI6IjUiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwiZXhwIjoxNjg5NzQ3NDExLCJpc3MiOiJQaXp6ZXJCYWNrRW5kIiwiYXVkIjoiUGl6emVyTW9iaWxlIn0.w7pqPIIkWw2HmyPhyRarP6vLJ3WDXmQU_mn-pHxutLg";
+    on<SignInSubmittedAppEvent>((event, emit) async {
+      final String? token = event.token;
       final userInfo = await _userInfoRepository.getUserInfo(token);
       if (userInfo.role == "user") {
         final activeOrder =
@@ -24,6 +24,22 @@ class AppBloc extends Bloc<AppEvent, AppState> {
           emit(ClientNoOrderState(token));
         }
       }
+    });
+
+    on<LoadResetPasswordAppEvent>((event, emit) async {
+      emit(ResetPasswordState());
+    });
+
+    on<LoadRegistrationAppEvent>((event, emit) async {
+      emit(RegistrationState());
+    });
+
+    on<LoadSignInAppEvent>(((event, emit) async {
+      emit(SignInState());
+    }));
+
+    on<UserLogOutEvent>((event, emit) async {
+      emit(SignInState());
     });
 
     on<ClientCreatedOrderEvent>((event, emit) async {

@@ -66,6 +66,8 @@ namespace DAL.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IsApproved = table.Column<sbyte>(type: "tinyint", nullable: false),
                     RefreshToken = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true, collation: "utf8mb4_0900_ai_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ApprovalCode = table.Column<string>(type: "varchar(6)", maxLength: 6, nullable: false, collation: "utf8mb4_0900_ai_ci")
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -246,13 +248,13 @@ namespace DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "user",
-                columns: new[] { "Id", "Bonuses", "Email", "IsApproved", "Name", "Passport", "Password", "Phone", "RefreshToken", "Role" },
+                columns: new[] { "Id", "ApprovalCode", "Bonuses", "Email", "IsApproved", "Name", "Passport", "Password", "Phone", "RefreshToken", "Role" },
                 values: new object[,]
                 {
-                    { 1, 0, "reksmbd@gmail.com", (sbyte)1, "Михаил Баусов Дмитриевич", null, "1U+u9QwJ8SdXuiRip3b83S7jiu06Z0PxlaPHFOJZJ+Q=:tiUz98Ow0IbpP7gWSLBCcA==", "+79106991174", null, "user" },
-                    { 2, null, "admin@gmail.com", (sbyte)1, "Администратор", "2415 771077", "8eqn6A6N11WY0k4j8PLlVfcmDvnUQZJOvTtxdBYtINA=:5tZTJitFXi/473n+fWFzog==", "+79106151273", null, "admin" },
-                    { 3, null, "worker@gmail.com", (sbyte)1, "Работник", "2416 772076", "ucPtmgnShnsbFBQVZg7kNukEDDluMTr2/fYAq3odDF8=:amw/M3NvUh1kzCQkIJnVIg==", "+79156251375", null, "worker" },
-                    { 4, null, "courier@gmail.com", (sbyte)1, "Курьер", "2316 771071", "ucPtmgnShnsbFBQVZg7kNukEDDluMTr2/fYAq3odDF8=:amw/M3NvUh1kzCQkIJnVIg==", "+79176221355", null, "courier" }
+                    { 1, "123321", 0, "reksmbd@gmail.com", (sbyte)1, "Михаил Баусов Дмитриевич", null, "1U+u9QwJ8SdXuiRip3b83S7jiu06Z0PxlaPHFOJZJ+Q=:tiUz98Ow0IbpP7gWSLBCcA==", "+79106991174", null, "user" },
+                    { 2, "123321", null, "admin@gmail.com", (sbyte)1, "Администратор", "2415 771077", "8eqn6A6N11WY0k4j8PLlVfcmDvnUQZJOvTtxdBYtINA=:5tZTJitFXi/473n+fWFzog==", "+79106151273", null, "admin" },
+                    { 3, "123321", null, "worker@gmail.com", (sbyte)1, "Работник", "2416 772076", "ucPtmgnShnsbFBQVZg7kNukEDDluMTr2/fYAq3odDF8=:amw/M3NvUh1kzCQkIJnVIg==", "+79156251375", null, "worker" },
+                    { 4, "123321", null, "courier@gmail.com", (sbyte)1, "Курьер", "2316 771071", "ucPtmgnShnsbFBQVZg7kNukEDDluMTr2/fYAq3odDF8=:amw/M3NvUh1kzCQkIJnVIg==", "+79176221355", null, "courier" }
                 });
 
             migrationBuilder.InsertData(

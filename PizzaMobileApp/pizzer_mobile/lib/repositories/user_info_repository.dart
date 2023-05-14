@@ -17,4 +17,21 @@ class UserInfoRepository {
       throw Exception(response.reasonPhrase);
     }
   }
+
+  Future<void> updateUserInfo(int? id, String? name, String? phone) async {
+    String Url = userInfoUrl + '/updateClient';
+    Response resPut = await put(Uri.parse(Url),
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(<String, dynamic>{
+          "id": id,
+          "name": name,
+          "phones": phone,
+        }));
+    if (resPut.statusCode != 200) {
+      throw Exception(resPut.reasonPhrase);
+    }
+  }
 }

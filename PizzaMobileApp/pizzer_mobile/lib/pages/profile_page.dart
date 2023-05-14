@@ -2,6 +2,8 @@ import 'package:pizzer_mobile/models/user_info_model.dart';
 import 'package:pizzer_mobile/repositories/order_repository.dart';
 import 'package:pizzer_mobile/repositories/user_info_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pizzer_mobile/pages/profile_info_page.dart';
+import 'package:pizzer_mobile/pages/user_orders_page.dart';
 import 'package:pizzer_mobile/blocs/profile/profile_bloc.dart';
 import 'package:pizzer_mobile/blocs/profile/profile_states.dart';
 import 'package:pizzer_mobile/blocs/profile/profile_events.dart';
@@ -12,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:pizzer_mobile/blocs/app_bloc/app_bloc.dart';
 import 'package:pizzer_mobile/blocs/app_bloc/app_events.dart';
 import 'package:pizzer_mobile/blocs/app_bloc/app_states.dart';
+import 'package:pizzer_mobile/pages/change_password_page.dart';
 
 class ProfilePage extends StatelessWidget {
   String? token;
@@ -65,7 +68,8 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget profileInfoLoaded(context, state) {
-    return Column(
+    return SingleChildScrollView(
+        child: Column(
       children: [
         Padding(
             padding: EdgeInsets.all(10),
@@ -73,7 +77,7 @@ class ProfilePage extends StatelessWidget {
                 width: (MediaQuery.of(context).size.width) / 1,
                 height:
                     (MediaQuery.of(context).orientation == Orientation.portrait)
-                        ? (MediaQuery.of(context).size.width) / 8
+                        ? (MediaQuery.of(context).size.width) / 10
                         : (MediaQuery.of(context).size.width) / 12,
                 decoration: BoxDecoration(
                   color: Color.fromARGB(200, 210, 210, 210),
@@ -89,7 +93,7 @@ class ProfilePage extends StatelessWidget {
                               Orientation.portrait)
                           ? (MediaQuery.of(context).size.width) / 3.1
                           : (MediaQuery.of(context).size.width) / 3.03,
-                      height: (MediaQuery.of(context).size.width) / 8,
+                      height: (MediaQuery.of(context).size.width) / 10,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         border: Border.all(color: Colors.black),
@@ -117,7 +121,7 @@ class ProfilePage extends StatelessWidget {
                                 Orientation.portrait)
                             ? (MediaQuery.of(context).size.width) / 3.1
                             : (MediaQuery.of(context).size.width) / 3.03,
-                        height: (MediaQuery.of(context).size.width) / 8,
+                        height: (MediaQuery.of(context).size.width) / 10,
                         decoration: BoxDecoration(
                           color: Color.fromARGB(180, 220, 220, 220),
                           borderRadius: BorderRadius.only(
@@ -145,7 +149,7 @@ class ProfilePage extends StatelessWidget {
                                 Orientation.portrait)
                             ? (MediaQuery.of(context).size.width) / 3.1
                             : (MediaQuery.of(context).size.width) / 3.03,
-                        height: (MediaQuery.of(context).size.width) / 8,
+                        height: (MediaQuery.of(context).size.width) / 10,
                         decoration: BoxDecoration(
                           color: Color.fromARGB(180, 220, 220, 220),
                           borderRadius: BorderRadius.only(
@@ -165,13 +169,17 @@ class ProfilePage extends StatelessWidget {
                                   : (MediaQuery.of(context).size.width) / 50),
                         )),
                       ))
-                ])))
+                ]))),
+        ProfileInfoPage(
+          token: token,
+        ),
       ],
-    );
+    ));
   }
 
   Widget userOrdersLoaded(context, state) {
-    return Center(
+    return SingleChildScrollView(
+        child: Center(
       child: Column(
         children: [
           Padding(
@@ -180,7 +188,7 @@ class ProfilePage extends StatelessWidget {
                   width: (MediaQuery.of(context).size.width),
                   height: (MediaQuery.of(context).orientation ==
                           Orientation.portrait)
-                      ? (MediaQuery.of(context).size.width) / 8
+                      ? (MediaQuery.of(context).size.width) / 10
                       : (MediaQuery.of(context).size.width) / 12,
                   decoration: BoxDecoration(
                     color: Color.fromARGB(200, 210, 210, 210),
@@ -199,7 +207,7 @@ class ProfilePage extends StatelessWidget {
                                   Orientation.portrait)
                               ? (MediaQuery.of(context).size.width) / 3.1
                               : (MediaQuery.of(context).size.width) / 3.03,
-                          height: (MediaQuery.of(context).size.width) / 8,
+                          height: (MediaQuery.of(context).size.width) / 10,
                           decoration: BoxDecoration(
                             color: Color.fromARGB(180, 220, 220, 220),
                             borderRadius: BorderRadius.only(
@@ -224,7 +232,7 @@ class ProfilePage extends StatelessWidget {
                                 Orientation.portrait)
                             ? (MediaQuery.of(context).size.width) / 3.1
                             : (MediaQuery.of(context).size.width) / 3.03,
-                        height: (MediaQuery.of(context).size.width) / 8,
+                        height: (MediaQuery.of(context).size.width) / 10,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border.all(color: Colors.black),
@@ -252,7 +260,7 @@ class ProfilePage extends StatelessWidget {
                                   Orientation.portrait)
                               ? (MediaQuery.of(context).size.width) / 3.1
                               : (MediaQuery.of(context).size.width) / 3.03,
-                          height: (MediaQuery.of(context).size.width) / 8,
+                          height: (MediaQuery.of(context).size.width) / 10,
                           decoration: BoxDecoration(
                             color: Color.fromARGB(180, 220, 220, 220),
                             borderRadius: BorderRadius.only(
@@ -272,14 +280,18 @@ class ProfilePage extends StatelessWidget {
                                     : (MediaQuery.of(context).size.width) / 50),
                           )),
                         )),
-                  ])))
+                  ]))),
+          UserOrdersPage(
+            token: token,
+          ),
         ],
       ),
-    );
+    ));
   }
 
   Widget changePasswordLoaded(context, state) {
-    return Center(
+    return SingleChildScrollView(
+        child: Center(
       child: Column(
         children: [
           Padding(
@@ -288,7 +300,7 @@ class ProfilePage extends StatelessWidget {
                   width: (MediaQuery.of(context).size.width),
                   height: (MediaQuery.of(context).orientation ==
                           Orientation.portrait)
-                      ? (MediaQuery.of(context).size.width) / 8
+                      ? (MediaQuery.of(context).size.width) / 10
                       : (MediaQuery.of(context).size.width) / 12,
                   decoration: BoxDecoration(
                     color: Color.fromARGB(200, 210, 210, 210),
@@ -307,7 +319,7 @@ class ProfilePage extends StatelessWidget {
                                   Orientation.portrait)
                               ? (MediaQuery.of(context).size.width) / 3.1
                               : (MediaQuery.of(context).size.width) / 3.03,
-                          height: (MediaQuery.of(context).size.width) / 8,
+                          height: (MediaQuery.of(context).size.width) / 10,
                           decoration: BoxDecoration(
                             color: Color.fromARGB(180, 220, 220, 220),
                             borderRadius: BorderRadius.only(
@@ -335,7 +347,7 @@ class ProfilePage extends StatelessWidget {
                                   Orientation.portrait)
                               ? (MediaQuery.of(context).size.width) / 3.1
                               : (MediaQuery.of(context).size.width) / 3.03,
-                          height: (MediaQuery.of(context).size.width) / 8,
+                          height: (MediaQuery.of(context).size.width) / 10,
                           decoration: BoxDecoration(
                             color: Color.fromARGB(180, 220, 220, 220),
                             borderRadius: BorderRadius.only(
@@ -360,7 +372,7 @@ class ProfilePage extends StatelessWidget {
                                 Orientation.portrait)
                             ? (MediaQuery.of(context).size.width) / 3.09
                             : (MediaQuery.of(context).size.width) / 3.03,
-                        height: (MediaQuery.of(context).size.width) / 8,
+                        height: (MediaQuery.of(context).size.width) / 10,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border.all(color: Colors.black),
@@ -380,9 +392,12 @@ class ProfilePage extends StatelessWidget {
                                   ? (MediaQuery.of(context).size.width) / 30
                                   : (MediaQuery.of(context).size.width) / 50),
                         ))),
-                  ])))
+                  ]))),
+          ChangePasswordPage(
+            token: token,
+          ),
         ],
       ),
-    );
+    ));
   }
 }

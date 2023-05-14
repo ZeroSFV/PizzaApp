@@ -26,6 +26,13 @@ class RegistrationState extends AppState {
   List<Object?> get props => [];
 }
 
+class ResetPasswordState extends AppState {
+  ResetPasswordState();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class RegistrationValidationLengthErrorState extends AppState {
   RegistrationValidationLengthErrorState();
 

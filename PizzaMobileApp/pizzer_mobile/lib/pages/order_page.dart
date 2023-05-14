@@ -287,7 +287,7 @@ class OrderPage extends StatelessWidget {
                           ))),
                   Expanded(
                       flex: 2,
-                      child: Text('${order.price!.toInt()}',
+                      child: Text('${order.price!.toInt()} Р',
                           textAlign: TextAlign.right,
                           style: TextStyle(
                               fontFamily: "Times New Roman",

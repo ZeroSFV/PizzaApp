@@ -23,6 +23,7 @@ class OrderModel {
   String? statusName;
   int? statusId;
   List? orderLines;
+  String? streetAddress;
 
   OrderModel({
     this.id,
@@ -77,6 +78,41 @@ class OrderModel {
     statusId = json['statusId'];
     orderLines =
         json['orderLines'].map((e) => OrderLinesModel.fromJson(e)).toList();
+    int index = address!.indexOf(", кв");
+    streetAddress = address!.substring(0, index);
+  }
+
+  OrderModel.fromJson(dynamic json) {
+    id = json['id'];
+    creationTime = DateTime.tryParse(json['creationTime']);
+    if (json['finishedTime'] != null) {
+      finishedTime = DateTime.tryParse(json['finishedTime']);
+    }
+    predictedTime = DateTime.tryParse(json['predictedTime']);
+    price = json['price'];
+    address = json['address'];
+    phoneNumber = json['phoneNumber'];
+    clientName = json['clientName'];
+    payingType = json['payingType'];
+    if (json['usedBonuses'] != null) {
+      usedBonuses = json['usedBonuses'];
+    }
+    givenBonuses = json['givenBonuses'];
+    if (json['comment'] != null) {
+      comment = json['comment'];
+    }
+    change = json['change'];
+    clientId = json['clientId'];
+    workerId = json['workerId'];
+    workerName = json['workerName'];
+    courierId = json['courierId'];
+    courierName = json['courierName'];
+    statusName = json['statusName'];
+    statusId = json['statusId'];
+    orderLines =
+        json['orderLines'].map((e) => OrderLinesModel.fromJson(e)).toList();
+    int index = address!.indexOf(", кв");
+    streetAddress = address!.substring(0, index);
   }
 
   // OrderModel.fromJson(dynamic json) {

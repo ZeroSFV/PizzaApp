@@ -26,7 +26,7 @@ namespace DAL.Data
         public string Role { get; set; }
         public sbyte IsApproved { get; set; }
         public string? RefreshToken { get; set; }
-
+        public string ApprovalCode { get; set; }
         public virtual ICollection<Basket>? Baskets { get; set; }
         public virtual ICollection<Order>? OrdersClient { get; set; }
         public virtual ICollection<Order>? OrdersWorker { get; set; }

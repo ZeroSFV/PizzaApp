@@ -37,7 +37,7 @@ namespace BLL.Services
             return dataBase.OrderRepository.GetAll()
                                            .Select(i => new OrderModel(i, dataBase))
                                            .Where(i => i.ClientId == userId)
-                                           .OrderBy(i => i.CreationTime)
+                                           .OrderByDescending(i => i.CreationTime)
                                            .ToList();
         }
 
@@ -46,7 +46,7 @@ namespace BLL.Services
             return dataBase.OrderRepository.GetAll()
                                            .Select(i => new OrderModel(i, dataBase))
                                            .Where(i => i.WorkerId == workerId)
-                                           .OrderBy (i => i.CreationTime)
+                                           .OrderBy(i => i.CreationTime)
                                            .ToList();
         }
 
@@ -93,6 +93,7 @@ namespace BLL.Services
                     user.Bonuses += curOrder.UsedBonuses;
                     dataBase.UserRepository.Update(user);
                 }
+                curOrder.FinishedTime = DateTime.Now;
                 curOrder.StatusId = 6;
                 Save();
             }
@@ -130,6 +131,9 @@ namespace BLL.Services
             if (order != null && order.StatusId < 5)
             {
                 order.StatusId++;
+                if (order.StatusId == 5)
+                    order.FinishedTime = DateTime.Now;
+                dataBase.OrderRepository.Update(order);
                 Save();
             }
         }

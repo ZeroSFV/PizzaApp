@@ -16,6 +16,7 @@ namespace BLL.Models
         public string Phone { get; set; }
         public int? Bonuses { get; set; }
         public string? Passport { get; set; }
+        public string? ApprovalCode { get; set; }
 
         public UserInfoModel() { }
         public UserInfoModel(UserModel u)
@@ -28,6 +29,7 @@ namespace BLL.Models
             Phone = u.Phone;
             Passport = u.Passport;
             Bonuses = u.Bonuses;
+            ApprovalCode = u.ApprovalCode;
         }
     }
 }

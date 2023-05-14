@@ -488,6 +488,11 @@ namespace DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("ApprovalCode")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("varchar(6)");
+
                     b.Property<int?>("Bonuses")
                         .HasColumnType("int");
 
@@ -535,6 +540,7 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 1,
+                            ApprovalCode = "123321",
                             Bonuses = 0,
                             Email = "reksmbd@gmail.com",
                             IsApproved = (sbyte)1,
@@ -546,6 +552,7 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 2,
+                            ApprovalCode = "123321",
                             Email = "admin@gmail.com",
                             IsApproved = (sbyte)1,
                             Name = "Администратор",
@@ -557,6 +564,7 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 3,
+                            ApprovalCode = "123321",
                             Email = "worker@gmail.com",
                             IsApproved = (sbyte)1,
                             Name = "Работник",
@@ -568,6 +576,7 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 4,
+                            ApprovalCode = "123321",
                             Email = "courier@gmail.com",
                             IsApproved = (sbyte)1,
                             Name = "Курьер",

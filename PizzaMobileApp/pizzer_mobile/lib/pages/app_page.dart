@@ -7,6 +7,7 @@ import 'package:pizzer_mobile/blocs/app_bloc/app_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pizzer_mobile/pages/client_page.dart';
 import 'package:pizzer_mobile/pages/client_order_page.dart';
+import 'package:pizzer_mobile/pages/sign_in_page.dart';
 import 'package:pizzer_mobile/repositories/order_repository.dart';
 import 'package:pizzer_mobile/repositories/user_info_repository.dart';
 
@@ -20,7 +21,7 @@ class AppPage extends StatelessWidget {
           BlocProvider<AppBloc>(
             create: (BuildContext context) =>
                 AppBloc(UserInfoRepository(), OrderRepository())
-                  ..add(SignInSubmittedEvent()),
+                  ..add(LoadSignInAppEvent()),
           ),
         ],
         child: Scaffold(
@@ -34,8 +35,15 @@ class AppPage extends StatelessWidget {
           ),
           body: BlocBuilder<AppBloc, AppState>(
             builder: (BuildContext context, AppState state) {
-              // Timer timer = Timer.periodic(
-              //     Duration(seconds: 10), (Timer t) => print("xd"));
+              if (state is SignInState) {
+                return SignInPage();
+              }
+              if (state is RegistrationState) {
+                return Container();
+              }
+              if (state is ResetPasswordState) {
+                return Container();
+              }
               if (state is ClientNoOrderState) {
                 return ClientPage(token: state.token);
               }

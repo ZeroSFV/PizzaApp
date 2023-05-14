@@ -7,8 +7,27 @@ abstract class AppEvent extends Equatable {
   const AppEvent();
 }
 
-class SignInSubmittedEvent extends AppEvent {
-  SignInSubmittedEvent();
+class SignInSubmittedAppEvent extends AppEvent {
+  String? token;
+  SignInSubmittedAppEvent(this.token);
+  @override
+  List get props => [token];
+}
+
+class LoadSignInAppEvent extends AppEvent {
+  LoadSignInAppEvent();
+  @override
+  List get props => [];
+}
+
+class LoadRegistrationAppEvent extends AppEvent {
+  LoadRegistrationAppEvent();
+  @override
+  List get props => [];
+}
+
+class LoadResetPasswordAppEvent extends AppEvent {
+  LoadResetPasswordAppEvent();
   @override
   List get props => [];
 }
@@ -55,6 +74,12 @@ class ClientCreatedOrderEvent extends AppEvent {
         givenBonuses,
         comment
       ];
+}
+
+class UserLogOutEvent extends AppEvent {
+  UserLogOutEvent();
+  @override
+  List get props => [];
 }
 
 class CheckIfOrderFinishedEvent extends AppEvent {

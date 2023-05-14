@@ -45,6 +45,20 @@ class OrderRepository {
     }
   }
 
+  Future<List<OrderModel>> getUserAllOrder(int? userId) async {
+    String Url = orderUrl + '/userOrder/' + userId.toString();
+    Response response = await get(Uri.parse(Url));
+
+    if (response.statusCode == 200) {
+      final List result = jsonDecode(response.body);
+      return result.map((e) => OrderModel.fromJson(e)).toList();
+    } else if (response.statusCode == 404) {
+      return [];
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
   Future<void> makeOrder(MakeOrderModel makeOrderModel) async {
     String Url = orderUrl + '/makeOrder';
     Response resPost = await post(Uri.parse(Url),
