@@ -32,8 +32,8 @@ class LoadResetPasswordAppEvent extends AppEvent {
   List get props => [];
 }
 
-class RegistrationSubmittedEvent extends AppEvent {
-  RegistrationSubmittedEvent();
+class RegistrationSubmittedAppEvent extends AppEvent {
+  RegistrationSubmittedAppEvent();
   @override
   List get props => [];
 }

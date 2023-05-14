@@ -7,6 +7,7 @@ class UserInfoModel {
   String? phone;
   int? bonuses;
   String? passport;
+  String? approvalCode;
 
   UserInfoModel(
       {this.id,
@@ -16,7 +17,8 @@ class UserInfoModel {
       this.isApproved,
       this.phone,
       this.bonuses,
-      this.passport});
+      this.passport,
+      this.approvalCode});
 
   UserInfoModel.fromJson(dynamic json) {
     id = json['id'];
@@ -27,5 +29,6 @@ class UserInfoModel {
     phone = json['phone'];
     bonuses = json['bonuses'];
     passport = json['passport'];
+    approvalCode = json['approvalCode'];
   }
 }

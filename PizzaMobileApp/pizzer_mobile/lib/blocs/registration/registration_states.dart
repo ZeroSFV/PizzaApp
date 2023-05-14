@@ -57,24 +57,36 @@ class IncorrectRepeatPasswordState extends RegistrationState {
   List<Object?> get props => [email, name, phone, password, repeatPassword];
 }
 
-class RegistrationSuccessState extends RegistrationState {
-  final String? token;
-  RegistrationSuccessState(this.token);
+class EmailIsNotAllowedState extends RegistrationState {
+  final String? email;
+  final String? name;
+  final String? phone;
+  final String? password;
+  final String? repeatPassword;
+  EmailIsNotAllowedState(
+      this.email, this.name, this.phone, this.password, this.repeatPassword);
 
   @override
-  List<Object?> get props => [token];
+  List<Object?> get props => [email, name, phone, password, repeatPassword];
 }
 
-class LoadingReState extends RegistrationState {
-  LoadingSignInState();
+class RegistrationSuccessState extends RegistrationState {
+  RegistrationSuccessState();
 
   @override
   List<Object?> get props => [];
 }
 
-class SignInErrorState extends RegistrationState {
+class LoadingRegistrationState extends RegistrationState {
+  LoadingRegistrationState();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class RegistrationErrorState extends RegistrationState {
   final String? error;
-  SignInErrorState(this.error);
+  RegistrationErrorState(this.error);
 
   @override
   List<Object?> get props => [error];

@@ -16,12 +16,16 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       final String? token = event.token;
       final userInfo = await _userInfoRepository.getUserInfo(token);
       if (userInfo.role == "user") {
-        final activeOrder =
-            await _orderRepository.checkActiveOrder(userInfo.id);
-        if (activeOrder == true) {
-          emit(ClientActiveOrderState(token));
+        if (userInfo.isApproved == true) {
+          final activeOrder =
+              await _orderRepository.checkActiveOrder(userInfo.id);
+          if (activeOrder == true) {
+            emit(ClientActiveOrderState(token));
+          } else {
+            emit(ClientNoOrderState(token));
+          }
         } else {
-          emit(ClientNoOrderState(token));
+          emit(ClientNotApprovedState(token, userInfo.approvalCode));
         }
       }
     });

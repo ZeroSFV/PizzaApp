@@ -30,6 +30,65 @@ class AccountRepository {
     }
   }
 
+  Future<void> approveUser(int? id, String? approvalCode) async {
+    String Url = accountUrl + '/approveUser';
+
+    Response resPut = await put(Uri.parse(Url),
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(<String, dynamic>{
+          "id": id,
+          "approvalCode": approvalCode,
+        }));
+    if (resPut.statusCode != 200) throw Exception(resPut.reasonPhrase);
+  }
+
+  Future<bool> resetPassword(String? email) async {
+    String Url = accountUrl + '/resetpassword';
+
+    Response resPut = await put(Uri.parse(Url),
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(<String, dynamic>{
+          "email": email,
+        }));
+    if (resPut.statusCode == 200)
+      return true;
+    else if (resPut.statusCode == 400) {
+      return false;
+    } else {
+      throw Exception(resPut.reasonPhrase);
+    }
+  }
+
+  Future<bool> register(String? email, String? name, String? phone,
+      String? password, String? repeatPassword) async {
+    String Url = accountUrl + '/signUp';
+    Response resPost = await post(Uri.parse(Url),
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(<String, dynamic>{
+          "email": email,
+          "name": name,
+          "phone": phone,
+          "password": password,
+          "repeatPassword": repeatPassword
+        }));
+    if (resPost.statusCode == 200)
+      return true;
+    else if (resPost.statusCode == 400) {
+      return false;
+    } else {
+      throw Exception(resPost.reasonPhrase);
+    }
+  }
+
   Future<SignInResponseModel> signIn(String? email, String? password) async {
     String Url = accountUrl + '/signIn';
 

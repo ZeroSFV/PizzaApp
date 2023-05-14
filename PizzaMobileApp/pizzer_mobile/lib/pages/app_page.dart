@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pizzer_mobile/pages/client_not_approved_page.dart';
 import 'package:pizzer_mobile/pages/pizza_catalogue_page.dart';
 import 'package:pizzer_mobile/pages/client_page.dart';
 import 'package:pizzer_mobile/blocs/app_bloc/app_bloc.dart';
@@ -7,6 +8,8 @@ import 'package:pizzer_mobile/blocs/app_bloc/app_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pizzer_mobile/pages/client_page.dart';
 import 'package:pizzer_mobile/pages/client_order_page.dart';
+import 'package:pizzer_mobile/pages/registration_page.dart';
+import 'package:pizzer_mobile/pages/reset_password_page.dart';
 import 'package:pizzer_mobile/pages/sign_in_page.dart';
 import 'package:pizzer_mobile/repositories/order_repository.dart';
 import 'package:pizzer_mobile/repositories/user_info_repository.dart';
@@ -39,13 +42,17 @@ class AppPage extends StatelessWidget {
                 return SignInPage();
               }
               if (state is RegistrationState) {
-                return Container();
+                return RegistrationPage();
               }
               if (state is ResetPasswordState) {
-                return Container();
+                return ResetPasswordPage();
               }
               if (state is ClientNoOrderState) {
                 return ClientPage(token: state.token);
+              }
+              if (state is ClientNotApprovedState) {
+                return ClientNotApprovedPage(
+                    token: state.token, approvalCode: state.approvalCode);
               }
               if (state is ClientActiveOrderState) {
                 // const oneSec = Duration(seconds: 3);

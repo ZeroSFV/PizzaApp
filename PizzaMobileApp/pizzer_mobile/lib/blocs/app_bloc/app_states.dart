@@ -55,10 +55,12 @@ class RegistrationErrorState extends AppState {
 }
 
 class ClientNotApprovedState extends AppState {
-  ClientNotApprovedState();
+  String? token;
+  String? approvalCode;
+  ClientNotApprovedState(this.token, this.approvalCode);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [token, approvalCode];
 }
 
 class ClientNoOrderState extends AppState {
