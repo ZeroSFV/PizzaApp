@@ -5,14 +5,12 @@ import 'package:pizzer_mobile/blocs/client_basket/client_basket_events.dart';
 import 'package:pizzer_mobile/blocs/client_basket/client_basket_states.dart';
 import 'package:pizzer_mobile/models/user_info_model.dart';
 import 'package:pizzer_mobile/repositories/basket_repository.dart';
-import 'package:pizzer_mobile/repositories/pizza_catalogue_repository.dart';
 import 'package:pizzer_mobile/repositories/user_info_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pizzer_mobile/blocs/client_basket/client_basket_blocs.dart';
 import 'package:pizzer_mobile/models/basket_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:pizzer_mobile/blocs/delivery_info/delivery_info_bloc.dart';
 import 'package:pizzer_mobile/blocs/delivery_info/delivery_info_events.dart';
 import 'package:pizzer_mobile/blocs/delivery_info/delivery_info_states.dart';
@@ -21,7 +19,6 @@ import 'package:pizzer_mobile/blocs/payment_type/payment_type_events.dart';
 import 'package:pizzer_mobile/blocs/payment_type/payment_type_states.dart';
 import 'package:pizzer_mobile/blocs/app_bloc/app_bloc.dart';
 import 'package:pizzer_mobile/blocs/app_bloc/app_events.dart';
-import 'package:pizzer_mobile/blocs/app_bloc/app_states.dart';
 
 class BasketPage extends StatelessWidget {
   BasketPage({super.key, this.token});

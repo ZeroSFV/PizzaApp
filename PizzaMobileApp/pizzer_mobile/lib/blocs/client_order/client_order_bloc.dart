@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:pizzer_mobile/blocs/app_bloc/app_bloc.dart';
 import 'package:pizzer_mobile/blocs/bonuses_bloc/bonuses_states.dart';
 import 'package:pizzer_mobile/blocs/client_order/client_order_events.dart';

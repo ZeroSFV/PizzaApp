@@ -59,6 +59,20 @@ class OrderRepository {
     }
   }
 
+  Future<List<OrderModel>> getUnacceptedCourierOrders() async {
+    String Url = orderUrl + '/unacceptedCourierOrders';
+    Response response = await get(Uri.parse(Url));
+
+    if (response.statusCode == 200) {
+      final List result = jsonDecode(response.body);
+      return result.map((e) => OrderModel.fromJson(e)).toList();
+    } else if (response.statusCode == 404) {
+      return [];
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
   Future<List<OrderModel>> getAllOrders() async {
     String Url = orderUrl;
     Response response = await get(Uri.parse(Url));
@@ -94,6 +108,46 @@ class OrderRepository {
     return false;
   }
 
+  Future<bool> courierAcceptOrder(int? courierId, int? orderId) async {
+    String Url = orderUrl + '/acceptOrderByCourier';
+    Response resPut = await put(Uri.parse(Url),
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(<String, dynamic>{
+          "orderId": orderId,
+          "workerId": 0,
+          "courierId": courierId
+        }));
+    if (resPut.statusCode == 200) {
+      return true;
+    }
+    if (resPut.statusCode != 400) {
+      throw Exception(resPut.reasonPhrase);
+    }
+    return false;
+  }
+
+  Future toNextStatus(int? orderId) async {
+    String Url = orderUrl + '/toNextStatus';
+    Response resPut = await put(Uri.parse(Url),
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(<String, dynamic>{
+          "id": orderId,
+        }));
+    if (resPut.statusCode == 200) {
+      return true;
+    }
+    if (resPut.statusCode != 400) {
+      throw Exception(resPut.reasonPhrase);
+    }
+    return false;
+  }
+
   Future<dynamic> getWorkerActiveOrder(int? workerId) async {
     String Url = orderUrl + '/workerActiveOrder/' + workerId.toString();
     Response response = await get(Uri.parse(Url));
@@ -112,8 +166,53 @@ class OrderRepository {
     }
   }
 
+  Future<List<OrderModel>> getCourierActiveOrders(int? workerId) async {
+    String Url = orderUrl + '/courierActiveOrder/' + workerId.toString();
+    Response response = await get(Uri.parse(Url));
+
+    if (response.statusCode == 200) {
+      final List result = jsonDecode(response.body);
+      return result.map((e) => OrderModel.fromJson(e)).toList();
+    } else if (response.statusCode == 400) {
+      final responseError = jsonDecode(response.body);
+      final reqResult = RequestModel.fromJson(responseError);
+      bool badResult = false;
+      return [];
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
   Future<List<OrderModel>> getUserAllOrder(int? userId) async {
     String Url = orderUrl + '/userOrder/' + userId.toString();
+    Response response = await get(Uri.parse(Url));
+
+    if (response.statusCode == 200) {
+      final List result = jsonDecode(response.body);
+      return result.map((e) => OrderModel.fromJson(e)).toList();
+    } else if (response.statusCode == 404) {
+      return [];
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
+  Future<List<OrderModel>> getWorkerAllOrder(int? workerId) async {
+    String Url = orderUrl + '/workerOrder/' + workerId.toString();
+    Response response = await get(Uri.parse(Url));
+
+    if (response.statusCode == 200) {
+      final List result = jsonDecode(response.body);
+      return result.map((e) => OrderModel.fromJson(e)).toList();
+    } else if (response.statusCode == 404) {
+      return [];
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
+  Future<List<OrderModel>> getCourierAllOrder(int? courierId) async {
+    String Url = orderUrl + '/courierOrder/' + courierId.toString();
     Response response = await get(Uri.parse(Url));
 
     if (response.statusCode == 200) {

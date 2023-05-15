@@ -1,6 +1,5 @@
 import 'package:pizzer_mobile/blocs/worker_navigation_bar/worker_navigation_bar_events.dart';
 import 'package:pizzer_mobile/blocs/worker_navigation_bar/worker_navigation_bar_bloc.dart';
-import 'package:pizzer_mobile/models/user_info_model.dart';
 import 'package:pizzer_mobile/repositories/order_repository.dart';
 import 'package:pizzer_mobile/repositories/user_info_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,12 +7,7 @@ import 'package:pizzer_mobile/blocs/worker_unaccepted_orders/worker_unaccepted_o
 import 'package:pizzer_mobile/blocs/worker_unaccepted_orders/worker_unaccepted_orders_events.dart';
 import 'package:pizzer_mobile/blocs/worker_unaccepted_orders/worker_unaccepted_orders_states.dart';
 import 'package:pizzer_mobile/models/order_model.dart';
-import 'package:pizzer_mobile/models/order_lines_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:pizzer_mobile/blocs/app_bloc/app_bloc.dart';
-import 'package:pizzer_mobile/blocs/app_bloc/app_events.dart';
-import 'package:pizzer_mobile/blocs/app_bloc/app_states.dart';
 
 class UnacceptedOrderWorkerPage extends StatelessWidget {
   String? token;
@@ -1069,23 +1063,19 @@ class UnacceptedOrderWorkerPage extends StatelessWidget {
 
   Widget userNoOrder(context, state) {
     return SingleChildScrollView(
-        child: Center(
-            child: Column(children: [
-      Text("Заказов нет",
-          style: TextStyle(
-              color: Color.fromARGB(240, 117, 117, 117),
-              fontSize:
-                  (MediaQuery.of(context).orientation == Orientation.portrait)
-                      ? MediaQuery.of(context).size.height / 20
-                      : MediaQuery.of(context).size.width / 20)),
-      Text("Сделайте заказы и они отобразятся в этом окне",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              color: Colors.black,
-              fontSize:
-                  (MediaQuery.of(context).orientation == Orientation.portrait)
-                      ? MediaQuery.of(context).size.height / 38
-                      : MediaQuery.of(context).size.width / 38))
-    ])));
+        child: Container(
+            height: (MediaQuery.of(context).size.height / 1.3),
+            width: (MediaQuery.of(context).size.width),
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text("Заказов нет",
+                  style: TextStyle(
+                      color: Color.fromARGB(240, 117, 117, 117),
+                      fontSize: (MediaQuery.of(context).orientation ==
+                              Orientation.portrait)
+                          ? MediaQuery.of(context).size.height / 20
+                          : MediaQuery.of(context).size.width / 20)),
+            )));
   }
 }

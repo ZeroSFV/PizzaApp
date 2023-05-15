@@ -6,7 +6,6 @@ import 'package:pizzer_mobile/blocs/approve_user/approve_user_events.dart';
 import 'package:pizzer_mobile/blocs/app_bloc/app_bloc.dart';
 import 'package:pizzer_mobile/blocs/app_bloc/app_events.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pizzer_mobile/repositories/user_info_repository.dart';
 
 class ClientNotApprovedPage extends StatelessWidget {

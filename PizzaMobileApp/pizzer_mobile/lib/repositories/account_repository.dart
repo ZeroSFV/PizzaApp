@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'package:pizzer_mobile/models/sign_in_response_model.dart';
-import 'package:pizzer_mobile/models/user_info_model.dart';
-import 'package:pizzer_mobile/models/request_model.dart';
 import 'package:http/http.dart';
 
 class AccountRepository {

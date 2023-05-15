@@ -1,18 +1,11 @@
-import 'package:pizzer_mobile/models/user_info_model.dart';
 import 'package:pizzer_mobile/repositories/order_repository.dart';
 import 'package:pizzer_mobile/repositories/user_info_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:pizzer_mobile/blocs/user_orders/user_orders_bloc.dart';
 import 'package:pizzer_mobile/blocs/user_orders/user_orders_states.dart';
 import 'package:pizzer_mobile/blocs/user_orders/user_orders_events.dart';
 import 'package:pizzer_mobile/models/order_model.dart';
-import 'package:pizzer_mobile/models/order_lines_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:pizzer_mobile/blocs/app_bloc/app_bloc.dart';
-import 'package:pizzer_mobile/blocs/app_bloc/app_events.dart';
-import 'package:pizzer_mobile/blocs/app_bloc/app_states.dart';
 
 class UserOrdersPage extends StatelessWidget {
   String? token;
@@ -225,15 +218,13 @@ class UserOrdersPage extends StatelessWidget {
                                     child: Container(
                                         decoration: BoxDecoration(
                                           color: Colors.red,
-                                          border:
-                                              Border.all(color: Colors.black),
                                           borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(40.0),
+                                              topRight: Radius.circular(15.0),
                                               bottomRight:
-                                                  Radius.circular(40.0),
-                                              topLeft: Radius.circular(40.0),
+                                                  Radius.circular(15.0),
+                                              topLeft: Radius.circular(15.0),
                                               bottomLeft:
-                                                  Radius.circular(40.0)),
+                                                  Radius.circular(15.0)),
                                         ),
                                         child: Text(
                                           'Подробности',
@@ -540,7 +531,8 @@ class UserOrdersPage extends StatelessWidget {
                                           : MediaQuery.of(context).size.width /
                                               35,
                                       fontWeight: FontWeight.w800))
-                              : Text('${order.finishedTime.toString()}',
+                              : Text(
+                                  '${order.finishedTime.toString().substring(0, 19)}',
                                   textAlign: TextAlign.right,
                                   style: TextStyle(
                                       fontFamily: "Times New Roman",
@@ -851,12 +843,11 @@ class UserOrdersPage extends StatelessWidget {
                                   width: MediaQuery.of(context).size.width / 2,
                                   decoration: BoxDecoration(
                                     color: Colors.red,
-                                    border: Border.all(color: Colors.black),
                                     borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(40.0),
-                                        bottomRight: Radius.circular(40.0),
-                                        topLeft: Radius.circular(40.0),
-                                        bottomLeft: Radius.circular(40.0)),
+                                        topRight: Radius.circular(15.0),
+                                        bottomRight: Radius.circular(15.0),
+                                        topLeft: Radius.circular(15.0),
+                                        bottomLeft: Radius.circular(15.0)),
                                   ),
                                   child: Text(
                                     'Вернуться к истории заказов',

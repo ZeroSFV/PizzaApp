@@ -3,13 +3,11 @@ import 'package:pizzer_mobile/blocs/filters_order/filters_order_states.dart';
 import 'package:pizzer_mobile/blocs/filters_order/filters_order_bloc.dart';
 import 'package:pizzer_mobile/blocs/pizza_catalogue_order/pizza_catalogue_order_events.dart';
 import 'package:pizzer_mobile/blocs/pizza_catalogue_order/pizza_catalogue_order_states.dart';
-import 'package:pizzer_mobile/repositories/basket_repository.dart';
 import 'package:pizzer_mobile/repositories/pizza_catalogue_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pizzer_mobile/blocs/pizza_catalogue_order/pizza_catalogue_order_bloc.dart';
 import 'package:pizzer_mobile/models/pizza_model.dart';
 import 'package:flutter/material.dart';
-import 'package:pizzer_mobile/repositories/user_info_repository.dart';
 
 class PizzaCatalogueOrderPage extends StatelessWidget {
   PizzaCatalogueOrderPage({super.key, this.token});

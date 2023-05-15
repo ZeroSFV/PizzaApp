@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pizzer_mobile/pages/client_not_approved_page.dart';
-import 'package:pizzer_mobile/pages/pizza_catalogue_page.dart';
 import 'package:pizzer_mobile/pages/client_page.dart';
 import 'package:pizzer_mobile/blocs/app_bloc/app_bloc.dart';
 import 'package:pizzer_mobile/blocs/app_bloc/app_events.dart';
 import 'package:pizzer_mobile/blocs/app_bloc/app_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pizzer_mobile/pages/client_page.dart';
+import 'package:pizzer_mobile/pages/courier_page.dart';
 import 'package:pizzer_mobile/pages/worker_page.dart';
 import 'package:pizzer_mobile/pages/client_order_page.dart';
 import 'package:pizzer_mobile/pages/registration_page.dart';
@@ -53,6 +52,9 @@ class AppPage extends StatelessWidget {
               }
               if (state is WorkerState) {
                 return WorkerPage(token: state.token);
+              }
+              if (state is CourierState) {
+                return CourierPage(token: state.token);
               }
               if (state is ClientNotApprovedState) {
                 return ClientNotApprovedPage(

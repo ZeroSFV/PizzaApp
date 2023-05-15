@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pizzer_mobile/blocs/app_bloc/app_bloc.dart';
-import 'package:pizzer_mobile/blocs/app_bloc/app_events.dart';
 import 'package:pizzer_mobile/blocs/navigation_bar_order/navigation_bar_order_bloc.dart';
 import 'package:pizzer_mobile/blocs/navigation_bar_order/navigation_bar_order_events.dart';
 import 'package:pizzer_mobile/blocs/navigation_bar_order/navigation_bar_order_states.dart';

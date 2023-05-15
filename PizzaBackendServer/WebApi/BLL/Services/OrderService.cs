@@ -46,7 +46,7 @@ namespace BLL.Services
             return dataBase.OrderRepository.GetAll()
                                            .Select(i => new OrderModel(i, dataBase))
                                            .Where(i => i.WorkerId == workerId)
-                                           .OrderBy(i => i.CreationTime)
+                                           .OrderByDescending(i => i.CreationTime)
                                            .ToList();
         }
 
@@ -55,7 +55,7 @@ namespace BLL.Services
             return dataBase.OrderRepository.GetAll()
                                            .Select(i => new OrderModel(i, dataBase))
                                            .Where(i => i.CourierId == courierId)
-                                           .OrderBy(i => i.CreationTime)
+                                           .OrderByDescending(i => i.CreationTime)
                                            .ToList();
         }
 
@@ -108,6 +108,7 @@ namespace BLL.Services
                 order.WorkerId = worker.Id;
                 order.Worker = worker;
                 order.StatusId++;
+                dataBase.OrderRepository.Update(order); 
                 Save();
             }
         }
@@ -121,6 +122,7 @@ namespace BLL.Services
                 order.CourierId = courier.Id;
                 order.Courier = courier;
                 order.StatusId++;
+                dataBase.OrderRepository.Update(order);
                 Save();
             }
         }

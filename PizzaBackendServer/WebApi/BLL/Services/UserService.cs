@@ -195,6 +195,16 @@ namespace BLL.Services
                 user.Phone = userUpdateModel.Phones;
                 dataBase.UserRepository.Update(user);
                 Save();
+                if (user.Role == "user")
+                {
+                    var orders = dataBase.OrderRepository.GetAll().Where(i => i.ClientId == user.Id);
+                    foreach (var o in orders)
+                    {
+                        o.ClientName = userUpdateModel.Name;
+                        dataBase.OrderRepository.Update(o);
+                        Save();
+                    }
+                }
             }
         }
 
