@@ -7,6 +7,7 @@ import 'package:pizzer_mobile/blocs/app_bloc/app_events.dart';
 import 'package:pizzer_mobile/blocs/app_bloc/app_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pizzer_mobile/pages/client_page.dart';
+import 'package:pizzer_mobile/pages/worker_page.dart';
 import 'package:pizzer_mobile/pages/client_order_page.dart';
 import 'package:pizzer_mobile/pages/registration_page.dart';
 import 'package:pizzer_mobile/pages/reset_password_page.dart';
@@ -49,6 +50,9 @@ class AppPage extends StatelessWidget {
               }
               if (state is ClientNoOrderState) {
                 return ClientPage(token: state.token);
+              }
+              if (state is WorkerState) {
+                return WorkerPage(token: state.token);
               }
               if (state is ClientNotApprovedState) {
                 return ClientNotApprovedPage(

@@ -80,24 +80,27 @@ class ClientActiveOrderState extends AppState {
 }
 
 class WorkerState extends AppState {
-  WorkerState();
+  String? token;
+  WorkerState(this.token);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [token];
 }
 
 class CourierState extends AppState {
-  CourierState();
+  String? token;
+  CourierState(this.token);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [token];
 }
 
 class AdminState extends AppState {
-  AdminState();
+  String? token;
+  AdminState(this.token);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [token];
 }
 
 class ServerErrorState extends AppState {

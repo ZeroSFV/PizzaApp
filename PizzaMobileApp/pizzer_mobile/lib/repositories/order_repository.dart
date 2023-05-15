@@ -45,6 +45,73 @@ class OrderRepository {
     }
   }
 
+  Future<List<OrderModel>> getUnacceptedWorkerOrders() async {
+    String Url = orderUrl + '/unacceptedWorkerOrders';
+    Response response = await get(Uri.parse(Url));
+
+    if (response.statusCode == 200) {
+      final List result = jsonDecode(response.body);
+      return result.map((e) => OrderModel.fromJson(e)).toList();
+    } else if (response.statusCode == 404) {
+      return [];
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
+  Future<List<OrderModel>> getAllOrders() async {
+    String Url = orderUrl;
+    Response response = await get(Uri.parse(Url));
+
+    if (response.statusCode == 200) {
+      final List result = jsonDecode(response.body);
+      return result.map((e) => OrderModel.fromJson(e)).toList();
+    } else if (response.statusCode == 404) {
+      return [];
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
+  Future<bool> workerAcceptOrder(int? workerId, int? orderId) async {
+    String Url = orderUrl + '/acceptOrderByWorker';
+    Response resPut = await put(Uri.parse(Url),
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(<String, dynamic>{
+          "orderId": orderId,
+          "workerId": workerId,
+          "courierId": 0
+        }));
+    if (resPut.statusCode == 200) {
+      return true;
+    }
+    if (resPut.statusCode != 400) {
+      throw Exception(resPut.reasonPhrase);
+    }
+    return false;
+  }
+
+  Future<dynamic> getWorkerActiveOrder(int? workerId) async {
+    String Url = orderUrl + '/workerActiveOrder/' + workerId.toString();
+    Response response = await get(Uri.parse(Url));
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      final orderResult = OrderModel.fromJsonSingle(result);
+      return orderResult;
+    } else if (response.statusCode == 400) {
+      final responseError = jsonDecode(response.body);
+      final reqResult = RequestModel.fromJson(responseError);
+      bool badResult = false;
+      return null;
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
   Future<List<OrderModel>> getUserAllOrder(int? userId) async {
     String Url = orderUrl + '/userOrder/' + userId.toString();
     Response response = await get(Uri.parse(Url));

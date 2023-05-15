@@ -28,6 +28,15 @@ class AppBloc extends Bloc<AppEvent, AppState> {
           emit(ClientNotApprovedState(token, userInfo.approvalCode));
         }
       }
+      if (userInfo.role == "worker") {
+        emit(WorkerState(event.token));
+      }
+      if (userInfo.role == "courier") {
+        emit(CourierState(event.token));
+      }
+      if (userInfo.role == "admin") {
+        emit(AdminState(event.token));
+      }
     });
 
     on<LoadResetPasswordAppEvent>((event, emit) async {
